@@ -1,0 +1,94 @@
+service: localstack-demo
+
+plugins:
+  - serverless-deployment-bucket
+  - serverless-localstack
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'local'}
+  region: ${self:custom.region}
+  deploymentBucket:
+    name: localstack-test-bucket
+
+custom:
+  region: us-east-1
+  accountID: '000000000000'
+  localstack:
+    stages: [local]
+    host: http://localhost
+    debug: true
+    autostart: true
+    lambda:
+      mountCode: true
+
+functions:
+  http_handleRequest:
+    handler: demo/lambdas/app.handleRequest
+    runtime: nodejs8.10
+    events:
+      - http:
+          path: /requests
+          method: post
+      - http:
+          path: /requests
+          method: get
+  sqs_handleItem:
+    handler: demo/lambdas/worker.triggerProcessing
+    runtime: ruby2.5
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt: [requestQueue, Arn]
+  backend_processRequest:
+    handler: demo/lambdas/processing.handleRequest
+    runtime: python3.6
+  backend_archiveResult:
+    handler: demo/lambdas/processing.archiveResult
+    runtime: python3.6
+
+resources:
+  Resources:
+    appDatabase:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: appRequests
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: requestID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: requestID
+            KeyType: RANGE
+    archiveBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: archiveBucket
+    requestQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: requestQueue
+    processingStateMachine:
+      Type: AWS::StepFunctions::StateMachine
+      Properties:
+        StateMachineName: processingStateMachine
+        RoleArn: testrole
+        DefinitionString: |
+          {
+            "StartAt": "ProcessRequest",
+            "States": {
+              "ProcessRequest": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:${self:provider.region}:${self:custom.accountID}:function:${self:service}-${self:provider.stage}-backend_processRequest",
+                "Next": "ArchiveResult"
+              },
+              "ArchiveResult": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:${self:provider.region}:${self:custom.accountID}:function:${self:service}-${self:provider.stage}-backend_archiveResult",
+                "End": true
+              }
+            }
+          }

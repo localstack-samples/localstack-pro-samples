@@ -1,0 +1,29 @@
+{
+  "name": "localstack-demo",
+  "version": "1.0.0",
+  "description": "LocalStack demo application",
+  "dependencies": {
+    "aws-sdk": "^2.402.0",
+    "axios": "^0.18.1",
+    "uuid": "^3.3.2",
+    "lodash": "^4.17.13"
+  },
+  "devDependencies": {
+    "eslint": "^6.5.1",
+    "serverless": "^1.54.0",
+    "serverless-deployment-bucket": "^1.1.0",
+    "serverless-localstack": "^0.4.19"
+  },
+  "scripts": {
+    "start": "make start",
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whummer/localstack-demo.git"
+  },
+  "author": "Waldemar Hummer",
+  "license": "Apache 2.0",
+  "homepage": "https://github.com/whummer/localstack-demo#readme"
+}

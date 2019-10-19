@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"></link>
+    <style type="text/css">
+      div {padding: 8px;}
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const refreshInterval = 5000;
+
+      class App extends React.Component {
+        state = {}
+        getBaseURL() {
+          if(this.baseURL) return;
+          axios.get('http://localhost:4567/restapis').then((res) => {
+            const apiID = res.data.item[0].id;
+            this.baseURL = 'http://localhost:4567/restapis/' + apiID + '/v1/_user_request_';
+            this.setState(prevState=>({...prevState}));
+          });
+        }
+        sendRequest() {
+          if(!this.baseURL) return;
+          const url = this.baseURL + '/requests';
+          axios.post(url, '{}').then((res) => {
+            alert('New request has been sent to the API. It should appear in the list as QUEUED shortly.');
+          });
+        }
+        componentDidMount() {
+          this.getBaseURL();
+          this.loopRefresh();
+        }
+        loopRefresh() {
+          this.setState(prevState=>({...prevState}));
+          setInterval(this.loopRefresh.bind(this), refreshInterval);
+        }
+        changeAutoUpdate() {
+          this.setState({autoUpdate: !this.state.autoUpdate})
+        }
+        render() {
+          return (
+            <div>
+              <h2>Requests:</h2>
+              <div><input type="checkbox" checked={this.state.checked ? 'checked': null} onChange={this.changeAutoUpdate.bind(this)}/> Auto-Refresh</div>
+              <div><button onClick={this.sendRequest.bind(this)}>Create new request</button></div>
+              <table className="pure-table">
+                <thead><tr><th>Timestamp</th><th>Request ID</th><th>Status</th></tr></thead>
+                <tbody><RequestEvents baseURL={this.baseURL} autoUpdate={this.state.autoUpdate}/></tbody>
+              </table>
+            </div>
+          );
+        }
+      }
+
+      class RequestEvents extends React.Component {
+        shouldFetchData() {
+          if(!this.props.baseURL || (this.nextUpdateTime && !this.props.autoUpdate)) return false;
+          if(this.nextUpdateTime && this.nextUpdateTime > Date.now()) return false;
+          this.nextUpdateTime = Date.now() + refreshInterval;
+          return true;
+        }
+        componentDidUpdate() {
+          if(!this.shouldFetchData()) return;
+          const url = this.props.baseURL + '/requests';
+          axios.get(url).then((res) => {
+            this.requests = res.data.result;
+            this.setState(prevState=>({...prevState}));
+          });
+        }
+        render() {
+          return (this.requests || []).
+              sort((r1, r2) => r2.timestamp - r1.timestamp).
+              map((r) => <Request req={r} key={r.id}/>);
+        }
+      }
+
+      class Request extends React.Component {
+        render() {
+          return (
+            <tr>
+              <td>{new Date(this.props.req.timestamp).toLocaleString()}</td>
+              <td>{this.props.req.requestID}</td>
+              <td>{this.props.req.status}</td>
+            </tr>
+          );
+        }
+      }
+      ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    </script>
+  </body>
+</html>

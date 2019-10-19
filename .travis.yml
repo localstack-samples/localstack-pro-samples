@@ -1,0 +1,22 @@
+sudo: required
+
+language: python
+
+services:
+  - docker
+
+python:
+  - "3.6"
+
+branches:
+  only:
+    - master
+
+install:
+  - make install
+
+script:
+  - make start
+
+notifications:
+  email: false
