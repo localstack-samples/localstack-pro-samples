@@ -1,0 +1,28 @@
+service: test-layers
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  deploymentBucket:
+    name: testbucket
+
+functions:
+  hello:
+    handler: handler.hello
+    layers:
+      - { Ref: TestLambdaLayer }
+    events:
+      - schedule: "cron(0 * * * ? *)"
+
+layers:
+  test:
+    path: layer
+
+plugins:
+  - serverless-localstack
+  - serverless-deployment-bucket
+
+custom:
+  localstack:
+    stages:
+      - local
