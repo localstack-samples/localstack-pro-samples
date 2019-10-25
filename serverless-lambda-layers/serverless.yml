@@ -13,14 +13,32 @@ functions:
       - { Ref: TestLambdaLayer }
     events:
       - schedule: "cron(0 * * * ? *)"
+      - http:
+          path: "/"
+          method: "get"
+          integration: "lambda-proxy"
 
 layers:
   test:
     path: layer
 
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Type: "AWS::ApiGateway::RestApi"
+      Properties:
+        Name: "${self:provider.stage}-${self:service}"
+    GatewayResponseDefault400:
+      Type: "AWS::ApiGateway::GatewayResponse"
+      Properties:
+        RestApiId:
+          Ref: "ApiGatewayRestApi"
+        ResponseType: "DEFAULT_4XX"
+        ResponseTemplates:
+          application/json: '{"errors":[{"message":"Custom text."}]}'
+
 plugins:
   - serverless-localstack
-  - serverless-deployment-bucket
 
 custom:
   localstack:
