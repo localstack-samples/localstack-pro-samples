@@ -16,24 +16,24 @@ To install the dependencies:
 make install
 ```
 
+## App Details
+
+Please refer to the `templates/` folder for details about the CloudFormation templates for the ECS service.
+
 ## Running
 
-Deploy the app locally and run a test invocation:
+Deploy the app locally via CloudFormation:
 ```
 make deploy
 ```
 
-You should see a success output in the terminal:
+You should see some logs and a success output in the terminal:
 ```
-{
-    "StatusCode": 200
-}
-```
-
-... and your LocalStack container should contain output similar to this:
+...
+Sample app (nginx) successfully deployed.
 ```
 
-```
+Finally, the test app (nginx) should be accessible under the URL http://localhost:45139/ .
 
 ## License
 
