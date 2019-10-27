@@ -7,10 +7,10 @@ usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 install:     ## Install dependencies
-	npm install
-	which serverless || npm install -g serverless
-	which localstack || pip install localstack
-	which awslocal || pip install awscli-local
+	@npm install
+	@which serverless || npm install -g serverless
+	@which localstack || pip install localstack
+	@which awslocal || pip install awscli-local
 
 run:         ## Deploy the app locally and run a Lambda test invocation
 	@make install; \

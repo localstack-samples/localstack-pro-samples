@@ -8,9 +8,9 @@ usage:           ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 install:         ## Install dependencies
-	npm install
-	which serverless || npm install -g serverless
-	which localstack || pip install localstack
+	@npm install
+	@which serverless || npm install -g serverless
+	@which localstack || pip install localstack
 
 start:           ## Deploy and start the app locally
 	@make install; \
