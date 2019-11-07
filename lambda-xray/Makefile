@@ -22,4 +22,4 @@ run:         ## Deploy the app locally and run a Lambda test invocation
 		ID=$$(awslocal xray get-trace-summaries --start-time $$(($$TIME-120)) --end-time $$TIME | jq -r '.TraceSummaries[0].Id'); \
 		awslocal xray batch-get-traces --trace-ids $$ID
 
-.PHONY: usage install start lint
+.PHONY: usage install run

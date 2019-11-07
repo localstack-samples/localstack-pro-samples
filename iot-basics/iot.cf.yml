@@ -1,0 +1,202 @@
+Parameters:
+  ProjectName:
+    Type: String
+    Default: myIoTAnalyticsProject
+  ChannelName:
+    Type: String
+    Default: my_channel
+  DatastoreName:
+    Type: String
+    Default: my_datastore
+  PipelineName:
+    Type: String
+    Default: my_pipeline
+  DatasetName:
+    Type: String
+    Default: my_dataset
+  SqlQuery:
+    Type: String
+    Default: "select * from myDatastore where __dt >= current_date - interval '1' day"
+  ScheduleExpression:
+    Type: String
+    Default: 'cron(0 10 * * ? *)'
+
+Resources:
+
+  # Sample 1: ingesting data to IoT Analytics projects
+  Channel:
+    Type: 'AWS::IoTAnalytics::Channel'
+    Properties:
+      ChannelName: !Ref ChannelName
+      Tags:
+        - Key: "Project"
+          Value: !Ref ProjectName
+  Datastore:
+    Type: 'AWS::IoTAnalytics::Datastore'
+    Properties:
+      DatastoreName: !Ref DatastoreName
+      Tags:
+        - Key: "Project"
+          Value: !Ref ProjectName
+  Pipeline:
+    Type: 'AWS::IoTAnalytics::Pipeline'
+    DependsOn:
+      - Channel
+      - Datastore
+    Properties:
+      PipelineName: !Ref PipelineName
+      PipelineActivities:
+        - Channel:
+            Name: ChannelActivity
+            ChannelName: !Ref ChannelName
+            Next: DatastoreActivity
+          Datastore:
+            Name: DatastoreActivity
+            DatastoreName: !Ref DatastoreName
+      Tags:
+        - Key: "Project"
+          Value: !Ref ProjectName
+  SqlDataset:
+    Type: 'AWS::IoTAnalytics::Dataset'
+    DependsOn: Datastore
+    Properties:
+      DatasetName: !Ref DatasetName
+      Actions:
+        - ActionName: SqlAction
+          QueryAction:
+            SqlQuery: !Ref SqlQuery
+      Triggers:
+        - Schedule:
+            ScheduleExpression: !Ref ScheduleExpression
+      RetentionPeriod:
+        Unlimited: false
+        NumberOfDays: 30
+      Tags:
+        - Key: "Project"
+          Value: !Ref ProjectName
+
+  # Sample 2:
+  Channel1:
+    Type: 'AWS::IoTAnalytics::Channel'
+    Properties:
+      ChannelName: fahrenheit_channel
+      Tags:
+        - Key: "Project"
+          Value: !Ref ProjectName
+  Channel2:
+    Type: 'AWS::IoTAnalytics::Channel'
+    Properties:
+      ChannelName: centigrade_channel
+      Tags:
+        - Key: "Project"
+          Value: !Ref ProjectName
+  Datastore:
+    Type: 'AWS::IoTAnalytics::Datastore'
+    Properties:
+      DatastoreName: normalized_temperature
+      Tags:
+        - Key: "Project"
+          Value: !Ref ProjectName
+  Pipeline1:
+    Type: 'AWS::IoTAnalytics::Pipeline'
+    DependsOn:
+      - Channel1
+      - Datastore
+    Properties:
+      PipelineName: convert_f_to_c
+      PipelineActivities:
+        - Channel:
+            Name: ChannelActivity
+            ChannelName: fahrenheit_channel
+            Next: ConvertTemperature
+          Math:
+            Name: ConvertTemperature
+            Attribute: temperature
+            Math: "(temp - 32) * 5 / 9"
+            Next: DatastoreActivity
+          Datastore:
+            Name: DatastoreActivity
+            DatastoreName: normalized_temperature
+      Tags:
+        - Key: "Project"
+          Value: !Ref ProjectName
+  Pipeline2:
+    Type: 'AWS::IoTAnalytics::Pipeline'
+    DependsOn:
+      - Channel2
+      - Datastore
+    Properties:
+      PipelineName: rename_t_to_temperature
+      PipelineActivities:
+        - Channel:
+            Name: ChannelActivity
+            ChannelName: centigrade_channel
+            Next: RenameTemperature
+          AddAttributes:
+            Name: RenameTemperature
+            Attributes:
+              t: temperature
+            Next: FilterOutT
+          RemoveAttributes:
+            Name: FilterOutT
+            Attributes:
+              - t
+            Next: DatastoreActivity
+          Datastore:
+            Name: DatastoreActivity
+            DatastoreName: normalized_temperature
+      Tags:
+        - Key: "Project"
+          Value: !Ref ProjectName
+  SqlDataset:
+    Type: 'AWS::IoTAnalytics::Dataset'
+    DependsOn: Datastore
+    Properties:
+      DatasetName: find_nonliquid_water
+      Actions:
+        - ActionName: SqlAction
+          QueryAction:
+            SqlQuery: "select * from normalizedTemperature where (temperature > 100 OR temperature < 0) AND (__dt >= current_date - interval '1' day)"
+      Triggers:
+        - Schedule:
+            ScheduleExpression: "cron(0/15 * * * ? *)"
+      RetentionPeriod:
+        Unlimited: false
+        NumberOfDays: 30
+      Tags:
+        - Key: "Project"
+          Value: !Ref ProjectName
+
+  # Sample 3: topic rule and certificate
+  MyTopicRule:
+    Type: AWS::IoT::TopicRule
+    Properties:
+       RuleName: rule123
+       TopicRulePayload:
+          RuleDisabled: "true"
+          Sql: >-
+             Select temp FROM 'SomeTopic' WHERE temp > 60
+          Actions: []
+  MyCertificate:
+    Type: AWS::IoT::Certificate
+    Properties:
+      CertificateSigningRequest: test
+      Status: test
+  MyPolicy:
+    Type: AWS::IoT::Policy
+    Properties:
+      PolicyName: pol1
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: ["iot:Connect"]
+            Resource: ["test-resource"]
+  MyThing:
+    Type: AWS::IoT::Thing
+    Properties:
+      ThingName: thing1
+      AttributePayload:
+        Attributes:
+           attr1: value1
+           attr2: value2
