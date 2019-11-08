@@ -18,7 +18,8 @@ deploy:      ## Deploy the app locally
 		echo "Deploying ECS app to local environment"; \
 		docker pull nginx; \
 		awslocal cloudformation create-stack --stack-name sample --template-body file://templates/ecs.sample.yml && \
-		sleep 3 && curl localhost:$(APP_PORT) && \
+		echo "ECS app successfully deployed. Sleeping a bit, then trying to access the app endpoint." && \
+		sleep 5 && curl localhost:$(APP_PORT) && \
 		echo "Sample app (nginx) successfully deployed. You can access it under http://localhost:$(APP_PORT)"
 
 .PHONY: usage install start lint
