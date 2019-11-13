@@ -1,0 +1,53 @@
+service: test-layers
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  deploymentBucket:
+    name: testbucket
+
+resources:
+  Resources:
+    MyTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: table1
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+custom:
+  appSync:
+    name: test-api
+    authenticationType: API_KEY
+    dataSources:
+      - type: AMAZON_DYNAMODB
+        name: ds1
+        description: DynamoDB data source
+        config:
+          tableName: { Ref: MyTable }
+    mappingTemplatesLocation: ./templates
+    mappingTemplates:
+      - type: Mutation
+        field: addPost
+        dataSource: ds1
+        request: ddb.PutItem.request.vlt
+        response: ddb.PutItem.response.vlt
+      - type: Query
+        field: getPosts
+        dataSource: ds1
+        request: ddb.Scan.request.vlt
+        response: ddb.Scan.response.vlt
+  localstack:
+    stages:
+      - local
+    endpoints:
+      AppSync: http://localhost:4605
+
+plugins:
+  - serverless-localstack
+  - serverless-appsync-plugin
+  - serverless-deployment-bucket

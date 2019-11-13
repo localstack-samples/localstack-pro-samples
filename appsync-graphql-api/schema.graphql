@@ -1,0 +1,22 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    getPosts: [Post!]!
+}
+
+type Mutation {
+    addPost(
+        id: String!
+    ): Post!
+}
+
+type Post {
+    id: DDBString!
+}
+
+type DDBString {
+    S: String!
+}
