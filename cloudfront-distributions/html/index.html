@@ -1,0 +1,26 @@
+<html>
+<body>
+<p>Click the button below - it will generate a random number</p>
+<p>Input Name:</p>
+<input id="inputname" type="text" name="inputname" value="foo">
+<br>
+<button onclick="saveAndGetNumber()">Generate</button>
+
+<p>Random Number (should appear below a few moments after clicking the button):</p>
+<p id="number"></p>
+
+<script>
+async function saveAndGetNumber() {
+  const numberResponse = await fetch(document.getElementById('inputname').value + '/upload', {
+    method: 'PUT'
+  });
+  const numberUrl = await numberResponse.json()
+  const confirmResponse = await fetch(numberUrl.result);
+  const theNumber = await confirmResponse.json()
+
+  document.getElementById('number').innerHTML = theNumber.message;
+}
+</script>
+
+</body>
+</html>

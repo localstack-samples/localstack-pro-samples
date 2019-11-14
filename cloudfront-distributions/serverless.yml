@@ -1,0 +1,79 @@
+service: test-cloudfront
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  environment:
+    cloudFrontAccessKeyId: "${ssm:/AccessKeyForCloudFrontTemp~true, 'NOT_FOUND'}"
+    cloudFrontPrivateKey: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIICWwIBAAKBgGAltxqenm0iPsV5HwlFvjLOt5M3049BRD/ipfx4OVvcZn7p8O95
+      ttM1UbS0KSLYh0A1izYP+1dUvE9LHyXmYZcpo+wukHFRDRMRmzD0Rn/oqxVrItsc
+      rajSuDC9uoR6BzoH0h+L9cAZCm2zHlY6z4eRC/ALjo31/fIdUeU8n/BdAgMBAAEC
+      gYAPDnjxIzveDUnVNNWGZzSU0khvNoPb4DWm54Bk3BLnbsliQJJpfh8CTkxARyJW
+      AaCUjo4BZllO4Mcoh7QWBFDt4OhA6/AR2e1JxHjdA+doI80UPGZbA0dYUMHo25sG
+      WL22iNSEkmMg650322oJP2s1Z+GGZae75t1zvnXD9YRlhQJBAKfpyuCPToSlB2cx
+      XvC0FD2YzaKfkv37Pz5r9Q6TjaBgUpPYL61mkejdMbUEubGlcQ6s6hHdCl5JVvml
+      5awrv8sCQQCSlf2UhXGr4EIZcrz3kDlzans7ENQW9JLvEDPdJt2c3K0rnM+k5XQ2
+      W/4XPwkuLq6XJrfFgeHQ5KhpZwrugjt3AkAPaea1tnH+uydy0ZVlgyJYhS5bP0q/
+      BdFIaaCVNfZKQo1SBQZbZI8AUU2+0DA7nnRCZJ0YBrJs9U6GnDP5GgsBAkBtt2B2
+      8y6yxAcVfyDbd5LYxWF5Q05L5EG6N/lp1TZYu3/OPe/Zb3j9WvujMKZRb9V0AyHX
+      7jA0J4G6asru3IFfAkEAj0ndaiq90uAwyaO8cd/aGrqDUDRqQCyUhTHfLfmaY2g8
+      1NsF7ERWao1RzMFP0cVG6HRARkFEZyKp321nRsWAfw==
+      -----END RSA PRIVATE KEY-----
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "s3:*"
+      Resource:
+        - "*"
+  apiGateway:
+    binaryMediaTypes:
+      - "application/octet-stream"
+      - "application/zip"
+      - "image/*"
+      - "text/html"
+functions:
+  getData:
+    handler: handler.getData
+    events:
+    - http:
+        path: /api/v1/{user_id}/data
+        method: get
+        integration: lambda-proxy
+  putData:
+    handler: handler.putData
+    events:
+    - http:
+        path: /api/v1/{user_id}/upload
+        method: put
+        integration: lambda-proxy
+  getHtml:
+    handler: handler.getHtml
+    events:
+    - http:
+        path: /api/v1/html/
+        method: get
+        integration: lambda-proxy
+    - http:
+        path: /api/v1/html/{path+}
+        method: get
+        integration: lambda-proxy
+
+resources:
+  Resources:
+    HtmlBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: htmlpages
+    DataBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: userdata
+
+custom:
+  localstack:
+    stages: [local]
+
+plugins:
+  - serverless-localstack
