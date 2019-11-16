@@ -27,4 +27,4 @@ run:        ## Deploy the app locally and invoke the CloudFront distribution
 		curl -k https://$$cf_domain/index
 
 
-.PHONY: usage install start lint
+.PHONY: usage install run

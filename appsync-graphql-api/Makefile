@@ -12,7 +12,7 @@ install:     ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
 
-run:         ## Deploy the app locally and run a Lambda test invocation
+run:         ## Deploy the app locally and run an AppSync GraphQL test invocation
 	@make install; \
 		echo "Deploying Serverless app to local environment"; \
 		SLS_DEBUG=1 npm run deploy && \

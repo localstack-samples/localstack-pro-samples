@@ -36,7 +36,7 @@ Deploy the app locally and run a Lambda test invocation:
 make run
 ```
 
-You should some log output of the Serverless deployment, then a success message in the terminal:
+You should see some log output of the Serverless deployment, then a success message in the terminal:
 ```
 Serverless: Stack update finished...
 ...
