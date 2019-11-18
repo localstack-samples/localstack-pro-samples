@@ -48,6 +48,10 @@ The script will then also ask you to specify a password reset code that is sent 
 Please check email inbox for ..., and enter the password reset code here:
 ```
 
+## Credits
+
+* Kudos to `@Jaystified`, [Kurusugawa Computer Inc.](https://kurusugawa.jp) who kindly provided the initial version of the testing script in `test.sh`.
+
 ## License
 
 This code is available under the Apache 2.0 license.
