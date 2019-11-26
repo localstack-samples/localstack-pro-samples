@@ -42,7 +42,7 @@ awslocal cognito-idp confirm-forgot-password --client-id $client_id --username e
 echo "Attempting to authenticate with the new password"
 awslocal cognito-idp initiate-auth --client-id $client_id --auth-flow USER_PASSWORD_AUTH --auth-parameters USERNAME=example_user,PASSWORD=new_password123
 
-## "Admin creates the user" workflow
+## "Admin creates the user" with "admin initiates auth" workflow
 
 echo "Create new user as admin"
 awslocal cognito-idp admin-create-user --user-pool-id $pool_id --username example_user2
@@ -53,3 +53,11 @@ echo "Setting password of new user"
 awslocal cognito-idp admin-set-user-password --user-pool-id $pool_id --username example_user2 --password 12345678 --permanent
 echo "Attempting to authenticate the new user"
 awslocal cognito-idp admin-initiate-auth --user-pool-id $pool_id --client-id $client_id --auth-flow ADMIN_USER_PASSWORD_AUTH --auth-parameters USERNAME=example_user2,PASSWORD=12345678
+
+## "Admin creates the user" with "user initiates auth" workflow
+
+awslocal cognito-idp admin-create-user --user-pool-id "$pool_id" --username example_user3 --temporary-password "ChangeMe"
+
+session=$(awslocal cognito-idp initiate-auth --auth-flow "USER_PASSWORD_AUTH" --auth-parameters USERNAME=example_user3,PASSWORD="ChangeMe" --client-id "$client_id" | jq -r '.Session')
+
+awslocal cognito-idp admin-respond-to-auth-challenge --user-pool-id "$pool_id" --client-id "$client_id" --challenge-responses "NEW_PASSWORD=FinalPassword,USERNAME=example_user3" --challenge-name NEW_PASSWORD_REQUIRED --session "$session"
