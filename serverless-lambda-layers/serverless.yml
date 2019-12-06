@@ -17,6 +17,11 @@ functions:
           path: "/"
           method: "get"
           integration: "lambda-proxy"
+          authorizer: authorizerFunc
+  authorizerFunc:
+    handler: handler.authorizerFunc
+    layers:
+      - { Ref: TestLambdaLayer }
 
 layers:
   test:
@@ -36,6 +41,16 @@ resources:
         ResponseType: "DEFAULT_4XX"
         ResponseTemplates:
           application/json: '{"errors":[{"message":"Custom text."}]}'
+    UserPool:
+      Type: "AWS::Cognito::UserPool"
+      Properties:
+        UserPoolName: p1
+    UserPoolClient:
+      Type: "AWS::Cognito::UserPoolClient"
+      Properties:
+        UserPoolId:
+          Ref: UserPool
+        ClientName: c1
 
 plugins:
   - serverless-localstack
