@@ -5,3 +5,8 @@ node_modules/
 .project
 .settings/
 
+*.log
+
+.terraform/
+terraform.tfstate
+
