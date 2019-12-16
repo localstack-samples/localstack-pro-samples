@@ -1,0 +1,11 @@
+[{
+    "Type": "CUSTOM_JAR",
+    "ActionOnFailure": "TERMINATE_CLUSTER",
+    "Jar": "s3://bucket1/test.jar",
+    "Args": ["job1.xml", "bucket1", "bucket2"]
+}, {
+    "Type": "Spark",
+    "ActionOnFailure": "CONTINUE",
+    "Jar": "s3://bucket1/test.jar",
+    "Args": ["--class", "TestJobSpark", "s3://bucket1/test.jar"]
+}]
