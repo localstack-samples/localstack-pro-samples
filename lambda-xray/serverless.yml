@@ -19,7 +19,4 @@ plugins:
   - serverless-localstack
   - serverless-deployment-bucket
 
-custom:
-  localstack:
-    stages:
-      - local
+custom: ${file(./config.yml):custom}
