@@ -1,0 +1,4 @@
+asyncio
+boto3
+localstack
+websockets

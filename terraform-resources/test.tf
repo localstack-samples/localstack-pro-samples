@@ -12,6 +12,7 @@ provider "aws" {
     cloudformation = "http://localhost:4581"
     cloudwatch     = "http://localhost:4582"
     dynamodb       = "http://localhost:4569"
+    ec2            = "http://localhost:4597"
     es             = "http://localhost:4578"
     elasticache    = "http://localhost:4598"
     firehose       = "http://localhost:4573"
@@ -30,6 +31,7 @@ provider "aws" {
     sts            = "http://localhost:4592"
   }
 }
+
 resource "aws_s3_bucket" "testBucket" {
   bucket = "myBucket"
   acl = "private"
@@ -129,3 +131,18 @@ resource "aws_elasticache_cluster" "my-redis" {
   engine_version       = "3.2.10"
   port                 = 6379
 }
+
+/*
+# TODO enable once fixed
+resource "aws_security_group" "eks-node" {
+  name        = "some-sg-1"
+  vpc_id      = "vpc123"
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+*/
