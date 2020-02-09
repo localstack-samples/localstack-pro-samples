@@ -1,0 +1,22 @@
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "test",
+    "secret_key": "test",
+    "skip_region_validation": true,
+    "region": "us-east-1",
+    "availability_zone": "us-east-1a",
+    "subnet_id": "subnet-c1bf3786",
+    "ssh_keypair_name": "cloud_key",
+    "ssh_private_key_file": "./localstack.id_rsa",
+    "ssh_username": "ec2-user",
+    "custom_endpoint_ec2": "http://localhost:4597",
+    "source_ami": "ami-9982a8ce",
+    "instance_type": "m2.small",
+    "ami_name": "amzn2_modified_ami"
+  }],
+  "provisioners" : [{
+    "script": "./setup.sh",
+    "type": "shell"
+  }]
+}

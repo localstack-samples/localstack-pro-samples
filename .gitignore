@@ -13,3 +13,7 @@ terraform.tfstate
 
 .venv/
 testdata/
+
+*.vmdk
+*.vdi
+*.7z

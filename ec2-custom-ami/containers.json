@@ -1,0 +1,10 @@
+[
+  {
+    "Description": "Test disk",
+    "Format": "vmdk",
+    "UserBucket": {
+      "S3Bucket": "__local__",
+      "S3Key": "./amzn2.vdi"
+    }
+  }
+]
