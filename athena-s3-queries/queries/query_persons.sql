@@ -1,1 +1,1 @@
-SELECT gender, COUNT(1) FROM localstack.test_table2 GROUP BY gender
+SELECT gender, COUNT(1) FROM hive.default.test_table1 GROUP BY gender

@@ -42,13 +42,19 @@ You should see something similar to the following log output in the terminal:
 $ ./run.sh
 Uploading test data to S3...
 make_bucket: athena-test
-upload: data/data.csv to s3://athena-test/data/data.csv         
+upload: data/data.csv to s3://athena-test/data/data.csv
 Running queries to create database and table definitions...
-Starting SELECT query over data in S3. Query ID: c842d095
-S3 query output location: s3://athena-test/results/Unsaved/2020/02/16/c842d095
-download: s3://athena-test/results/Unsaved/2020/02/16/c842d095/results.csv to ../../../../../tmp/c842d095.results.csv
+NOTE: This can take a very long time (several minutes) as the system is initializing
+Waiting for completion status of query cda0572a: RUNNING
+Waiting for completion status of query cda0572a: RUNNING
+Waiting for completion status of query cda0572a: RUNNING
+...
+Waiting for completion status of query cda0572a: SUCCEEDED
+Starting SELECT query over data in S3. Query ID: 8a19e3a3
+S3 query output location: s3://athena-test/results/Unsaved/2020/02/18/8a19e3a3
+Waiting for query results to become available in S3 (this can take some time)
+download: s3://athena-test/results/Unsaved/2020/02/18/8a19e3a3/results.csv to /tmp/8a19e3a3.results.csv
 Query result downloaded from S3:
-gender,1
 Male,49
 Female,51
 ```
