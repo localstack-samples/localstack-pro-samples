@@ -6,7 +6,7 @@ Simple demo application illustrating how to proxy DynamoDB data via AppSync Grap
 
 * LocalStack
 * Docker
-* Node.js / `npm`
+* Python 3.6+
 * `make`
 
 ## Installing
@@ -14,6 +14,13 @@ Simple demo application illustrating how to proxy DynamoDB data via AppSync Grap
 To install the dependencies:
 ```
 make install
+```
+
+## Starting LocalStack
+
+Make sure that LocalStack is started with the following `SERVICES` configuration:
+```
+LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=serverless,appsync,dynamodb localstack start
 ```
 
 ## Running
@@ -49,6 +56,15 @@ $ awslocal dynamodb scan --table-name table1
     "ScannedCount": 1,
     "ConsumedCapacity": null
 }
+```
+
+Finally, you should also see a message printed from the WebSocket client subscribed to notifications from the API:
+```
+...
+Starting a WebSocket client to subscribe to GraphQL mutation operations.
+Connecting to WebSocket URL ws://localhost:4510/graphql/...
+...
+Received notification message from WebSocket: {"addedPost": {"id": "id123"}}
 ```
 
 ## License

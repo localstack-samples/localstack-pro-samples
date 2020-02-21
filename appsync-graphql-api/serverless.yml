@@ -1,4 +1,4 @@
-service: test-layers
+service: test-appsync
 
 provider:
   name: aws

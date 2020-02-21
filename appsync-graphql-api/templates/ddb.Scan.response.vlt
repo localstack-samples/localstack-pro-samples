@@ -1,1 +1,1 @@
-$util.toJson($context.result["Items"])
+$util.toJson($context.result)

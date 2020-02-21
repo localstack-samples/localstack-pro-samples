@@ -1,1 +1,1 @@
-$util.toJson($context.result["Attributes"])
+$util.toJson($context.result)

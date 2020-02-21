@@ -1,6 +1,7 @@
 schema {
     query: Query
     mutation: Mutation
+    subscription: Subscription
 }
 
 type Query {
@@ -13,10 +14,12 @@ type Mutation {
     ): Post!
 }
 
-type Post {
-    id: DDBString!
+type Subscription {
+    addedPost: Post
+    @aws_subscribe(mutations: ["addPost"])
 }
 
-type DDBString {
-    S: String!
+type Post {
+    id: String!
+    time: AWSTimestamp
 }
