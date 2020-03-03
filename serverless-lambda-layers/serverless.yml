@@ -2,6 +2,7 @@ service: test-layers
 
 provider:
   name: aws
+  region: us-east-1
   runtime: nodejs10.x
   deploymentBucket:
     name: testbucket
@@ -22,6 +23,16 @@ functions:
     handler: handler.authorizerFunc
     layers:
       - { Ref: TestLambdaLayer }
+  hello1:
+    handler: handler.hello
+    events:
+      - http:
+          path: "/1"
+          method: "get"
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: CognitoAuthorizer
 
 layers:
   test:
@@ -51,9 +62,26 @@ resources:
         UserPoolId:
           Ref: UserPool
         ClientName: c1
+    CognitoAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        IdentitySource: method.request.header.Authorization
+        Name: CognitoAuthorizer
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - !Sub arn:aws:cognito-idp:#{AWS::Region}:#{AWS::AccountId}:userpool/#{UserPool}
+  Outputs:
+    RestApiId:
+      Value:
+        Ref: ApiGatewayRestApi
+      Export:
+        Name: "${self:provider.stage}-${self:service}ServiceEndpoint"
 
 plugins:
   - serverless-localstack
+  - serverless-pseudo-parameters
 
 custom:
   localstack:

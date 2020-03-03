@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 
-const cloudFrontUrl = 'https://9de9433e.cloudfront.net';
+const cloudFrontUrl = 'https://a0770bd2.cloudfront.net';
 const htmlBucket = 'htmlpages';
 const dataBucket = 'userdata';
 

@@ -1,6 +1,6 @@
 # LocalStack Demo: ECS Container App
 
-Simple demo application illustrating ECS applications running locally using LocalStack.
+Simple demo application illustrating ECS applications running locally using LocalStack. The application image is built using Docker and pushed to a local ECR registry.
 
 ## Prerequisites
 
@@ -24,13 +24,21 @@ Please refer to the `templates/` folder for details about the CloudFormation tem
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cloudformation,ecs,ec2 localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cloudformation,ecs,ecr,ec2 localstack start
 ```
 
-Deploy the app locally via CloudFormation:
+The following command builds and deploys the app locally via CloudFormation:
+
 ```
 make deploy
 ```
+
+Specifically, the script above runs the following steps:
+1. Create a new ECR registry locally
+2. Build the application Docker image (from the `nginx` base image)
+3. Push the image to the ECR registry
+4. Create the ECS cluster and infrastructure
+5. Create and deploy the ECS application, which starts the container in you local Docker environment
 
 You should see some logs and a success output in the terminal:
 ```

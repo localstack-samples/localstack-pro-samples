@@ -18,6 +18,11 @@ make install
 
 ## Running
 
+Make sure that LocalStack is started with the following `SERVICES` configuration:
+```
+LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cloudformation,events,cognito localstack start
+```
+
 Deploy the app locally and run a Lambda test invocation:
 ```
 make run
