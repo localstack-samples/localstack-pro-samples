@@ -1,0 +1,6 @@
+{
+    "version": "2018-05-29",
+    "statements": [
+        "SELECT id, title FROM posts"
+    ]
+}

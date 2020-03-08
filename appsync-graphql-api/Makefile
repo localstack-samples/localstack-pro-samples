@@ -1,6 +1,6 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = serverless,appsync
+export SERVICES = serverless,appsync,dynamodb,rds,secretsmanager
 export AWS_DEFAULT_REGION=us-east-1
 APPSYNC_URL = http://localhost:4605/graphql
 
@@ -22,10 +22,13 @@ run:         ## Deploy the app locally and run an AppSync GraphQL test invocatio
 		api_id=$$(awslocal appsync list-graphql-apis | jq -r .graphqlApis[0].apiId) && \
 		echo "Starting a WebSocket client to subscribe to GraphQL mutation operations." && \
 		(. .venv/bin/activate; python websocket_client.py "$$api_id" &) && sleep 2 && \
-		echo "Now trying to invoke the AppSync API." && \
-		curl -d '{"query":"mutation {addPost(id: \"id123\"){id}}"}' $(APPSYNC_URL)/$$api_id && \
-		curl -d '{"query":"query {getPosts{id}}"}' $(APPSYNC_URL)/$$api_id && \
+		echo "Now trying to invoke the AppSync API for DynamoDB integration." && \
+		curl -d '{"query":"mutation {addPostDDB(id: \"id123\"){id}}"}' $(APPSYNC_URL)/$$api_id && \
+		curl -d '{"query":"query {getPostsDDB{id}}"}' $(APPSYNC_URL)/$$api_id && \
 		echo "Scanning items from DynamoDB table - should include entry with 'id123':" && \
-		awslocal dynamodb scan --table-name table1
+		awslocal dynamodb scan --table-name table1 && \
+		echo "Now trying to invoke the AppSync API for RDS integration." && \
+		curl -d '{"query":"mutation {addPostRDS(id: \"id123\"){id}}"}' $(APPSYNC_URL)/$$api_id && \
+		curl -d '{"query":"query {getPostsRDS{id}}"}' $(APPSYNC_URL)/$$api_id
 
 .PHONY: usage install start lint

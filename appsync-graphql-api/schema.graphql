@@ -5,18 +5,18 @@ schema {
 }
 
 type Query {
-    getPosts: [Post!]!
+    getPostsDDB: [Post!]!
+    getPostsRDS: [Post!]!
 }
 
 type Mutation {
-    addPost(
-        id: String!
-    ): Post!
+    addPostDDB(id: String!): Post!
+    addPostRDS(id: String!): Post!
 }
 
 type Subscription {
     addedPost: Post
-    @aws_subscribe(mutations: ["addPost"])
+    @aws_subscribe(mutations: ["addPostDDB"])
 }
 
 type Post {

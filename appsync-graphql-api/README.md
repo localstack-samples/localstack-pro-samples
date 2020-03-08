@@ -1,6 +1,6 @@
-# LocalStack Demo: AppSync GraphQL DynamoDB Proxy
+# LocalStack Demo: AppSync GraphQL APIs for DynamoDB and RDS Aurora Postgres
 
-Simple demo application illustrating how to proxy DynamoDB data via AppSync GraphQL using LocalStack.
+Simple demo application illustrating how to proxy data from different resources (DynamoDB tables, RDS databases) via AppSync GraphQL using LocalStack.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ make install
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=serverless,appsync,dynamodb localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=serverless,appsync,dynamodb,rds,secretsmanager localstack start
 ```
 
 ## Running
@@ -30,18 +30,21 @@ Deploy the app locally and run the GraphQL test invocations:
 make run
 ```
 
-The demo will run two GraphQL queries:
+The demo will run different GraphQL queries, for two different datasources (DynamoDB / RDS Aurora):
 
-1. a mutation query which inserts a new item into DynamoDB
-2. a query which scans and returns the items from the DynamoDB table
+1. a mutation query which inserts a new item into DynamoDB / RDS Aurora
+2. a query which scans and returns the items from DynamoDB / RDS Aurora
 
 You should see a success output in the terminal:
 ```
-{"data":{"addPost":{"id":{"S":"id123"}}}}
-{"data":{"getPosts":[{"id":{"S":"id123"}}]}}
+{"data":{"addPostDDB":{"id":{"S":"id123"}}}}
+{"data":{"getPostsDDB":[{"id":{"S":"id123"}}]}}
+...
+{"data":{"addPostRDS":{"id":{"S":"id123"}}}}
+{"data":{"getPostsRDS":[{"id":{"S":"id123"}}]}}
 ```
 
-... and the item should have been added to your local DynamoDB table:
+... and the item should have been added to your local DynamoDB table (as well as your RDS database):
 ```
 $ awslocal dynamodb scan --table-name table1
 {

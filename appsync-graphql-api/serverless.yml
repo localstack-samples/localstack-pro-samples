@@ -8,7 +8,7 @@ provider:
 
 resources:
   Resources:
-    MyTable:
+    DDBTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: table1
@@ -18,29 +18,68 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+    RDSDatabase:
+      Type: AWS::RDS::DBInstance
+      Properties:
+        DBName: ${self:custom.rds.dbname}
+        Engine: aurora-postgresql
+        DBClusterIdentifier: ${self:custom.rds.dbcluster}
+        DBInstanceClass: cls1
+        MasterUsername: ${self:custom.rds.username}
+        MasterUserPassword: ${self:custom.rds.password}
+    RDSDatabaseSecret:
+      Type: AWS::SecretsManager::Secret
+      Properties:
+        Name: String
+        SecretString: ${self:custom.rds.password}
 
 custom:
+  rds:
+    dbcluster: c1
+    dbname: testappsync
+    username: testuser
+    password: testpass
   appSync:
     name: test-api
+    schema: schema.graphql
     authenticationType: API_KEY
     dataSources:
       - type: AMAZON_DYNAMODB
-        name: ds1
+        name: ds_ddb
         description: DynamoDB data source
         config:
-          tableName: { Ref: MyTable }
+          tableName: { Ref: DDBTable }
+      - type: RELATIONAL_DATABASE
+        name: ds_rds
+        description: RDS data source
+        config:
+          databaseName: ${self:custom.rds.dbname}
+          dbClusterIdentifier: ${self:custom.rds.dbcluster}
+          awsSecretStoreArn: { Ref: RDSDatabaseSecret }
     mappingTemplatesLocation: ./templates
     mappingTemplates:
+      # mapping templates for DynamoDB data source
       - type: Mutation
-        field: addPost
-        dataSource: ds1
+        field: addPostDDB
+        dataSource: ds_ddb
         request: ddb.PutItem.request.vlt
         response: ddb.PutItem.response.vlt
       - type: Query
-        field: getPosts
-        dataSource: ds1
+        field: getPostsDDB
+        dataSource: ds_ddb
         request: ddb.Scan.request.vlt
         response: ddb.Scan.response.vlt
+      # mapping templates for RDS Aurora data source
+      - type: Mutation
+        field: addPostRDS
+        dataSource: ds_rds
+        request: rds.insert.request.vlt
+        response: rds.insert.response.vlt
+      - type: Query
+        field: getPostsRDS
+        dataSource: ds_rds
+        request: rds.select.request.vlt
+        response: rds.select.response.vlt
   localstack:
     stages:
       - local

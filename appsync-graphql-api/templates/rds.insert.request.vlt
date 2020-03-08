@@ -1,0 +1,8 @@
+{
+    "version": "2018-05-29",
+    "statements": [
+        "CREATE TABLE IF NOT EXISTS posts (id varchar, title varchar)",
+        "INSERT INTO posts (id, title) values ('$ctx.args.id', 'test title')",
+        "SELECT * FROM posts WHERE id='$ctx.args.id'"
+    ]
+}
