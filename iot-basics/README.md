@@ -51,6 +51,22 @@ You should see a couple of successful API call outputs in the terminal:
 ...
 ```
 
+The example then also connects to the IoT MQTT endpoint and sends/receives a couple of messages, see the exemplary output below:
+```
+Running MQTT publish/subscribe test
+10 messages published
+0: /test-topic => bytearray(b'TEST MESSAGE 0')
+1: /test-topic => bytearray(b'TEST MESSAGE 1')
+2: /test-topic => bytearray(b'TEST MESSAGE 2')
+3: /test-topic => bytearray(b'TEST MESSAGE 3')
+4: /test-topic => bytearray(b'TEST MESSAGE 4')
+5: /test-topic => bytearray(b'TEST MESSAGE 5')
+6: /test-topic => bytearray(b'TEST MESSAGE 6')
+7: /test-topic => bytearray(b'TEST MESSAGE 7')
+8: /test-topic => bytearray(b'TEST MESSAGE 8')
+9: /test-topic => bytearray(b'TEST MESSAGE 9')
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.

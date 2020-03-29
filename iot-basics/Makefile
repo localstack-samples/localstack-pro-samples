@@ -1,6 +1,6 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = serverless
+export SERVICES = serverless,iot
 export AWS_DEFAULT_REGION=us-east-1
 
 usage:       ## Show this help
@@ -10,6 +10,11 @@ install:     ## Install dependencies
 	@npm install
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
+	@test -e .venv || (virtualenv .venv; . .venv/bin/activate; pip install -r requirements.txt)
+
+test-mqtt:
+	@echo 'Running MQTT publish/subscribe test'; \
+		(. .venv/bin/activate; python mqtt_test.py)
 
 run:         ## Deploy the app locally
 	@make install; \
@@ -19,6 +24,7 @@ run:         ## Deploy the app locally
 		awslocal iot list-things; \
 		awslocal iot list-policies; \
 		awslocal iot create-job --job-id j1 --targets t1; \
-		awslocal iot list-jobs
+		awslocal iot list-jobs; \
+		make test-mqtt
 
 .PHONY: usage install run
