@@ -1,0 +1,22 @@
+{
+  "Type": "select",
+  "ArchiveId": "c0c1c95a0ffec6fa79914196190a0843",
+  "SelectParameters": {
+    "InputSerialization": {
+      "csv": {}
+    },
+    "ExpressionType": "SQL",
+    "Expression": "SELECT count(*), sum(Cost) FROM archive",
+    "OutputSerialization": {
+      "csv": {}
+    }
+  },
+  "OutputLocation": {
+    "S3": {
+      "BucketName": "glacier-results",
+      "Prefix": "test/query1",
+      "CannedACL": "public-read",
+      "StorageClass": "STANDARD"
+    }
+  }
+}

@@ -17,3 +17,5 @@ testdata/
 *.vmdk
 *.vdi
 *.7z
+
+glacier-s3-select/*result.csv
