@@ -27,4 +27,7 @@ run:         ## Deploy the app locally
 		awslocal iot list-jobs; \
 		make test-mqtt
 
+test-ci:
+	make install && make run || true
+
 .PHONY: usage install run

@@ -15,4 +15,7 @@ install:    ## Install dependencies
 run:        ## Run the scenario with the DB queries against local RDS
 	@$(PYTHON_BIN) query.py
 
+test-ci:
+	make install && make run || true
+
 .PHONY: usage install run

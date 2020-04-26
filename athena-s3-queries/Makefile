@@ -16,4 +16,7 @@ run:         ## Deploy the app locally and run an AppSync GraphQL test invocatio
 		echo "Running Athena queries"; \
 		./run.sh
 
+test-ci:
+	# skip Athena tests for now, to avoid downloading large images in CI
+
 .PHONY: usage install run

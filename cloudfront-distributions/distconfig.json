@@ -9,7 +9,7 @@
         "Items": [
             {
                 "Id": "HTML-API",
-                "DomainName": "cb8aoujceq.execute-api.us-east-1.amazonaws.com",
+                "DomainName": "fwd0of2yth.execute-api.us-east-1.amazonaws.com",
                 "OriginPath": "/local/api/v1/html",
                 "CustomHeaders": {
                     "Quantity": 0
@@ -32,7 +32,7 @@
             },
             {
                 "Id": "API-ORIGIN",
-                "DomainName": "cb8aoujceq.execute-api.us-east-1.amazonaws.com",
+                "DomainName": "fwd0of2yth.execute-api.us-east-1.amazonaws.com",
                 "OriginPath": "/local/api/v1",
                 "CustomHeaders": {
                     "Quantity": 0

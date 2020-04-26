@@ -1,13 +1,19 @@
-usage:           ## Show this help
+usage:         ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-install:         ## Install dependencies for all projects
-	CMD='make install' make forEachDir
+install:       ## Install dependencies for all projects
+	CMD='make install' make for-each-dir
 
-lint:            ## Run code linter for all projects
-	CMD='make lint' make forEachDir
+lint:          ## Run code linter for all projects
+	CMD='make lint' make for-each-dir
 
-forEachDir:
-	for d in $$(ls -d */); do (cd $$d; $(CMD)); done
+start:         ## Start LocalStack infrastructure
+	nohup localstack start &
 
-.PHONY: usage install lint
+for-each-dir:
+	for d in $$(ls -d */); do (cd $$d; $(CMD)) || exit 1; done
+
+test-ci-all:
+	CMD='make test-ci' make for-each-dir
+
+.PHONY: usage install lint start

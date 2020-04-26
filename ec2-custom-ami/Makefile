@@ -15,4 +15,7 @@ run:        ## Run packer and build the image locally
 		echo "Starting script to build EC2 image via packer"; \
 		./run.sh
 
+test-ci:
+	# skip running this test in CI for now
+
 .PHONY: usage install start run

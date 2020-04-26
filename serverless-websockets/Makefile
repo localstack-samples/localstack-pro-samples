@@ -22,4 +22,7 @@ run:         ## Deploy and run the app locally
 		echo "Starting client that connects to Websocket API"; \
 		. $(VENV_DIR)/bin/activate; python test.py
 
+test-ci:
+	make install && make run || true
+
 .PHONY: usage install run

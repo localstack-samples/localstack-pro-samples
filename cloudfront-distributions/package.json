@@ -1,0 +1,13 @@
+{
+  "description": "Simple CloudFront test for LocalStack Pro",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/localstack/localstack-pro-samples",
+  "devDependencies": {
+    "serverless": "^1.54.0",
+    "serverless-localstack": "^0.4.19",
+    "serverless-deployment-bucket": "^1.1.0"
+  },
+  "scripts": {
+    "deploy": "sls deploy --stage local"
+  }
+}

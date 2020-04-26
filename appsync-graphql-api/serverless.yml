@@ -30,7 +30,7 @@ resources:
     RDSDatabaseSecret:
       Type: AWS::SecretsManager::Secret
       Properties:
-        Name: String
+        Name: rds-db-secret
         SecretString: ${self:custom.rds.password}
 
 custom:

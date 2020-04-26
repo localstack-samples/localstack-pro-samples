@@ -29,4 +29,7 @@ deploy:      ## Build and deploy the app locally
 		sleep 5 && curl localhost:$(APP_PORT) && \
 		echo "Sample app (nginx) successfully deployed. You can access it under http://localhost:$(APP_PORT)"
 
+test-ci:
+	make install && make deploy || true
+
 .PHONY: usage install deploy

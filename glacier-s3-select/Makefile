@@ -14,4 +14,7 @@ run:        ## Upload data and run Glacier/S3 Select queries locally
 	@make install; \
 		./test.sh
 
+test-ci:
+	make install && make run
+
 .PHONY: usage install run

@@ -11,6 +11,7 @@ install:         ## Install dependencies
 start:           ## Deploy and start the app locally
 	terraform apply
 
-lint:
+test-ci:
+	# TODO install terraform and enable in CI
 
-.PHONY: usage install start lint
+.PHONY: usage install start test-ci

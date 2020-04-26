@@ -44,8 +44,9 @@ def get_endpoint():
 
 
 async def run_async():
-    sub = asyncio.create_task(subscriber())
-    pub = asyncio.create_task(publisher())
+    loop = asyncio.get_event_loop()
+    sub = loop.create_task(subscriber())
+    pub = loop.create_task(publisher())
     await pub
     await sub
 

@@ -16,4 +16,7 @@ install:    ## Install dependencies
 run:        ## Launch the TensorFlow training job in local SageMaker
 	@. .venv/bin/activate; python run_job.py
 
+test-ci:
+	# disable for now, to avoid downloading large dependencies in CI
+
 .PHONY: usage install run

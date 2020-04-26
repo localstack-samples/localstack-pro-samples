@@ -20,4 +20,7 @@ run:         ## Deploy the app locally and run a Lambda test invocation
 		echo "Serverless app successfully deployed. Now trying to invoke the Lambda function with layer." && \
 		awslocal lambda invoke --function-name test-layers-local-hello /tmp/out.tmp
 
+test-ci:
+	make install && make run || true
+
 .PHONY: usage install start lint

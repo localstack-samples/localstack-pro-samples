@@ -13,4 +13,7 @@ install:    ## Install dependencies
 run:        ## Run the scenario with the Cognito commands
 	@./test.sh
 
-.PHONY: usage install run
+test-ci:
+	# skip cognito tests in CI for now, as they require interactive input
+
+.PHONY: usage install run test

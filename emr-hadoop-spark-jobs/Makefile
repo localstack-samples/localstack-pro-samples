@@ -37,4 +37,7 @@ run:         ## Build and deploy the app locally
 	@echo "The Spark job should have copied file "job2.xml" to bucket bucket3:"
 	awslocal s3 ls s3://bucket3/
 
+test-ci:
+	# skip test in CI for now, to avoid downloading large Docker image
+
 .PHONY: usage install run

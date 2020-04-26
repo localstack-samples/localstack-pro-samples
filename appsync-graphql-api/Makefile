@@ -31,4 +31,7 @@ run:         ## Deploy the app locally and run an AppSync GraphQL test invocatio
 		curl -d '{"query":"mutation {addPostRDS(id: \"id123\"){id}}"}' $(APPSYNC_URL)/$$api_id && \
 		curl -d '{"query":"query {getPostsRDS{id}}"}' $(APPSYNC_URL)/$$api_id
 
+test-ci:
+	make install && make run
+
 .PHONY: usage install start lint
