@@ -17,4 +17,4 @@ perl -i -pe 's/"subnet_id": .*/"subnet_id": "'$SUB_ID'",/' packer.json
 perl -i -pe 's|"ssh_private_key_file": .*|"ssh_private_key_file": "'$PWD'/localstack.id_rsa",|' packer.json
 
 echo "Starting image creation using packer"
-packer build packer.json
+packer build packer.json || sudo packer build packer.json
