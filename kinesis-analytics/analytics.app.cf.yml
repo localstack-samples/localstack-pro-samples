@@ -1,0 +1,96 @@
+Parameters:
+  ProjectName:
+    Type: String
+    Default: test123
+
+Resources:
+  BasicApplication:
+    Type: AWS::KinesisAnalytics::Application
+    Properties:
+      ApplicationName: sampleApp
+      ApplicationDescription: Sample Application
+      ApplicationCode: |
+          CREATE OR REPLACE STREAM input1_001 (
+              symbol VARCHAR(20), price float, volume LONG)
+          DESCRIPTION 'Test description 123';
+          SELECT STREAM * FROM input1_001 WHERE volume < 150;
+      Inputs:
+        - NamePrefix: "input1"
+          InputSchema:
+            RecordColumns:
+              - Name: "symbol"
+                SqlType: "VARCHAR(16)"
+              - Name: "price"
+                SqlType: "float"
+              - Name: "volume"
+                SqlType: "LONG"
+            RecordFormat:
+              RecordFormatType: JSON
+              MappingParameters:
+                JSONMappingParameters:
+                  RecordRowPath: "$"
+          KinesisStreamsInput:
+            ResourceARN: !GetAtt InputKinesisStream.Arn
+            RoleARN: !GetAtt KinesisAnalyticsRole.Arn
+  InputKinesisStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      ShardCount: 1
+  OutputKinesisStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      ShardCount: 1
+  KinesisAnalyticsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: kinesisanalytics.amazonaws.com
+            Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: Open
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: "*"
+                Resource: "*"
+  BasicApplicationOutputs:
+    Type: AWS::KinesisAnalytics::ApplicationOutput
+    DependsOn: BasicApplication
+    Properties:
+      ApplicationName: !Ref BasicApplication
+      Output:
+        Name: OutStream
+        DestinationSchema:
+          RecordFormatType: JSON
+        KinesisStreamsOutput:
+          ResourceARN: !GetAtt OutputKinesisStream.Arn
+          RoleARN: !GetAtt KinesisAnalyticsRole.Arn
+  ApplicationReferenceDataSource:
+    Type: AWS::KinesisAnalytics::ApplicationReferenceDataSource
+    DependsOn: BasicApplicationOutputs
+    Properties:
+      ApplicationName: !Ref BasicApplication
+      ReferenceDataSource:
+        TableName: "exampleTable"
+        ReferenceSchema:
+          RecordColumns:
+            - Name: "OutStream"
+              SqlType: "VARCHAR(16)"
+              Mapping: "$.example"
+          RecordFormat:
+            RecordFormatType: "JSON"
+            MappingParameters:
+              JSONMappingParameters:
+                RecordRowPath: "$"
+        S3ReferenceDataSource:
+          BucketARN: !GetAtt S3Bucket.Arn
+          FileKey: 'fakeKey'
+          ReferenceRoleARN: !GetAtt KinesisAnalyticsRole.Arn
+  S3Bucket:
+    Type: AWS::S3::Bucket
