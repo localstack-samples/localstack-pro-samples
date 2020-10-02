@@ -4,7 +4,7 @@
   "repository": "https://github.com/localstack/localstack-pro-samples",
   "devDependencies": {
     "serverless": "^1.54.0",
-    "serverless-localstack": "^0.4.19",
+    "serverless-localstack": "^0.4.27",
     "serverless-appsync-plugin": "1.1.2",
     "serverless-deployment-bucket": "^1.1.0"
   },

@@ -20,7 +20,7 @@ run:        ## Deploy the app locally and invoke the CloudFront distribution
 		cf_domain=$$(awslocal cloudfront create-distribution --distribution-config \
 			file://distconfig.json | jq -r '.Distribution.DomainName') && \
 		echo "Injecting CloudFront domain $$cf_domain into code and redeploying Lambda" && \
-		perl -i -pe 's|//.*cloudfront\.net|//'$$cf_domain'|g' handler.js && \
+		perl -i -pe "s|cloudFrontUrl = '.*|cloudFrontUrl = 'https://"$$cf_domain"';|g" handler.js && \
 		sls deploy --stage local && \
 		echo "Trying to call distribution endpoint (note: it may take a few minutes for the DNS name to become available)" && \
 		echo curl -k https://$$cf_domain/index && \
