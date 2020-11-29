@@ -6,7 +6,7 @@ usage:      ## Show this help
 
 run:        ## Deploy and run the Azure test application
 	@echo 'Creating Azure function archive'
-	zip function.zip function.py
+	zip -r function.zip HttpTrigger requirements.txt host.json
 
 	@echo 'Creating required resources'
 	azlocal group create -g g1 -l l1
