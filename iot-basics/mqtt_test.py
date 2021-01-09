@@ -4,7 +4,7 @@ import asyncio
 from hbmqtt.client import MQTTClient, ClientException
 from hbmqtt.mqtt.constants import QOS_0
 
-IOT_ENDPOINT_URL = 'http://localhost:4589'
+IOT_ENDPOINT_URL = 'http://localhost:4566'
 
 NUM_MESSAGES = 10
 TOPIC_NAME = '/test-topic'

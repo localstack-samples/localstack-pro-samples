@@ -6,6 +6,8 @@ node_modules/
 .settings/
 target/
 
+__pycache__/
+
 *.log
 
 .terraform/
@@ -17,5 +19,7 @@ testdata/
 *.vmdk
 *.vdi
 *.7z
+*.zip
 
 glacier-s3-select/*result.csv
+azure-functions/.python_packages/

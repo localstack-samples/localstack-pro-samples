@@ -18,13 +18,12 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-    RDSDatabase:
-      Type: AWS::RDS::DBInstance
+    RDSCluster:
+      Type: AWS::RDS::DBCluster
       Properties:
-        DBName: ${self:custom.rds.dbname}
+        DatabaseName: ${self:custom.rds.dbname}
         Engine: aurora-postgresql
         DBClusterIdentifier: ${self:custom.rds.dbcluster}
-        DBInstanceClass: cls1
         MasterUsername: ${self:custom.rds.username}
         MasterUserPassword: ${self:custom.rds.password}
     RDSDatabaseSecret:

@@ -11,9 +11,9 @@ start:         ## Start LocalStack infrastructure
 	nohup localstack start &
 
 for-each-dir:
-	for d in $$(ls -d */); do (cd $$d; $(CMD)) || exit 1; done
+	for d in $$(ls -d */); do echo "Running tests in $$d"; (cd $$d; $(CMD)) || exit 1; done
 
 test-ci-all:
-	CMD='make test-ci' make for-each-dir
+	CMD='test ! -e Makefile || make test-ci' make for-each-dir
 
 .PHONY: usage install lint start

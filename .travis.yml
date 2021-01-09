@@ -13,7 +13,7 @@ branches:
     - master
 
 script:
-  - pip install localstack
+  - pip install localstack awscli-local[ver1]
   - docker pull localstack/localstack
   - make start
   - sleep 10

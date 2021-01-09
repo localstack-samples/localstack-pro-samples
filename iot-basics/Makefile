@@ -28,6 +28,6 @@ run:         ## Deploy the app locally
 		make test-mqtt
 
 test-ci:
-	make install && make run || true
+	make install && make run
 
 .PHONY: usage install run

@@ -1,10 +1,10 @@
 const AWS = require('aws-sdk');
 
-const cloudFrontUrl = 'https://6886e4eb.cloudfront.net';
+const cloudFrontUrl = 'https://8198a697.cloudfront.localhost.localstack.cloud';
 const htmlBucket = 'htmlpages';
 const dataBucket = 'userdata';
 
-const s3Endpoint = `${process.env.LOCALSTACK_HOSTNAME}:4572`;
+const s3Endpoint = `${process.env.LOCALSTACK_HOSTNAME}:4566`;
 const s3Params = {
   endpoint: s3Endpoint, sslEnabled: false, s3ForcePathStyle: true
 };
