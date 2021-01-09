@@ -2,7 +2,7 @@ export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export SERVICES = serverless,appsync,dynamodb,rds,secretsmanager
 export AWS_DEFAULT_REGION=us-east-1
-APPSYNC_URL = http://localhost:4605/graphql
+APPSYNC_URL = http://localhost:4566/graphql
 
 usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -19,7 +19,7 @@ run:         ## Deploy the app locally and run an AppSync GraphQL test invocatio
 		echo "Deploying Serverless app to local environment"; \
 		SLS_DEBUG=1 npm run deploy && \
 		echo "Serverless app successfully deployed." && \
-		api_id=$$(awslocal appsync list-graphql-apis | jq -r .graphqlApis[0].apiId) && \
+		api_id=$$(awslocal appsync list-graphql-apis | jq -r '(.graphqlApis[] | select(.name=="test-api")).apiId') && \
 		echo "Starting a WebSocket client to subscribe to GraphQL mutation operations." && \
 		(. .venv/bin/activate; python websocket_client.py "$$api_id" &) && sleep 2 && \
 		echo "Now trying to invoke the AppSync API for DynamoDB integration." && \

@@ -8,7 +8,7 @@ import websockets
 # initialize globals
 os.environ['AWS_ACCESS_KEY_ID'] = 'test'
 os.environ['AWS_SECRET_ACCESS_KEY'] = 'test'
-URL_APPSYNC = 'http://localhost:4605'
+URL_APPSYNC = 'http://localhost:4566'
 
 
 def subscribe_websocket(api_id):
