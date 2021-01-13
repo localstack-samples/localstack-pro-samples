@@ -1,5 +1,5 @@
 -- Hive DDL format:
-CREATE EXTERNAL TABLE test_table1 (
+CREATE EXTERNAL TABLE test_db.test_table1 (
   id INT,
   first_name STRING,
   last_name STRING,
