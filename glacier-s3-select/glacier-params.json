@@ -3,7 +3,9 @@
   "ArchiveId": "c0c1c95a0ffec6fa79914196190a0843",
   "SelectParameters": {
     "InputSerialization": {
-      "csv": {}
+      "csv": {
+        "FileHeaderInfo": "Use"
+      }
     },
     "ExpressionType": "SQL",
     "Expression": "SELECT count(*), sum(Cost) FROM archive",

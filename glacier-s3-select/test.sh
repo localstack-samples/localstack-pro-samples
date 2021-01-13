@@ -6,7 +6,7 @@ awslocal s3 cp data.csv s3://test1/data.csv
 echo "Running S3 Select query against CSV file in bucket"
 awslocal s3api select-object-content --bucket test1 --key data.csv \
   --expression 'select count(*), sum(Cost) from s3object' --expression-type SQL \
-  --input-serialization 'CSV={}' --output-serialization 'CSV={}' s3-result.csv
+  --input-serialization 'CSV={FileHeaderInfo=USE}' --output-serialization 'CSV={}' s3-result.csv
 
 echo 'Query results for S3 Select query below'
 echo '----'

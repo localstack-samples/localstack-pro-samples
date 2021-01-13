@@ -11,7 +11,7 @@ install:     ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
 
-run:         ## Deploy the app locally and run an AppSync GraphQL test invocation
+run:         ## Set up database connections and run Athena queries locally
 	@make install; \
 		echo "Running Athena queries"; \
 		./run.sh
