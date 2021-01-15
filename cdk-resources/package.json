@@ -1,0 +1,36 @@
+{
+  "name": "cdk-resources-1",
+  "version": "0.1.0",
+  "bin": {
+    "cdk-resources-1": "bin/cdk-resources-1.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "aws-cdk": "1.85.0",
+    "@aws-cdk/assert": "1.85.0",
+    "@types/jest": "^26.0.10",
+    "@types/node": "10.17.27",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.2.0",
+    "ts-node": "^9.0.0",
+    "typescript": "~3.9.7"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-appsync": "1.85.0",
+    "@aws-cdk/aws-cognito": "1.85.0",
+    "@aws-cdk/aws-dynamodb": "1.85.0",
+    "@aws-cdk/aws-events-targets": "1.85.0",
+    "@aws-cdk/aws-iam": "1.85.0",
+    "@aws-cdk/aws-lambda-event-sources": "1.85.0",
+    "@aws-cdk/aws-lambda-nodejs": "1.85.0",
+    "@aws-cdk/aws-sns": "1.85.0",
+    "@aws-cdk/aws-sns-subscriptions": "1.85.0",
+    "@aws-cdk/aws-sqs": "1.85.0",
+    "@aws-cdk/core": "1.85.0"
+  }
+}
