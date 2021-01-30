@@ -51,7 +51,7 @@ def create_graph_db():
     print('Creating Neptune Graph DB cluster "%s" - this may take a few moments ...' % CLUSTER_ID)
     client = connect_neptune()
     cluster = client.create_db_cluster(DBClusterIdentifier=CLUSTER_ID, Engine='neptune')['DBCluster']
-    time.sleep(6)
+    time.sleep(2)
     return cluster
 
 
