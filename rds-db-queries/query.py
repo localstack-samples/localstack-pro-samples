@@ -2,7 +2,7 @@ import os
 import boto3
 import psycopg2
 
-RDS_ENDPOINT = os.environ.get('RDS_ENDPOINT') or 'http://localhost:4594'
+RDS_ENDPOINT = os.environ.get('RDS_ENDPOINT') or 'http://localhost:4566'
 
 
 def run_queries(instance):
