@@ -34,6 +34,7 @@ cd lambda-refarch-webapp
 Package and deploy the application against LocalStack, using the `samlocal` command line:
 ```
 awslocal s3 mb s3://test
+samlocal build
 samlocal package --s3-bucket test --output-template-file packaged.yml
 samlocal deploy --stack-name s3 --s3-bucket test --template-file packaged.yml --capabilities CAPABILITY_IAM --parameter-overrides 'Repository=test OauthToken=test'
 ```
@@ -44,9 +45,9 @@ Once deployed, you need to adjust the contents of the `www/src/config.js` config
 ```
 const config = {
   "aws_user_pools_web_client_id": "<cognitoClientId>",
-  "api_base_url": "http://localhost:4567/restapis/<restApiId>/Stage/_user_request_",
+  "api_base_url": "http://localhost:4566/restapis/<restApiId>/Stage/_user_request_",
   "coginto_hosted_domain": "localhost.localstack.cloud:4566",
-  "redirect_url": "http://localhost:8082/"
+  "redirect_url": "http://localhost:8080/"
 };
 ```
 
