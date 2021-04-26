@@ -1,0 +1,70 @@
+service: test-layers
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs10.x
+  deploymentBucket:
+    name: testbucket
+
+functions:
+  hello1:
+    handler: handler.hello1
+    events:
+    - alb:
+        listenerArn: !Ref HTTPListener
+        priority: 1
+        conditions:
+          path: /hello1
+  hello2:
+    handler: handler.hello2
+    events:
+    - alb:
+        listenerArn: !Ref HTTPListener
+        priority: 2
+        conditions:
+          path: /hello2
+
+resources:
+  Resources:
+    LoadBalancer:
+      Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+      Properties:
+        Name: lb-test-1
+        Subnets:
+          - !Ref Subnet
+    HTTPListener:
+      Type: AWS::ElasticLoadBalancingV2::Listener
+      Properties:
+        DefaultActions:
+          - Type: redirect
+            RedirectConfig:
+              Protocol: HTTPS
+              Port: 443
+              Host: "#{host}"
+        LoadBalancerArn: !Ref LoadBalancer
+        Protocol: HTTP
+    Subnet:
+      Type: AWS::EC2::Subnet
+      Properties:
+        VpcId: !Ref VPC
+        CidrBlock: 12.2.1.0/24
+        AvailabilityZone: !Select
+          - 0
+          - Fn::GetAZs: !Ref "AWS::Region"
+    VPC:
+      Type: AWS::EC2::VPC
+      Properties:
+        EnableDnsSupport: "true"
+        EnableDnsHostnames: "true"
+        CidrBlock: 12.2.1.0/24
+
+plugins:
+  - serverless-deployment-bucket
+  - serverless-localstack
+  - serverless-pseudo-parameters
+
+custom:
+  localstack:
+    stages:
+      - local
