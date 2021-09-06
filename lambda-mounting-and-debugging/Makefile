@@ -12,7 +12,7 @@ install:     ## Install dependencies
 	test -e $(VENV_DIR) || virtualenv $(VENV_DIR)
 	. $(VENV_DIR)/bin/activate; pip install debugpy
 
-run:         ## Build, deploy, and invoke the Lambda container image locally
+run:         ## Deploy and invoke the Lambda container locally
 	@make install; \
 		echo "Deploying Lambda locally"; \
 		./run.sh; \
