@@ -6,12 +6,15 @@ node_modules/
 .settings/
 target/
 
+.idea/
+
 __pycache__/
 
 *.log
 
 .terraform/
 terraform.tfstate
+.terraform.lock*
 
 .venv/
 testdata/
