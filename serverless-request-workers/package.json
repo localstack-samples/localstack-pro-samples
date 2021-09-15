@@ -4,7 +4,7 @@
   "description": "LocalStack demo application",
   "dependencies": {
     "aws-sdk": "^2.402.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "uuid": "^3.3.2",
     "lodash": "^4.17.21"
   },
