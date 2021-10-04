@@ -6,8 +6,8 @@ provider:
     name: localstack-websockets-serverless
 
 package:
-  exclude:
-    - .venv/**
+  patterns:
+    - "!.venv/**"
 
 plugins:
   - serverless-deployment-bucket
@@ -30,8 +30,10 @@ functions:
     events:
       - websocket:
           route: $default
+          routeResponseSelectionExpression: $default
   actionHandler:
     handler: handler.handler
     events:
       - websocket:
           route: test-action
+          routeResponseSelectionExpression: $default

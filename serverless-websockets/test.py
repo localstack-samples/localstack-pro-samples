@@ -27,10 +27,11 @@ def test_websocket_api():
     print('Connecting to websocket URL %s' % url)
     asyncio.get_event_loop().run_until_complete(start_client(url))
     result = queue.get(timeout=3)
-    result_body = result['body']
-    result_body = json.loads(result_body)
+    #result_body = result['body']
+    #result_body = json.loads(result)
 
-    assert result_body == msg
+    #assert result_body == msg
+    assert result == msg
 
 
 def main():
