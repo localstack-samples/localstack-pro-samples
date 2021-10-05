@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) 2017-2021 LocalStack maintainers and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id "java"
+    id "org.jetbrains.kotlin.jvm" version '1.5.31'
+    id "org.jetbrains.kotlin.plugin.spring" version '1.5.31'
+    id 'org.springframework.boot' version '2.5.5'
+    id "io.spring.dependency-management" version '1.0.11.RELEASE'
+    id "com.github.johnrengelman.shadow" version '7.0.0'
+}
+
+group = 'org.localstack.sampleproject'
+sourceCompatibility = 11
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://plugins.gradle.org/m2/" }
+}
+
+ext {
+    springCloudVersion = "3.1.4"
+    awsLambdaLog4jVersion = "1.2.0"
+    awsLambdaJavaEventsVersion = "3.10.0"
+    jacksonVersion = "2.12.5"
+
+    junitVersion = "4.13.2"
+    localstackUtilsVersion = "0.2.15"
+    awsSdkVersion = "2.17.52"
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
+    implementation "org.springframework.cloud:spring-cloud-starter-function-web:$springCloudVersion"
+    implementation "org.springframework.cloud:spring-cloud-function-adapter-aws:$springCloudVersion"
+
+    implementation "com.amazonaws:aws-lambda-java-log4j2:$awsLambdaLog4jVersion"
+    implementation "com.amazonaws:aws-lambda-java-events:$awsLambdaJavaEventsVersion"
+
+    implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "cloud.localstack:localstack-utils:$localstackUtilsVersion"
+    testImplementation "software.amazon.awssdk:lambda:$awsSdkVersion"
+}
+
+import com.github.jengelman.gradle.plugins.shadow.transformers.*
+
+// Configure the main class
+jar {
+    manifest {
+        attributes 'Start-Class': 'org.localstack.sampleproject.Application'
+    }
+}
+
+// Build a fatjar (with dependencies) for aws lambda
+shadowJar {
+    transform(Log4j2PluginsCacheFileTransformer)
+
+    dependencies {
+        exclude(
+            dependency("org.springframework.cloud:spring-cloud-function-web:${springCloudVersion}")
+        )
+    }
+
+    // Required for Spring
+    mergeServiceFiles()
+
+    append 'META-INF/spring.handlers'
+    append 'META-INF/spring.schemas'
+    append 'META-INF/spring.tooling'
+
+    transform(PropertiesFileTransformer) {
+        paths = ['META-INF/spring.factories']
+        mergeStrategy = "append"
+    }
+}
+
+assemble.dependsOn shadowJar
+
+// Task to prepare the codebase for hot reloading
+task buildHot(type: Copy) {
+    from zipTree("${project.buildDir}/libs/${project.name}-all.jar")
+    into "${project.buildDir}/hot"
+}
+
+buildHot.dependsOn shadowJar

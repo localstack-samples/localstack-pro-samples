@@ -1,0 +1,15 @@
+{
+  "name": "localstack-sampleproject-serverless",
+  "version": "1.0.0",
+  "description": "Spring Cloud Function on LocalStack",
+  "author": "LocalStack Team",
+  "license": "Apache-2.0",
+  "scripts": {
+    "deploy": "serverless deploy"
+  },
+  "devDependencies": {
+    "serverless": "^2.60.0",
+    "serverless-deployment-bucket": "^1.5.1",
+    "serverless-localstack": "^0.4.35"
+  }
+}

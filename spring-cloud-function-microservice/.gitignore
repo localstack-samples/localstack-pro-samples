@@ -1,0 +1,14 @@
+.DS_Store
+.gradle
+build
+.idea
+.vscode
+node_modules
+.serverless
+.terraform
+.settings
+.env
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+cdk.out

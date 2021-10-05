@@ -1,0 +1,73 @@
+##
+# Copyright (c) 2017-2021 LocalStack maintainers and contributors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+##
+
+service: localstack-sampleproject-serverless
+
+provider:
+  name: aws
+  runtime: java11
+  stage: ${opt:stage}
+  region: ${env:AWS_REGION,us-east-1}
+  lambdaHashingVersion: 20201221
+  deploymentBucket:
+    name: deployment-bucket
+
+package:
+  artifact: ../../build/libs/localstack-sampleproject-all.jar
+
+plugins:
+  - serverless-localstack
+  - serverless-deployment-bucket
+
+custom:
+  stages:
+    local:
+      mountCode: true
+    testing:
+      mountCode: false
+  localstack:
+    stages:
+      - local
+      - testing
+    lambda:
+      mountCode: ${self:custom.stages.${opt:stage}.mountCode}
+
+functions:
+  http_proxy:
+    timeout: 30
+    handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+          cors: true
+      # Please, note that events are a LocalStack PRO feature
+      - schedule:
+          rate: rate(10 minutes)
+          enabled: true
+          input:
+            httpMethod: SCHEDULE
+            path: warmup
+  lambda_helloOne:
+    timeout: 30
+    handler: org.localstack.sampleproject.api.LambdaApi
+    environment:
+      FUNCTION_NAME: functionOne
+  lambda_helloTwo:
+    timeout: 30
+    handler: org.localstack.sampleproject.api.LambdaApi
+    environment:
+      FUNCTION_NAME: functionTwo
