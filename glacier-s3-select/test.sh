@@ -22,7 +22,8 @@ echo 'Uploading test CSV file to new Glacier vault'
 archiveId=$(awslocal glacier upload-archive --vault-name vault1 --account-id - --body data.csv | jq -r '.archiveId')
 
 echo 'Initiating new "select" job in Glacier to query data from CSV file in vault archive'
-sed -i '' 's/"ArchiveId": ".*"/"ArchiveId": "'$archiveId'"/' glacier-params.json
+#sed -i 's/"ArchiveId": ".*"/"ArchiveId": "'$archiveId'"/' glacier-params.json
+perl -i -pe 's/"ArchiveId": ".*"/"ArchiveId": "'$archiveId'"/' glacier-params.json
 outPath=$(awslocal glacier initiate-job --account-id - --vault-name vault1 --job-parameters file://glacier-params.json | jq -r '.jobOutputPath')
 
 echo 'Sleep some time to wait for Glacier job to finish'
