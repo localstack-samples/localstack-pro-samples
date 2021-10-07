@@ -33,8 +33,8 @@ provider "aws" {
   }
 }
 
-resource "aws_s3_bucket" "testBucket" {
-  bucket = "myBucket"
+resource "aws_s3_bucket" "test-bucket" {
+  bucket = "my-bucket"
   acl = "private"
 }
 
@@ -60,7 +60,7 @@ resource "aws_iam_role" "invocation_role" {
   "Statement": {
     "Effect": "Allow",
     "Action": "s3:ListBucket",
-    "Resource": "arn:aws:s3:::example_bucket"
+    "Resource": "arn:aws:s3:::test-bucket"
   }
 }
 EOF

@@ -23,6 +23,7 @@ testdata/
 *.vdi
 *.7z
 *.zip
+!lambda.zip
 
 glacier-s3-select/*result.csv
 azure-functions/.python_packages/
