@@ -12,7 +12,7 @@ install:     ## Install dependencies
 	@which serverless || npm install -g serverless
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
-	@test -e .venv || (virtualenv .venv; . .venv/bin/activate; pip install -r requirements.txt)
+	@test -e .venv || (python3 -m venv .venv; source .venv/bin/activate; pip install -r requirements.txt)
 
 run:         ## Deploy the app locally and run an AppSync GraphQL test invocation
 	@make install; \
@@ -20,16 +20,21 @@ run:         ## Deploy the app locally and run an AppSync GraphQL test invocatio
 		SLS_DEBUG=1 npm run deploy && \
 		echo "Serverless app successfully deployed." && \
 		api_id=$$(awslocal appsync list-graphql-apis | jq -r '(.graphqlApis[] | select(.name=="test-api")).apiId') && \
+		echo "DEBUG: api_id is: $$api_id" && \
+		api_key=$$(awslocal appsync create-api-key --api-id $$api_id) && \
+		echo "DEBUG: api_key is: $$api_key" && \
 		echo "Starting a WebSocket client to subscribe to GraphQL mutation operations." && \
-		(. .venv/bin/activate; python websocket_client.py "$$api_id" &) && sleep 2 && \
+		(source .venv/bin/activate; python websocket_client.py "$$api_id" &) && sleep 2 && \
 		echo "Now trying to invoke the AppSync API for DynamoDB integration." && \
-		curl -d '{"query":"mutation {addPostDDB(id: \"id123\"){id}}"}' $(APPSYNC_URL)/$$api_id && \
-		curl -d '{"query":"query {getPostsDDB{id}}"}' $(APPSYNC_URL)/$$api_id && \
+		curl -H "x-api-key: $$api_key" -d '{"query":"mutation {addPostDDB(id: \"id123\"){id}}"}' $(APPSYNC_URL)/$$api_id && \
+		#echo "DEBUG: $$(curl -H "x-api-key: $$api_key" -d '{"query":"mutation {addPostDDB(id: \"id123\"){id}}"}' $(APPSYNC_URL)/$$api_id)" && \
+		curl -H "x-api-key: $$api_key" -d '{"query":"query {getPostsDDB{id}}"}' $(APPSYNC_URL)/$$api_id && \
+		#echo "DEBUG: $$(curl -H "x-api-key: $$api_key" -d '{"query":"query {getPostsDDB{id}}"}' $(APPSYNC_URL)/$$api_id)" && \
 		echo "Scanning items from DynamoDB table - should include entry with 'id123':" && \
 		awslocal dynamodb scan --table-name table1 && \
 		echo "Now trying to invoke the AppSync API for RDS integration." && \
-		curl -d '{"query":"mutation {addPostRDS(id: \"id123\"){id}}"}' $(APPSYNC_URL)/$$api_id && \
-		curl -d '{"query":"query {getPostsRDS{id}}"}' $(APPSYNC_URL)/$$api_id
+		curl -H "x-api-key: $$api_key" -d '{"query":"mutation {addPostRDS(id: \"id123\"){id}}"}' $(APPSYNC_URL)/$$api_id && \
+		curl -H "x-api-key: $$api_key" -d '{"query":"query {getPostsRDS{id}}"}' $(APPSYNC_URL)/$$api_id
 
 test-ci:
 	make install && make run
