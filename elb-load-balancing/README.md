@@ -20,7 +20,7 @@ make install
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cloudformation,elb,ec2 localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cloudformation,elb,ec2,s3,sts,logs,iam,lambda localstack start
 ```
 
 Deploy the app locally and run an ELB Lambda test invocation:
