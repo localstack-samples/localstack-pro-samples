@@ -28,26 +28,38 @@ def main():
     return
 
     # Create dynamic frames from the source tables
-    persons = glueContext.create_dynamic_frame.from_catalog(database=db_name, table_name=tbl_persons)
-    memberships = glueContext.create_dynamic_frame.from_catalog(database=db_name, table_name=tbl_membership)
-    orgs = glueContext.create_dynamic_frame.from_catalog(database=db_name, table_name=tbl_organization)
+    persons = glueContext.create_dynamic_frame.from_catalog(
+        database=db_name, table_name=tbl_persons
+    )
+    memberships = glueContext.create_dynamic_frame.from_catalog(
+        database=db_name, table_name=tbl_membership
+    )
+    orgs = glueContext.create_dynamic_frame.from_catalog(
+        database=db_name, table_name=tbl_organization
+    )
 
     # Keep the fields we need and rename some.
-    orgs = (orgs.drop_fields(['other_names', 'identifiers'])
-        .rename_field('id', 'org_id').rename_field('name', 'org_name'))
+    orgs = (
+        orgs.drop_fields(["other_names", "identifiers"])
+        .rename_field("id", "org_id")
+        .rename_field("name", "org_name")
+    )
 
     # Join the frames to create history
-    l_history = Join.apply(orgs,
-        Join.apply(persons, memberships, 'id', 'person_id'), 'org_id', 'organization_id'
-    ).drop_fields(['person_id', 'org_id'])
+    l_history = Join.apply(
+        orgs, Join.apply(persons, memberships, "id", "person_id"), "org_id", "organization_id"
+    ).drop_fields(["person_id", "org_id"])
 
     # ---- Write out the history ----
 
     # Write out the dynamic frame into parquet in "legislator_history" directory
     print("Writing to /legislator_history ...")
     glueContext.write_dynamic_frame.from_options(
-        frame = l_history, connection_type = "s3",
-        connection_options = {"path": output_history_dir}, format = "parquet")
+        frame=l_history,
+        connection_type="s3",
+        connection_options={"path": output_history_dir},
+        format="parquet",
+    )
 
     # Write out a single file to directory "legislator_single"
     s_history = l_history.toDF().repartition(1)
@@ -56,7 +68,7 @@ def main():
 
     # Convert to data frame, write to directory "legislator_part", partitioned by Senate / House.
     print("Writing to /legislator_part, partitioned by Senate and House ...")
-    l_history.toDF().write.parquet(output_lg_partitioned_dir, partitionBy=['org_name'])
+    l_history.toDF().write.parquet(output_lg_partitioned_dir, partitionBy=["org_name"])
 
     # ---- Write out to relational databases ----
 
@@ -69,8 +81,11 @@ def main():
         m_df = dfc.select(df_name)
         print("Writing to Redshift table: ", df_name, " ...")
         glueContext.write_dynamic_frame.from_jdbc_conf(
-            frame = m_df, catalog_connection = "redshift3",
-            connection_options = {"dbtable": df_name, "database": "testdb"},
-            redshift_tmp_dir = redshift_temp_dir)
+            frame=m_df,
+            catalog_connection="redshift3",
+            connection_options={"dbtable": df_name, "database": "testdb"},
+            redshift_tmp_dir=redshift_temp_dir,
+        )
+
 
 main()

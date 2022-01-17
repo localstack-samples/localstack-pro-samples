@@ -1,2 +1,2 @@
 def handler(event, context):
-    print('Hello from LocalStack Lambda container image!')
+    print("Hello from LocalStack Lambda container image!")

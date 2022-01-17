@@ -1,0 +1,12 @@
+
+# LocalStack Pro Samples project configuration
+
+[tool.black]
+line_length = 100
+include = '\.pyi?$'
+#extend_exclude = '()'
+
+[tool.isort]
+profile = 'black'
+#extend_skip = []
+line_length = 100
