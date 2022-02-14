@@ -9,8 +9,8 @@
     "subnet_id": "subnet-c1bf3786",
     "ssh_keypair_name": "cloud_key",
     "ssh_private_key_file": "./localstack.id_rsa",
-    "ssh_username": "ec2-user",
-    "custom_endpoint_ec2": "http://localhost:4597",
+    "ssh_username": "root",
+    "custom_endpoint_ec2": "http://localhost:4566",
     "source_ami": "ami-9982a8ce",
     "instance_type": "m2.small",
     "ami_name": "amzn2_modified_ami"
