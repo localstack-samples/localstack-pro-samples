@@ -2,7 +2,7 @@ service: sls-apigw-domain
 
 provider:
   name: aws
-  runtime: python3.6
+  runtime: nodejs12.x
   stage: local
   region: ${env:AWS_DEFAULT_REGION, 'us-east-1'}
 
@@ -14,6 +14,7 @@ custom:
     stage: ${self:provider.stage}
     createRoute53Record: true
     autoDomain: true
+    apiType: http
   localstack:
     stages:
       - local
@@ -22,13 +23,13 @@ functions:
   hello:
     handler: handler.hello
     events:
-      - http:
+      - httpApi:
           path: /hello
           method: get
   goodbye:
     handler: handler.goodbye
     events:
-      - http:
+      - httpApi:
           path: /goodbye
           method: get
 
