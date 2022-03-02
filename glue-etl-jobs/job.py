@@ -24,9 +24,6 @@ def main():
     output_lg_partitioned_dir = "s3://glue-sample-target/output-dir/legislator_part"
     redshift_temp_dir = "s3://glue-sample-target/temp-dir/"
 
-    # TODO: still required to populate the metadata table to fully enable the from_catalog(..) lookups below!
-    return
-
     # Create dynamic frames from the source tables
     persons = glueContext.create_dynamic_frame.from_catalog(database=db_name, table_name=tbl_persons)
     memberships = glueContext.create_dynamic_frame.from_catalog(database=db_name, table_name=tbl_membership)
@@ -49,10 +46,10 @@ def main():
         frame = l_history, connection_type = "s3",
         connection_options = {"path": output_history_dir}, format = "parquet")
 
-    # Write out a single file to directory "legislator_single"
-    s_history = l_history.toDF().repartition(1)
-    print("Writing to /legislator_single ...")
-    s_history.write.parquet(output_lg_single_dir)
+    # Write out a single file to directory "legislator_single" - TODO enable!
+    # s_history = l_history.toDF().repartition(1)
+    # print("Writing to /legislator_single ...")
+    # s_history.write.parquet(output_lg_single_dir)
 
     # Convert to data frame, write to directory "legislator_part", partitioned by Senate / House.
     print("Writing to /legislator_part, partitioned by Senate and House ...")
@@ -64,13 +61,13 @@ def main():
     print("Converting to flat tables ...")
     dfc = l_history.relationalize("hist_root", redshift_temp_dir)
 
-    # Cycle through and write to Redshift.
+    # Cycle through and write back to DB
     for df_name in dfc.keys():
         m_df = dfc.select(df_name)
-        print("Writing to Redshift table: ", df_name, " ...")
+        print("Writing to Postgres table:", df_name)
         glueContext.write_dynamic_frame.from_jdbc_conf(
-            frame = m_df, catalog_connection = "redshift3",
-            connection_options = {"dbtable": df_name, "database": "testdb"},
+            frame = m_df, catalog_connection = "c1",
+            connection_options = {"dbtable": df_name, "database": "test"},
             redshift_tmp_dir = redshift_temp_dir)
 
 main()
