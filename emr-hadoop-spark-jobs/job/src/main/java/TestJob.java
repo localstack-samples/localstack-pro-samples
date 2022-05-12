@@ -10,7 +10,9 @@ public class TestJob {
     public static void uploadFile(String object_key, String from_bucket, String to_bucket) {
         AWSCredentials credentials = new BasicAWSCredentials("foo", "foo");
         String region = System.getenv().get("AWS_REGION");
-        String s3URL = System.getenv().get("TEST_S3_URL");
+        String lsHost = System.getenv().get("LOCALSTACK_HOSTNAME");
+        String edgePort = System.getenv().get("EDGE_PORT");
+        String s3URL = String.format("http://%s:%s", lsHost, edgePort);
         AmazonS3ClientBuilder builder = AmazonS3ClientBuilder.standard().
             withEndpointConfiguration(
                 new AwsClientBuilder.EndpointConfiguration(s3URL, region)).
