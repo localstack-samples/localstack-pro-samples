@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  EmailQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: email-notification-queue
+  EmailTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: email-notifications
+
+  SnsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      Endpoint: !GetAtt EmailQueue.Arn
+      TopicArn: !GetAtt EmailTopic.TopicArn
