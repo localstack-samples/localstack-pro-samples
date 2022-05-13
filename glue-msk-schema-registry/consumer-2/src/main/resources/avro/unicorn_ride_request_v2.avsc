@@ -1,0 +1,25 @@
+{
+  "type": "record",
+  "name": "UnicornRideRequest",
+  "namespace": "cloud.localstack.demos.gluemsk.schema",
+  "fields": [
+    {"name": "request_id", "type": "int", "doc": "customer request id"},
+    {"name": "pickup_address","type": "string","doc": "customer pickup address"},
+    {"name": "destination_address","type": "string","doc": "customer destination address"},
+    {"name": "ride_fare","type": "float","doc": "ride fare amount (USD)"},
+    {"name": "ride_duration","type": "int","doc": "ride duration in minutes"},
+    {"name": "preferred_unicorn_color","type": {"type": "enum","name": "UnicornPreferredColor","symbols": ["WHITE","BLACK","RED","BLUE","GREY"]}, "default": "WHITE"},
+    {
+      "name": "recommended_unicorn",
+      "type": {
+        "type": "record",
+        "name": "RecommendedUnicorn",
+        "fields": [
+          {"name": "unicorn_id","type": "int", "doc": "recommended unicorn id"},
+          {"name": "color","type": {"type": "enum","name": "unicorn_color","symbols": ["WHITE","RED","BLUE"]}},
+          {"name": "stars_rating", "type": ["null", "int"], "default": null, "doc": "unicorn star ratings based on customers feedback"}
+        ]
+      }
+    }
+  ]
+}
