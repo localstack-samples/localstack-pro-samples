@@ -3,7 +3,6 @@ export AWS_SECRET_ACCESS_KEY ?= test
 export SERVICES = cloudformation,ecs,ec2
 export AWS_DEFAULT_REGION = us-east-1
 DOCKER_CONTAINER = localstack_nginx_1_0
-APP_PORT ?= 45139
 
 usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -16,7 +15,8 @@ deploy:      ## Build and deploy the app locally
 	@make install && make clean; \
 		echo "Creating a new ECR repository locally"; \
 		repoUri=$$(awslocal ecr create-repository --repository-name repo1 | jq -r '.repository.repositoryUri'); \
-		echo "Building the Docker image, pushing it to ECR URL: $$repoUri"; \
+		echo "Building the Docker image, pushing it to local ECR URL: $$repoUri"; \
+		sleep 3; \
 		docker build -t "$$repoUri" .; \
 		docker push "$$repoUri"; \
 		docker rmi "$$repoUri"; \
@@ -27,8 +27,12 @@ deploy:      ## Build and deploy the app locally
 			--template-body file://templates/ecs.sample.yml \
 			--parameters ParameterKey=ImageUrl,ParameterValue=$$repoUri && \
 		echo "ECS app successfully deployed. Sleeping a bit, then trying to access the app endpoint." && \
-		sleep 5 && curl localhost:$(APP_PORT) && \
-		echo "Sample app (nginx) successfully deployed. You can access it under http://localhost:$(APP_PORT)"
+		sleep 5 && \
+		cluster_arn=$$(awslocal ecs list-clusters | jq -r '.clusterArns[0]') && \
+		for i in {1..5}; do task_arn=$$(awslocal ecs list-tasks --cluster $$cluster_arn | jq -r '.taskArns[0]'); if [ "$$task_arn" != "null" ]; then break; fi; sleep 2; done && \
+		app_port=$$(awslocal ecs describe-tasks --cluster $$cluster_arn --tasks $$task_arn | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort') && \
+		curl localhost:$$app_port && \
+		echo "Sample app (nginx) successfully deployed. You can access it under http://localhost:$$app_port"
 
 clean:        ## stop and remove created containers
 	@((docker stop $(DOCKER_CONTAINER) && docker rm $(DOCKER_CONTAINER))>/dev/null 2>/dev/null) ||:
