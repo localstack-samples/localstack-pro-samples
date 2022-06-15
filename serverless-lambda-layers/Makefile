@@ -9,6 +9,7 @@ usage:       ## Show this help
 install:     ## Install dependencies
 	@npm install
 	@which serverless || npm install -g serverless
+	@npm install --save-dev serverless-localstack
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
 

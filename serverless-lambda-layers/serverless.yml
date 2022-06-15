@@ -3,7 +3,7 @@ service: test-layers
 provider:
   name: aws
   region: us-east-1
-  runtime: nodejs10.x
+  runtime: nodejs12.x
   deploymentBucket:
     name: testbucket
 
