@@ -1,15 +1,15 @@
 service: localstack-demo
 
 plugins:
-  - serverless-deployment-bucket
+#  - serverless-deployment-bucket
   - serverless-localstack
 
 provider:
   name: aws
   stage: ${opt:stage, 'local'}
   region: ${self:custom.region}
-  deploymentBucket:
-    name: localstack-test-bucket
+  #deploymentBucket:
+  #  name: localstack-test-bucket
 
 custom:
   region: us-east-1
@@ -18,7 +18,7 @@ custom:
     stages: [local]
     host: http://localhost
     debug: true
-    autostart: true
+#    autostart: true
     lambda:
       mountCode: true
 

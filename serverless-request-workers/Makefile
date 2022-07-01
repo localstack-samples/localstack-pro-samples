@@ -12,7 +12,7 @@ install:         ## Install dependencies
 	@which serverless || npm install -g serverless
 	@which localstack || pip install localstack
 
-start:           ## Deploy and start the app locally
+run:           ## Deploy and start the app locally
 	@make install; \
 		echo "Deploying Serverless app to local environment"; \
 		SLS_DEBUG=1 serverless deploy --stage local && \

@@ -2,7 +2,7 @@ service: test-xray
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs14.x
   deploymentBucket:
     name: testbucket
 

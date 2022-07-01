@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 
-const cloudFrontUrl = 'https://8198a697.cloudfront.localhost.localstack.cloud';
+const cloudFrontUrl = 'https://0c208d2a.cloudfront.localhost.localstack.cloud';
 const htmlBucket = 'htmlpages';
 const dataBucket = 'userdata';
 

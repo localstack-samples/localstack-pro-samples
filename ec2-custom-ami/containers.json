@@ -4,7 +4,7 @@
     "Format": "vmdk",
     "UserBucket": {
       "S3Bucket": "__local__",
-      "S3Key": "./amzn2.vdi"
+      "S3Key": "/home/bernhard/LocalStack/localstack-pro-samples/ec2-custom-ami/amzn2.vdi"
     }
   }
 ]

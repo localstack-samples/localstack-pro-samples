@@ -3,9 +3,9 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/localstack/localstack-pro-samples",
   "devDependencies": {
-    "serverless": "^1.54.0",
-    "serverless-localstack": "^0.4.28",
-    "serverless-deployment-bucket": "^1.1.0"
+    "serverless": "^1.83.3",
+    "serverless-deployment-bucket": "^1.1.0",
+    "serverless-localstack": "^0.4.28"
   },
   "scripts": {
     "deploy": "sls deploy --stage local"
