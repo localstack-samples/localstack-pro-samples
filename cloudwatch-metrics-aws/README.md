@@ -25,3 +25,4 @@ For example, when using smtp4dev, simply run:
 and set `SMTP_HOST=localhost:2525`.
 Navigating to `http://localhost:3000` will open a UI to access the email notifications.
 
+Alternatively, you can use your real smtp server. Please refer to your provider to set the proper values for `SMTP_HOST`, `SMTP_USER` and `SMTP_PASS`
