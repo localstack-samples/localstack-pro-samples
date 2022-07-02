@@ -3,11 +3,10 @@ import boto3
 import asyncio
 import websockets
 from six.moves.queue import Queue
-from localstack.config import TEST_APIGATEWAYV2_URL
 
 
 def test_websocket_api():
-    client = boto3.client('apigatewayv2', endpoint_url=TEST_APIGATEWAYV2_URL)
+    client = boto3.client('apigatewayv2', endpoint_url="http://localhost:4566")
     queue = Queue()
     msg = {'action': 'test-action'}
 
@@ -27,10 +26,7 @@ def test_websocket_api():
     print('Connecting to websocket URL %s' % url)
     asyncio.get_event_loop().run_until_complete(start_client(url))
     result = queue.get(timeout=3)
-    #result_body = result['body']
-    #result_body = json.loads(result)
 
-    #assert result_body == msg
     assert result == msg
 
 
