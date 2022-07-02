@@ -1,8 +1,19 @@
 import os
 import boto3
-from pyqldb.driver.pooled_qldb_driver import PooledQldbDriver
+from pyqldb.driver.qldb_driver import QldbDriver
+from pyqldb.config.retry_config import RetryConfig
 
 QLDB_ENDPOINT = os.environ.get('QLDB_ENDPOINT') or 'http://localhost:4566'
+# Configure retry limit to 3
+retry_config = RetryConfig(retry_limit=3)
+
+
+def create_table(transaction_executor, table_name):
+    transaction_executor.execute_statement(f"Create TABLE {table_name}")
+
+
+def insert_documents(transaction_executor, table_name, arg_1):
+    transaction_executor.execute_statement(f"INSERT INTO {table_name} ?", arg_1)
 
 
 def create_list_tables():
@@ -11,15 +22,13 @@ def create_list_tables():
     ledger_name = create_ledger()
     print('Creating new test ledger in QLDB API: %s' % ledger_name)
     driver = get_driver(ledger_name)
-    session = driver.get_session()
 
     print('Creating two test tables in ledger')
-    tables = list(session.list_tables())
+    tables = list(driver.list_tables())
     assert tables == []
-    session.execute_statement('CREATE TABLE foobar1')
-    session.execute_statement('CREATE TABLE foobar2')
-    tables = list(session.list_tables())
-    tables = [t.text for t in tables]
+    driver.execute_lambda(lambda executor: create_table(executor, "foobar1"))
+    driver.execute_lambda(lambda executor: create_table(executor, "foobar2"))
+    tables = list(driver.list_tables())
     print('Retrieves list of tables in ledger %s: %s' % (ledger_name, tables))
     assert tables == ['foobar1', 'foobar2']
     print('-----------')
@@ -30,32 +39,36 @@ def query_join_tables():
     print('-----------')
     ledger_name = create_ledger()
     driver = get_driver(ledger_name)
-    session = driver.get_session()
 
     print('Creating two test tables in ledger - "Vehicle" and "VehicleRegistration"')
 
     # create tables
-    session.execute_statement('CREATE TABLE Vehicle')
-    session.execute_statement('CREATE TABLE VehicleRegistration')
+    driver.execute_lambda(lambda executor: create_table(executor, "Vehicle"))
+    driver.execute_lambda(lambda executor: create_table(executor, "VehicleRegistration"))
 
     # insert data
     persons_to_vehicles = {'p1': ['v1'], 'p2': ['v2', 'v3']}
     for person, vehicles in persons_to_vehicles.items():
         for vehicle in vehicles:
-            session.execute_statement('INSERT INTO Vehicle ?', {'id': vehicle})
-            session.execute_statement('INSERT INTO VehicleRegistration ?',
-                {'id': vehicle, 'Owner': {'PersonId': person}})
+            doc_1 = {"id": vehicle}
+            driver.execute_lambda(lambda x: insert_documents(x, table_name="Vehicle", arg_1=doc_1))
+            doc_2 = {'id': vehicle, 'Owner': {'PersonId': person}}
+            driver.execute_lambda(lambda x: insert_documents(x, table_name="VehicleRegistration", arg_1=doc_2))
 
     # run queries
     print('Running a query that joins data from the two tables')
     query = ('SELECT Vehicle FROM Vehicle INNER JOIN VehicleRegistration AS r '
         'ON Vehicle.id = r.id WHERE r.Owner.PersonId = ?')
 
+    # Query the table
     result = []
     for pid in persons_to_vehicles.keys():
-        cursor = session.execute_statement(query, pid)
-        for entry in cursor:
-            result.append(convert_to_dict(entry))
+        def read_documents(transaction_executor):
+            cursor = transaction_executor.execute_statement(query, pid)
+            for doc in cursor:
+                result.append(convert_to_dict(doc))
+
+        driver.execute_lambda(lambda executor: read_documents(executor))
     print('Query result: %s' % result)
     assert result == [{'Vehicle': {'id': id}} for id in ['v1', 'v2', 'v3']]
 
@@ -75,7 +88,7 @@ def create_ledger():
 
 
 def get_driver(ledger_name):
-    return PooledQldbDriver(ledger_name=ledger_name, endpoint_url=QLDB_ENDPOINT)
+    return QldbDriver(ledger_name=ledger_name, retry_config=retry_config, endpoint_url=QLDB_ENDPOINT)
 
 
 def connect_qldb():
