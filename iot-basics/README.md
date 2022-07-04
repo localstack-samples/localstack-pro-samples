@@ -17,9 +17,9 @@ make install
 
 ## Running
 
-Make sure that LocalStack is started with the following `SERVICES` configuration:
+Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cloudformation,iot localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 localstack start
 ```
 
 Deploy the app locally and run a Lambda test invocation:
@@ -33,6 +33,7 @@ You should see a couple of successful API call outputs in the terminal:
     "things": [
         {
             "thingName": "thing1",
+            "thingArn": "arn:aws:iot:us-east-1:000000000000:thing/thing1",
             "attributes": {
                 "attr1": "value1",
                 "attr2": "value2"
@@ -55,16 +56,16 @@ The example then also connects to the IoT MQTT endpoint and sends/receives a cou
 ```
 Running MQTT publish/subscribe test
 10 messages published
-0: /test-topic => bytearray(b'TEST MESSAGE 0')
-1: /test-topic => bytearray(b'TEST MESSAGE 1')
-2: /test-topic => bytearray(b'TEST MESSAGE 2')
-3: /test-topic => bytearray(b'TEST MESSAGE 3')
-4: /test-topic => bytearray(b'TEST MESSAGE 4')
-5: /test-topic => bytearray(b'TEST MESSAGE 5')
-6: /test-topic => bytearray(b'TEST MESSAGE 6')
-7: /test-topic => bytearray(b'TEST MESSAGE 7')
-8: /test-topic => bytearray(b'TEST MESSAGE 8')
-9: /test-topic => bytearray(b'TEST MESSAGE 9')
+0: /test-topic => b'TEST MESSAGE 0'
+1: /test-topic => b'TEST MESSAGE 1'
+2: /test-topic => b'TEST MESSAGE 2'
+3: /test-topic => b'TEST MESSAGE 3'
+4: /test-topic => b'TEST MESSAGE 4'
+5: /test-topic => b'TEST MESSAGE 5'
+6: /test-topic => b'TEST MESSAGE 6'
+7: /test-topic => b'TEST MESSAGE 7'
+8: /test-topic => b'TEST MESSAGE 8'
+9: /test-topic => b'TEST MESSAGE 9'
 ```
 
 ## License
