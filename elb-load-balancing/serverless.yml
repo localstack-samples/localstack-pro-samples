@@ -1,9 +1,9 @@
-service: test-layers
+service: test-elb-load-balancing
 
 provider:
   name: aws
   region: us-east-1
-  runtime: nodejs10.x
+  runtime: nodejs12.x
   deploymentBucket:
     name: testbucket
 
