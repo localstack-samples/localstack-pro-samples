@@ -1,3 +1,6 @@
+# IMPORTANT
+The demostrated functionality has been removed from LocalStack
+
 # LocalStack Demo: EC2 VMs and Custom Images using Packer
 
 Simple demo application illustrating EC2 virtual machines (VMs) and building images locally, using LocalStack.
