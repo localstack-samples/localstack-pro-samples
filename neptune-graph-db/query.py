@@ -9,6 +9,23 @@ NEPTUNE_ENDPOINT = os.environ.get('NEPTUNE_ENDPOINT') or 'http://localhost:4566'
 CLUSTER_ID = 'cluster123'
 
 
+def poll_condition(condition, timeout: float = None, interval: float = 0.5) -> bool:
+    remaining = 0
+    if timeout is not None:
+        remaining = timeout
+
+    while not condition():
+        if timeout is not None:
+            remaining -= interval
+
+            if remaining <= 0:
+                return False
+
+        time.sleep(interval)
+
+    return True
+
+
 def run_queries(cluster):
     cluster_url = 'ws://localhost:%s/gremlin' % cluster['Port']
 
@@ -28,6 +45,7 @@ def run_queries(cluster):
     result_set = future_result_set.result()
     result = result_set.one()
     assert result == [1, 2, 3, 4]
+    poll_condition(lambda: result_set.done.done(), timeout=3)
     assert result_set.done.done()
     graph_client.close()
 
@@ -51,12 +69,23 @@ def create_graph_db():
     print('Creating Neptune Graph DB cluster "%s" - this may take a few moments ...' % CLUSTER_ID)
     client = connect_neptune()
     cluster = client.create_db_cluster(DBClusterIdentifier=CLUSTER_ID, Engine='neptune')['DBCluster']
-    time.sleep(2)
+
+    def is_cluster_available():
+        clusters = client.describe_db_clusters()
+        return clusters["DBClusters"][0]["Status"] == "available"
+
+    cluster_available = poll_condition(is_cluster_available, timeout=10, interval=1)
+    if not cluster_available:
+        raise Exception("The server took too much time to start")
+
     return cluster
 
 
-def delete_db(cluster):
-    cluster_id = cluster['DBClusterIdentifier']
+def delete_db(cluster=None):
+    if cluster:
+        cluster_id = cluster['DBClusterIdentifier']
+    else:
+        cluster_id = CLUSTER_ID
     print('Deleting Neptune Graph DB cluster "%s"' % cluster_id)
     client = connect_neptune()
     client.delete_db_cluster(DBClusterIdentifier=cluster_id)
@@ -67,9 +96,12 @@ def connect_neptune():
 
 
 def main():
-    instance = create_graph_db()
-    run_queries(instance)
-    delete_db(instance)
+    instance = None
+    try:
+        instance = create_graph_db()
+        run_queries(instance)
+    finally:
+        delete_db(instance)
     print('Done.')
 
 

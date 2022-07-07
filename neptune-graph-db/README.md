@@ -19,9 +19,9 @@ make install
 
 ## Starting LocalStack
 
-Make sure that LocalStack is started with the following `SERVICES` configuration:
+Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=neptune localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 localstack start
 ```
 
 ## Running
@@ -42,7 +42,7 @@ Adding new vertices "v1" and "v2" to the graph
 New list of vertices in the graph: [v[0], v[3]]
 Deleting Neptune Graph DB cluster "cluster123"
 ```
-
+_Note: when running the scenario consecutively, it may takes some time to free the port used by Neptune._
 ## License
 
 The code in this sample repo is available under the Apache 2.0 license.
