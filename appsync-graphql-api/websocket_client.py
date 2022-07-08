@@ -37,8 +37,10 @@ def subscribe_websocket(api_id):
 
 
 def main():
-    subscribe_websocket(sys.argv[1])
-
+    try:
+      subscribe_websocket(sys.argv[1])
+    except websockets.exceptions.ConnectionClosedOK as e:
+      print(f"WebSocket connection terminated")
 
 if __name__ == '__main__':
     main()
