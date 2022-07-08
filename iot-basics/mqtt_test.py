@@ -1,63 +1,93 @@
-import time
 import logging
-import asyncio
-from hbmqtt.client import MQTTClient, ClientException
-from hbmqtt.mqtt.constants import QOS_0
+import time
+import os
+from queue import Queue
+
+import paho.mqtt.client as mqtt_client
+
+
+FORMAT = ('%(asctime)-15s %(threadName)-15s'
+          ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
+logging.basicConfig(format=FORMAT)
+_logger = logging.getLogger()
+log_level = logging.DEBUG if os.environ.get('DEBUG') in ['1', 'true', 'True'] else logging.WARNING
+_logger.setLevel(log_level)
+
 
 IOT_ENDPOINT_URL = 'http://localhost:4566'
 
 NUM_MESSAGES = 10
 TOPIC_NAME = '/test-topic'
 
-
-@asyncio.coroutine
-def subscriber():
-    C = MQTTClient()
-    yield from C.connect(get_endpoint())
-    yield from C.subscribe([(TOPIC_NAME, QOS_0)])
-    try:
-        for i in range(NUM_MESSAGES):
-            message = yield from C.deliver_message()
-            packet = message.publish_packet
-            print("%d: %s => %s" % (i, packet.variable_header.topic_name, str(packet.payload.data)))
-        yield from C.unsubscribe([TOPIC_NAME])
-        yield from C.disconnect()
-    except ClientException as ce:
-        print("Client exception: %s" % ce)
-
-
-@asyncio.coroutine
-def publisher():
-    C = MQTTClient()
-    yield from C.connect(get_endpoint())
-    for i in range(NUM_MESSAGES):
-        tasks = [asyncio.ensure_future(C.publish(TOPIC_NAME, ('TEST MESSAGE %s' % i).encode('utf-8')))]
-        yield from asyncio.wait(tasks)
-    print('%s messages published' % NUM_MESSAGES)
-    yield from C.disconnect()
+recv_queue = Queue()
 
 
 def get_endpoint():
     import boto3
     endpoint = boto3.client('iot', endpoint_url=IOT_ENDPOINT_URL).describe_endpoint()
-    return 'mqtt://%s' % endpoint['endpointAddress']
+    host, port = endpoint['endpointAddress'].split(':')
+    return host, int(port)
 
 
-async def run_async():
-    loop = asyncio.get_event_loop()
-    sub = loop.create_task(subscriber())
-    pub = loop.create_task(publisher())
-    await pub
-    await sub
+def create_subscriber():
+    def _on_connect(client, *args):
+        client.subscribe(TOPIC_NAME, qos=0)
+
+    def on_message(client, userdata, message: mqtt_client.MQTTMessage):
+        recv_queue.put(message)
+
+    mqtt = mqtt_client.Client("mqtt_subscriber")
+    mqtt.enable_logger(_logger)
+    mqtt.on_connect = _on_connect
+    mqtt.on_message = on_message
+    mqtt.loop_start()
+    mqtt._thread.name = 'mqtt_thread_subscriber'  # noqa
+    return mqtt
 
 
-@asyncio.coroutine
-def run():
-    yield from run_async()
+def create_publisher():
+    mqtt_publisher = mqtt_client.Client("mqtt_publisher")
+    mqtt_publisher.enable_logger(_logger)
+    mqtt_publisher.loop_start()
+    mqtt_publisher._thread.name = f'mqtt_thread_publisher'  # noqa
+    return mqtt_publisher
+
+
+def publish_messages(endpoint_host: str, endpoint_port: int):
+    publisher = create_publisher()
+    publisher.connect(host=endpoint_host, port=endpoint_port)
+    # sleep 2 to let broker connack
+    time.sleep(2)
+    for i in range(NUM_MESSAGES):
+        publisher.publish(
+            topic=TOPIC_NAME,
+            payload=f"TEST MESSAGE {i}",
+            qos=0
+        )
+    print(f"{NUM_MESSAGES} messages published")
+    publisher.disconnect()
+    publisher.loop_stop()
+    return publisher
 
 
 def main():
-    asyncio.get_event_loop().run_until_complete(run())
+    endpoint_host, endpoint_port = get_endpoint()
+    _logger.debug("Trying to connect to MQTT endpoint %s:%s", endpoint_host, endpoint_port)
+    mqtt_subscriber = create_subscriber()
+    mqtt_subscriber.connect(host=endpoint_host, port=endpoint_port)
+    time.sleep(2)  # sleep 2 to let broker connack and suback
+    publish_messages(endpoint_host, endpoint_port)
+    try:
+        for i in range(NUM_MESSAGES):
+            message: mqtt_client.MQTTMessage = recv_queue.get(block=True, timeout=3)
+            print(f"{i}: {message.topic} => {message.payload}")
+
+    except KeyboardInterrupt:
+        pass
+    except Exception as e:
+        _logger.exception(e)
+    finally:
+        mqtt_subscriber.loop_stop()
 
 
 if __name__ == '__main__':
