@@ -106,22 +106,22 @@ resource "aws_lambda_function" "authorizer" {
   source_code_hash = "${filebase64sha256("lambda.zip")}"
 }
 
-resource "aws_elasticsearch_domain" "example" {
-  domain_name           = "test-domain"
-  elasticsearch_version = "1.5"
+#resource "aws_elasticsearch_domain" "example" {
+#  domain_name           = "test-domain"
+#  elasticsearch_version = "1.5"
 
-  cluster_config {
-    instance_type = "r4.large.elasticsearch"
-  }
+#    cluster_config {
+#    instance_type = "r4.large.elasticsearch"
+#  }
 
-  snapshot_options {
-    automated_snapshot_start_hour = 23
-  }
+#  snapshot_options {
+#    automated_snapshot_start_hour = 23
+#  }
 
-  tags = {
-    Domain = "TestDomain"
-  }
-}
+#  tags = {
+#    Domain = "TestDomain"
+#  }
+#}
 
 resource "aws_elasticache_cluster" "my-redis" {
   cluster_id           = "my-redis-cluster"

@@ -14,7 +14,7 @@ install:         ## Install dependencies
 	rm terraform_*.zip)
 	
 
-start:           ## Deploy and start the app locally
+run:           ## Deploy and start the app locally
 	@(test -d .terraform || terraform init) && terraform apply
 
 clear: 		 ## remove remnants from older deployments
@@ -29,4 +29,4 @@ uninstall:
 test-ci:
 	# TODO install terraform and enable in CI
 
-.PHONY: usage install start test-ci
+.PHONY: usage install run test-ci
