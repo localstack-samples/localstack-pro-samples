@@ -20,7 +20,7 @@ provider:
   name: aws
   runtime: java11
   stage: ${opt:stage}
-  region: ${env:AWS_REGION,us-east-1}
+  region: ${env:AWS_REGION, "us-east-1"}
   lambdaHashingVersion: 20201221
   deploymentBucket:
     name: deployment-bucket

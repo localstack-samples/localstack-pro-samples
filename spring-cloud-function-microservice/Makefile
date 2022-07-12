@@ -21,10 +21,10 @@ watch:                       ## Watch project files to perform hot swapping
 	bin/watchman.sh $(SOURCES_FOLDER) "make build-hot"
 
 deploy-sls: build-jar        ## Deploy serverless project to a specified stage
-	cd deployments/serverless && npm run deploy -- --stage $(STAGE)
+	cd deployments/serverless && npm install && npm run deploy -- --stage $(STAGE)
 
 deploy-sls-local: build-hot  ## Deploy serverless project to LocalStack and enable hot-swapping
-	cd deployments/serverless && npm run deploy -- --stage local
+	cd deployments/serverless && npm install && npm run deploy -- --stage local
 
 deploy-cdk-local: build-hot  ## Deploy serverless project to LocalStack and enable hot-swapping
 	cd deployments/cdk && \
@@ -35,6 +35,7 @@ deploy-tf-local: build-hot  ## Deploy serverless project to LocalStack and enabl
 	cd deployments/terraform && \
         terraform init && \
         terraform apply -var "STAGE=local" -var "AWS_REGION=$(AWS_REGION)" -var "LAMBDA_MOUNT_CWD=$(LAMBDA_MOUNT_CWD)"
+
 
 clean:                      ## Clean up
 	rm -rf build
