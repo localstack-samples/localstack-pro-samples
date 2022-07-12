@@ -23,7 +23,8 @@ function wait_for_query {
 
 echo Running queries to create database and table definitions...
 echo 'NOTE: This can take a very long time (several minutes) as the system is initializing'
-awslocal athena start-query-execution --query-string "`cat queries/create_database.sql`" > /dev/null
+queryId=$(awslocal athena start-query-execution --query-string "`cat queries/create_database.sql`" | jq -r '.QueryExecutionId')
+wait_for_query $queryId
 queryId=$(awslocal athena start-query-execution --query-string "`cat queries/create_tables.sql`" --query-execution-context Database=$DATABASE --result-configuration OutputLocation=$S3_OUTPUT | jq -r '.QueryExecutionId')
 wait_for_query $queryId
 
