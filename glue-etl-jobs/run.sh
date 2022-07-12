@@ -24,14 +24,16 @@ awslocal glue create-table --database legislators \
 awslocal glue create-connection \
   --connection-input '{"Name":"c1", "ConnectionType": "JDBC", "ConnectionProperties": {"USERNAME": "test", "PASSWORD": "test", "JDBC_CONNECTION_URL": "jdbc:postgresql://localhost.localstack.cloud:'$db_port'"}}'
 
+secret=$(awslocal secretsmanager create-secret --name mysecret --secret-string "12345678" | jq -r ".ARN")
+
 echo Creating Postgres database tables with data ...
-awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn arn:aws:secretsmanager:us-east-1:000000000000:secret:mysecret --sql 'CREATE TABLE IF NOT EXISTS persons(id varchar, name varchar)'
-awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn arn:aws:secretsmanager:us-east-1:000000000000:secret:mysecret --sql 'CREATE TABLE IF NOT EXISTS organizations(org_id varchar, org_name varchar)'
-awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn arn:aws:secretsmanager:us-east-1:000000000000:secret:mysecret --sql 'CREATE TABLE IF NOT EXISTS memberships(person_id varchar, organization_id varchar)'
-awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn arn:aws:secretsmanager:us-east-1:000000000000:secret:mysecret --sql "insert into persons(id, name) VALUES('p1', 'person 1')"
-awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn arn:aws:secretsmanager:us-east-1:000000000000:secret:mysecret --sql "insert into organizations(org_id, org_name) VALUES('o1', 'org 1')"
-awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn arn:aws:secretsmanager:us-east-1:000000000000:secret:mysecret --sql "insert into memberships(person_id, organization_id) VALUES('p1', 'o1')"
-awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn arn:aws:secretsmanager:us-east-1:000000000000:secret:mysecret --sql 'CREATE TABLE IF NOT EXISTS hist_root(id varchar, name varchar, org_id varchar, org_name varchar, person_id varchar, organization_id varchar)'
+awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn $secret --sql 'CREATE TABLE IF NOT EXISTS persons(id varchar, name varchar)'
+awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn $secret --sql 'CREATE TABLE IF NOT EXISTS organizations(org_id varchar, org_name varchar)'
+awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn $secret --sql 'CREATE TABLE IF NOT EXISTS memberships(person_id varchar, organization_id varchar)'
+awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn $secret --sql "insert into persons(id, name) VALUES('p1', 'person 1')"
+awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn $secret --sql "insert into organizations(org_id, org_name) VALUES('o1', 'org1')"
+awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn $secret --sql "insert into memberships(person_id, organization_id) VALUES('p1', 'o1')"
+awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:c1 --secret-arn $secret --sql 'CREATE TABLE IF NOT EXISTS hist_root(id varchar, name varchar, org_id varchar, org_name varchar, person_id varchar, organization_id varchar)'
 
 echo Starting Glue job from PySpark script ...
 awslocal glue create-job --name $JOB_NAME --role r1 \
