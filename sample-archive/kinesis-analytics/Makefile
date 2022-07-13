@@ -7,7 +7,7 @@ usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 install:     ## Install dependencies
-	@npm install
+	#@npm install
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
 
@@ -17,9 +17,10 @@ deploy:
 		echo "Kinesis Analytics stack successfully deployed."; \
 		echo "Sleeping some time to wait for the application and Kinesis listeners to start up ..."; \
 		for i in {1..7}; do  \
+                        sleep 15; \
 			status=$$(awslocal kinesisanalytics describe-application --application-name sampleApp \
 			| jq -r .ApplicationDetail.ApplicationStatus); \
-			echo "Application status: $$status"; if [ "$$status" = "RUNNING" ]; then break; fi; sleep 4; \
+			echo "Application status: $$status"; if [ "$$status" = "RUNNING" ]; then break; fi;  \
 		done; \
 		awslocal kinesis list-streams; \
 		awslocal kinesisanalytics list-applications
@@ -34,7 +35,7 @@ query:
 		awslocal kinesis put-record --stream-name $$inStream \
 			--data '{"symbol":"TEST","price":123,"volume":100}' --partition-key test; \
 		echo "Waiting for query results... (should print a record array with base64-encoded 'Data' below)"; \
-		sleep 3; \
+		sleep 10; \
 		awslocal kinesis get-records --shard-iterator $$iter | jq .Records
 
 run:         ## Deploy the app and run the streaming queries locally
