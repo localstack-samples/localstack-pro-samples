@@ -24,9 +24,9 @@ This scenario requires access to an SMTP server to send Cognito emails (e.g., to
 * `SMTP_PASS`: SMTP password
 * `SMTP_EMAIL`: Email address under which the messages should be sent
 
-Make sure that LocalStack is started with the following `SERVICES` configuration:
+Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cognito localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 localstack start
 ```
 
 ## Running

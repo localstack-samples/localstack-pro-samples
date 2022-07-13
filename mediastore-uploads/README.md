@@ -18,9 +18,9 @@ make install
 
 ## Running
 
-Make sure that LocalStack is started with the following `SERVICES` configuration:
+Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cloudformation,mediastore localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 localstack start
 ```
 
 The following command runs the example, which creates a MediaStore container, uploads and downloads files to/from the container, and finally cleans up the created resources:

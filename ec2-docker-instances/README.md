@@ -22,7 +22,7 @@ make install
 
 Run LocalStack with following enviroment flags:
 ```
-LOCALSTACK_API_KEY=... EC2_VM_MANAGER=docker DEBUG=1 SERVICES=ssm,ec2 localstack start
+LOCALSTACK_API_KEY=... EC2_VM_MANAGER=docker DEBUG=1 localstack start
 ```
 
 Run the demo:

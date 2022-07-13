@@ -22,9 +22,9 @@ Please refer to the `test.csv` file and feel free to modify in order to see chan
 
 ## Running
 
-Make sure that LocalStack is started with the following `SERVICES` configuration:
+Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cloudformation,glacier localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 localstack start
 ```
 
 The following command creates local S3 buckets and Glacier vaults, and runs simple demo queries over the `data.csv` CSV file:

@@ -22,9 +22,9 @@ Please refer to the `job.py` PySpark job file and the `run.sh` script that runs 
 
 ## Running
 
-Make sure that LocalStack is started with the following `SERVICES` configuration:
+Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=serverless,rds,glue localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 localstack start
 ```
 
 The following command prepares, creates, and runs the Glue job:

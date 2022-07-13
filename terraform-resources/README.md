@@ -18,9 +18,9 @@ make install
 
 ## Starting LocalStack
 
-Make sure that LocalStack is started with the following `SERVICES` configuration:
+Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=serverless,sns,sqs,elasticache,es,rds localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 localstack start
 ```
 
 ## Running

@@ -17,9 +17,9 @@ make install
 
 ## Running
 
-Make sure that LocalStack is started with the following `SERVICES` configuration:
+Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=codecommit localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 localstack start
 ```
 
 The following command runs the test application locally, creates an Git repository via the AWS CodeCommit API locally, commits and pushes a test file to the repository, and then checks out the file in a fresh clone of the repository:

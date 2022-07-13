@@ -18,9 +18,9 @@ make install
 
 ## Starting LocalStack
 
-Make sure that LocalStack is started with the following `SERVICES` configuration:
+Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=serverless,appsync,dynamodb,rds,secretsmanager localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 localstack start
 ```
 
 ## Running

@@ -22,9 +22,9 @@ Please refer to the `templates/` folder for details about the CloudFormation tem
 
 ## Running
 
-Make sure that LocalStack is started with the following `SERVICES` configuration:
+Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cloudformation,ecs,ecr,ec2,iam,elbv2 localstack start
+LOCALSTACK_API_KEY=... DEBUG=1 localstack start
 ```
 
 The following command builds and deploys the app locally via CloudFormation:
