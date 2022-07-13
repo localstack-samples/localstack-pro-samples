@@ -11,7 +11,7 @@ awslocal s3 mb s3://$BUCKET
 awslocal s3 cp data/data.csv $S3_INPUT
 
 function wait_for_query {
-  for i in {1..25}; do
+  for i in {1..50}; do
     status=$(awslocal athena get-query-execution --query-execution-id $1 | jq -r '.QueryExecution.Status.State')
     echo Waiting for completion status of query $1: $status
     if [ "$status" != "RUNNING" ]; then
@@ -19,6 +19,8 @@ function wait_for_query {
     fi
     sleep 6
   done
+  echo "Query did not finish in time. There seems to be a problem. Pleaes take a look at the LocalStack logs."
+  exit 1
 }
 
 echo Running queries to create database and table definitions...

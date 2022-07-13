@@ -10,6 +10,7 @@ install:     ## Install dependencies
 #	@test -e node_modules || npm install
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
+	docker pull localstack/bigdata
 
 run:         ## Set up database connections and run Athena queries locally
 	@make install; \
