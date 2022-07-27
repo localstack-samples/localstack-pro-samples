@@ -17,6 +17,6 @@ for-each-dir:
 	for d in $$(ls -d */); do echo "Running tests in $$d"; ((cd $$d; $(CMD)) || echo "test in $$d FAILED") && localstack stop; done
 
 test-ci-all:
-	CMD='test ! -e Makefile || make test-ci' make for-each-dir
+	CMD='test ! -e Makefile || (make start install ready run; make stop)' make for-each-dir
 
 .PHONY: usage install lint start

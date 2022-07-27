@@ -5,7 +5,7 @@ function finish {
   echo ""
   # Delete the cluster (if available)
   echo "(Cleanup) Deleting Kafka cluster."
-  awslocal kafka delete-cluster --cluster-arn  "arn:aws:kafka:us-east-1:000000000000:cluster/unicorn-ride-cluster" 2> /dev/null || true
+  awslocal kafka delete-cluster --cluster-arn  $cluster_arn 2> /dev/null || true
   # Delete the schema registry
   echo "(Cleanup) Deleting registry."
   awslocal glue delete-registry --registry-id RegistryName=unicorn-ride-request-registry 2> /dev/null || true
@@ -33,20 +33,30 @@ else
 fi
 
 step "Start with creating a Kafka cluster..."
-(set -x; awslocal kafka create-cluster \
+cluster_arn=$(awslocal kafka create-cluster \
   --cluster-name "unicorn-ride-cluster" \
   --kafka-version "2.2.1" \
   --number-of-broker-nodes 1 \
-  --broker-node-group-info "{\"ClientSubnets\": [], \"InstanceType\":\"kafka.m5.xlarge\"}")
+  --broker-node-group-info "{\"ClientSubnets\": [], \"InstanceType\":\"kafka.m5.xlarge\"}" | jq -r .ClusterArn)
 
-state=$(set -x; awslocal kafka describe-cluster --cluster-arn "arn:aws:kafka:us-east-1:000000000000:cluster/unicorn-ride-cluster" | jq -r .ClusterInfo.State)
-while [ "$state" != ACTIVE ]; do
+state=$(set -x; awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
+for i in {1..35}; do
   echo "Waiting for Kafka cluster to become ACTIVE (current status: $state)..."
   sleep 4
-  state=$(awslocal kafka describe-cluster --cluster-arn "arn:aws:kafka:us-east-1:000000000000:cluster/unicorn-ride-cluster" | jq -r .ClusterInfo.State)
+  if [ "$state" == ACTIVE ]; then
+    break
+  elif [ "$state" == FAILED ]; then
+    echo "Cluster creation FAILED, exiting..."
+    exit 1
+  fi
+  state=$(awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
 done
 
-bootstrap_broker=$(set -x; awslocal kafka get-bootstrap-brokers --cluster-arn  "arn:aws:kafka:us-east-1:000000000000:cluster/unicorn-ride-cluster" | jq -r .BootstrapBrokerString)
+if [ "$state" != ACTIVE  ]; then
+  echo "Gave up waiting on Cluster, exiting..."
+  exit 1
+fi
+bootstrap_broker=$(set -x; awslocal kafka get-bootstrap-brokers --cluster-arn  $cluster_arn | jq -r .BootstrapBrokerString)
 echo "Kafka Bootstrap Broker: $bootstrap_broker"
 
 step "The Kafka cluster is ready. Let's create a Glue Schema Registry..."

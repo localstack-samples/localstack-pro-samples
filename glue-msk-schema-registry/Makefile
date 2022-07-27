@@ -25,6 +25,6 @@ ready:
 	@localstack wait -t 30; echo "Localstack is ready to use!"
 
 test-ci:
-	make start install ready run stop
+	make start install ready run; make stop
 
 .PHONY: usage install run-interactive run-quiet run run-quiet
