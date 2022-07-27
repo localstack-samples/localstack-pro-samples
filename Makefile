@@ -17,6 +17,6 @@ for-each-dir:
 	for d in $$(ls -d */); do echo "Running tests in $$d"; ((cd $$d; $(CMD)) || echo "test in $$d FAILED") && localstack stop; done
 
 test-ci-all:
-	CMD='test ! -e Makefile && (docker-compose -f ~/LocalStack/local_docker/docker-compose.yml up -d && make test-ci && docker-compose -f ~/LocalStack/local_docker/docker-compose.yml stop)' make for-each-dir
+	CMD='test ! -e Makefile || make test-ci' make for-each-dir
 
 .PHONY: usage install lint start
