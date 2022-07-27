@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 
@@ -19,7 +19,7 @@ jobs:
           # install LocalStack cli and awslocal
           pip install localstack awscli-local[ver1]
           # Make sure to pull the latest version of the image
-          docker pull localstack/localstack 
+          docker pull localstack/localstack
     - name: Execute tests
       env:
         LOCALSTACK_API_KEY: ${{ secrets.LOCALSTACK_API_KEY }}
