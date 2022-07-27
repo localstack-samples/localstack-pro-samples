@@ -22,4 +22,5 @@ jobs:
     - name: Execute tests
       env:
         LOCALSTACK_API_KEY: ${{ secrets.TEST_LOCALSTACK_API_KEY }}
+        DNS_ADDRESS: 127.0.0.1
       run: make test-ci-all
