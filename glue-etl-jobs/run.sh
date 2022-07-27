@@ -9,11 +9,11 @@ awslocal s3 mb s3://$BUCKET
 awslocal s3 cp job.py $S3_URL
 awslocal s3 mb s3://glue-sample-target
 
-awslocal rds create-db-cluster --db-cluster-identifier $cluster_identifier --engine aurora-postgresql --database-name test
-
 cluster_identifier=glue_etl_cluster1
 
-db_port=$(awslocal rds describe-db-clusters --db-cluster-identifier $cluster_identifier | jq -r '.DBClusters[0].Port')
+awslocal rds create-db-cluster --db-cluster-identifier $cluster_identifier --engine aurora-postgresql --database-name test
+
+db_port=$(awslocal rds describe-db-clusters --db-cluster-identifier $cluster_identifier) | jq -r '.DBClusters[0].Port'
 echo Using local RDS database on port $db_port ...
 
 echo Creating Glue databases and tables ...
@@ -45,10 +45,18 @@ awslocal glue create-job --name $JOB_NAME --role r1 \
 run_id=$(awslocal glue start-job-run --job-name $JOB_NAME | jq -r .JobRunId)
 
 state=$(awslocal glue get-job-run --job-name $JOB_NAME --run-id $run_id | jq -r .JobRun.JobRunState)
-while [ "$state" != SUCCEEDED ]; do
+
+for i in {1..35}; do
   echo "Waiting for Glue job ID '$run_id' to finish (current status: $state) ..."
   sleep 4
   state=$(awslocal glue get-job-run --job-name $JOB_NAME --run-id $run_id | jq -r .JobRun.JobRunState)
+  if [ "$state" == SUCCEEDED ]; then
+    echo "Done - Glue job execution finished. Please check the LocalStack container logs for more details."
+    exit 0
+elif [ "$state" == FAILED ]; then
+    echo "Job execution failed, exiting. Please check the LocalStack logs for details."
+    exit 1
+fi
 done
 
 echo "Done - Glue job execution finished. Please check the LocalStack container logs for more details."

@@ -14,7 +14,7 @@ stop:          ## Stop LocalStack infrastructure
 	nohup localstack stop
 
 for-each-dir:
-	for d in $$(ls -d */); do echo "Running tests in $$d"; ((cd $$d; $(CMD)) || echo "test in $$d FAILED") && localstack stop; done
+	for d in $$(ls -d */); do echo "Running tests in $$d"; ((cd $$d; $(CMD)) || echo "test in $$d FAILED"); done
 
 test-ci-all:
 	CMD='test ! -e Makefile || (make start install ready run; make stop)' make for-each-dir
