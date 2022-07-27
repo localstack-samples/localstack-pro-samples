@@ -1,6 +1,5 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = cloudformation,ecs,ec2
 export AWS_DEFAULT_REGION = us-east-1
 DOCKER_CONTAINER = localstack_nginx_1_0
 
@@ -12,7 +11,6 @@ install:     ## Install dependencies
 	@which awslocal || pip install awscli-local
 
 deploy:      ## Build and deploy the app locally
-	@make install && make clean; \
 		echo "Creating a new ECR repository locally"; \
 		repoUri=$$(awslocal ecr create-repository --repository-name repo1 | jq -r '.repository.repositoryUri'); \
 		echo "Building the Docker image, pushing it to local ECR URL: $$repoUri"; \
@@ -37,7 +35,16 @@ deploy:      ## Build and deploy the app locally
 clean:        ## stop and remove created containers
 	@((docker stop $(DOCKER_CONTAINER) && docker rm $(DOCKER_CONTAINER))>/dev/null 2>/dev/null) ||:
 
+start:
+	localstack start -d
+
+stop: clean
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
+
 test-ci:
-	make install && make deploy || true
+	make start install ready run stop
 
 .PHONY: usage install deploy

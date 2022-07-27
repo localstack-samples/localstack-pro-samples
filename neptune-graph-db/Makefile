@@ -15,7 +15,16 @@ install:    ## Install dependencies
 run:        ## Run the scenario with queries against local Neptune
 	@$(PYTHON_BIN) query.py
 
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
+
 test-ci:
-	make install && make run || true
+	make start install ready run stop
 
 .PHONY: usage install run

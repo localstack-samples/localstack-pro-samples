@@ -1,6 +1,5 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = serverless,appsync,dynamodb,rds,secretsmanager
 export AWS_DEFAULT_REGION=us-east-1
 APPSYNC_URL = http://localhost:4566/graphql
 SHELL := /bin/bash

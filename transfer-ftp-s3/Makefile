@@ -1,6 +1,5 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = s3,transfer
 export AWS_DEFAULT_REGION=us-east-1
 
 usage:       ## Show this help
@@ -16,7 +15,16 @@ run:         ## Deploy and run the sample locally
 	@echo "Running Test: Creating FTP server and uploading files to S3 via Transfer API"; \
 		(. .venv/bin/activate; python test.py)
 
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
+
 test-ci:
-	make install && make run || true
+	make start install ready run stop
 
 .PHONY: usage install run

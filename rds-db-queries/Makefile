@@ -1,7 +1,6 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export AWS_DEFAULT_REGION = us-east-1
-export SERVICES = rds
 SHELL := /bin/bash
 PYTHON_BIN ?= $(shell which python3 || which python)
 
@@ -16,7 +15,16 @@ install:    ## Install dependencies
 run:        ## Run the scenario with the DB queries against local RDS
 	@source .venv/bin/activate && $(PYTHON_BIN) query.py
 
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
+
 test-ci:
-	make install && make run || true
+	make start install ready run stop
 
 .PHONY: usage install run

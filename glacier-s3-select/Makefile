@@ -11,10 +11,19 @@ install:    ## Install dependencies
 	@which awslocal || pip install awscli-local
 
 run:        ## Upload data and run Glacier/S3 Select queries locally
-	@make install; \
-		./test.sh
+	./test.sh
+
+
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
 
 test-ci:
-	make install && make run
+	make start install ready run stop
 
 .PHONY: usage install run

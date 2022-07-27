@@ -15,18 +15,26 @@ test-mqtt:
 		(. .venv/bin/activate; python mqtt_test.py)
 
 run:         ## Deploy the app locally
-	@make install; \
-		echo "Deploying app to local environment"; \
-		awslocal cloudformation create-stack --stack-name test-iot --template-body file://iot.cf.yml; \
-		echo "IoT stack successfully deployed. Now checking whether all resources have been created."; \
-		sleep 3; \
-		awslocal iot list-things; \
-		awslocal iot list-policies; \
-		awslocal iot create-job --job-id j1 --targets t1; \
-		awslocal iot list-jobs; \
-		make test-mqtt
+	echo "Deploying app to local environment"; \
+	awslocal cloudformation create-stack --stack-name test-iot --template-body file://iot.cf.yml; \
+	echo "IoT stack successfully deployed. Now checking whether all resources have been created."; \
+	sleep 3; \
+	awslocal iot list-things; \
+	awslocal iot list-policies; \
+	awslocal iot create-job --job-id j1 --targets t1; \
+	awslocal iot list-jobs; \
+	make test-mqtt
+
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
 
 test-ci:
-	make install && make run
+	make start install ready run stop
 
 .PHONY: usage install run

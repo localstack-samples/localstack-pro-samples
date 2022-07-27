@@ -1,6 +1,5 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = serverless,iot
 export AWS_DEFAULT_REGION=us-east-1
 
 usage:       ## Show this help
@@ -11,11 +10,19 @@ install:     ## Install dependencies
 	@which awslocal || pip install awscli-local
 
 run:         ## Run the IAM tests locally
-	@make install
 	@echo "Running IAM enforcement tests in local environment"
 	@./run.sh
 
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
+
 test-ci:
-	make install && make run || true
+	make start install ready run stop
 
 .PHONY: usage install run

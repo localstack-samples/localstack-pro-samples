@@ -1,7 +1,6 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export AWS_DEFAULT_REGION = us-east-1
-export SERVICES = serverless,glue,rds
 
 usage:     ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -11,10 +10,18 @@ install:   ## Install dependencies
 	@which awslocal || pip install awscli-local
 
 run:       ## Prepare environment and run sample Glue PySpark ETL job
-	@make install; \
-		./run.sh
+	./run.sh
+
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
 
 test-ci:
-	make install && make run
+	make start install ready run stop
 
 .PHONY: usage install run

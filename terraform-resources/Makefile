@@ -1,5 +1,4 @@
 export DOCKER_BRIDGE ?= $(shell (uname -a | grep Linux > /dev/null) && echo 172.17.0.1 || echo docker.for.mac.localhost)
-export SERVICES = serverless,cloudformation,sts,stepfunctions,sqs
 export START_WEB ?= 1
 export PATH := $(PATH):.
 
@@ -26,7 +25,16 @@ clean: clear	 ## remove all project related files and reverse terraform init
 uninstall:
 	@rm -f terraform
 
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
+
 test-ci:
-	# TODO install terraform and enable in CI
+	make start install ready run stop
 
 .PHONY: usage install run test-ci

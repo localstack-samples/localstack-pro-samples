@@ -2,7 +2,6 @@ export VENV_DIR ?= .venv
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export AWS_DEFAULT_REGION = us-east-1
-export SERVICES = serverless,apigatewayv2
 
 usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -16,13 +15,22 @@ install:     ## Install dependencies
 	@. $(VENV_DIR)/bin/activate; pip install -r requirements.txt
 
 run:         ## Deploy and run the app locally
-	@make install; \
-		echo "Deploying Serverless app to local environment"; \
-		SLS_DEBUG=1 npm run deploy; \
-		echo "Starting client that connects to Websocket API"; \
-		. $(VENV_DIR)/bin/activate; python test.py
+	echo "Deploying Serverless app to local environment"; \
+	SLS_DEBUG=1 npm run deploy; \
+	echo "Starting client that connects to Websocket API"; \
+	. $(VENV_DIR)/bin/activate; python test.py
+
+
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
 
 test-ci:
-	make install && make run || true
+	make start install ready run stop
 
 .PHONY: usage install run

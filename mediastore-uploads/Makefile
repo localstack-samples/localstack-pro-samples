@@ -1,6 +1,5 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = cloudformation,mediastore
 export AWS_DEFAULT_REGION = us-east-1
 
 usage:      ## Show this help
@@ -11,10 +10,18 @@ install:    ## Install dependencies
 	@which awslocal > /dev/null || pip install awscli-local
 
 run:        ## Run tests uploading objects via MediaStore API
-	@make install; \
-		./test.sh
+	./test.sh
+
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
 
 test-ci:
-	make install && make run
+	make start install ready run stop
 
 .PHONY: usage install run

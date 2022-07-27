@@ -6,9 +6,18 @@ install:
 	docker tag ubuntu:focal localstack-ec2/ubuntu-focal-docker-ami:ami-00a001
 
 # Run demo
-run: install
+run:
 	./run.sh
 
-# No op
+
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
+
 test-ci:
-	/bin/true
+	make start install ready run stop
