@@ -40,6 +40,7 @@ cluster_arn=$(awslocal kafka create-cluster \
   --broker-node-group-info "{\"ClientSubnets\": [], \"InstanceType\":\"kafka.m5.xlarge\"}" | jq -r .ClusterArn)
 
 state=$(set -x; awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
+
 for i in {1..35}; do
   echo "Waiting for Kafka cluster to become ACTIVE (current status: $state)..."
   sleep 4
@@ -63,20 +64,20 @@ step "The Kafka cluster is ready. Let's create a Glue Schema Registry..."
 (set -x; awslocal glue create-registry --registry-name unicorn-ride-request-registry)
 
 step "Create the AVRO schema in the new registry (with compatibility BACKWARD)..."
-(set -x; awslocal glue create-schema \
+schema_arn=$(set -x; awslocal glue create-schema \
   --registry-id RegistryName="unicorn-ride-request-registry" \
   --schema-name unicorn-ride-request-schema-avro \
   --compatibility BACKWARD \
   --data-format AVRO \
-  --schema-definition "file://producer/src/main/resources/avro/unicorn_ride_request_v1.avsc")
+  --schema-definition "file://producer/src/main/resources/avro/unicorn_ride_request_v1.avsc" | jq -r .SchemaArn)
 
 step "Check if the schema has been created successfully..."
 (set -x; awslocal glue get-schema \
-  --schema-id SchemaArn="arn:aws:glue:us-east-1:000000000000:schema/unicorn-ride-request-registry/unicorn-ride-request-schema-avro")
+  --schema-id SchemaArn=$schema_arn)
 
 step "Check if the schema version has been created correctly..."
 (set -x; awslocal glue get-schema-version \
-  --schema-id SchemaArn="arn:aws:glue:us-east-1:000000000000:schema/unicorn-ride-request-registry/unicorn-ride-request-schema-avro" \
+  --schema-id SchemaArn=$schema_arn \
   --schema-version-number LatestVersion=True)
 
 step "Prepare the Java clients (clean modules, generate AVRO model classes, compile the modules)..."
@@ -93,21 +94,21 @@ step "Run a new producer (automatically registers a new schema which removes a r
 
 step "Get a diff between the initial version and the version registered by the new producer..."
 (set -x; awslocal glue get-schema-versions-diff \
-  --schema-id SchemaArn="arn:aws:glue:us-east-1:000000000000:schema/unicorn-ride-request-registry/unicorn-ride-request-schema-avro" \
+  --schema-id SchemaArn=$schema_arn \
   --schema-diff-type SYNTAX_DIFF \
   --first-schema-version-number VersionNumber=1 \
   --second-schema-version-number LatestVersion=True | jq -r)
-
-step "Expected failure: Execute an incompatible (outdated) consumer..."
-(set -x; mvn -pl consumer exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker")
 
 step "Expected failure: Execute a producer which tries to register an incompatible schema..."
 (set -x; mvn -pl producer-3 exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker")
 
 step "Check that the newly registered schema is in state 'FAILED'..."
 awslocal glue get-schema-version \
-  --schema-id SchemaArn="arn:aws:glue:us-east-1:000000000000:schema/unicorn-ride-request-registry/unicorn-ride-request-schema-avro" \
+  --schema-id SchemaArn=$schema_arn \
   --schema-version-number VersionNumber=3
+
+step "Expected failure: Execute an incompatible (outdated) consumer..."
+(set -x; mvn -pl consumer exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker")
 
 step "Execute a compatible (updated) consumer..."
 (set -x; mvn -pl consumer-2 exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker")
