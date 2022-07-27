@@ -1,7 +1,6 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export AWS_DEFAULT_REGION ?= us-east-1
-export SERVICES ?= serverless,acm,route53
 
 usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -11,6 +10,15 @@ install:     ## Install dependencies
 	@which serverless || npm install -g serverless
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
+
+start:
+	localstack start -d
+
+stop:
+	localstack stop
+
+ready:
+	@localstack wait -t 30; echo "Localstack is ready to use!"
 
 cert:        ## Create test SSL certificate
 	mkdir -p sslcert
@@ -22,7 +30,6 @@ cert:        ## Create test SSL certificate
 		openssl x509 -req -in ssl.csr -CAcreateserial -out server.crt -sha256 -CAkey rootCA.key -CA rootCA.pem
 
 run:         ## Deploy the app locally and run an API GW test invocation
-	@make install; \
 		echo "Generating and importing test SSL certificate to ACM for Route53 domain test.example.com"; \
 		make cert; \
 		echo "Importing local test certificate into ACM API ..."; \
@@ -38,6 +45,6 @@ run:         ## Deploy the app locally and run an API GW test invocation
 		curl -H 'Host: test.example.com' http://localhost:4566/goodbye
 
 test-ci:
-	make install && make run || true
+	make start install run stop
 
 .PHONY: usage install run cert

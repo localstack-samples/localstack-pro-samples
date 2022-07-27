@@ -14,8 +14,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: make install
-
+    - name: Install LocalStack
+      run:
+          # install LocalStack cli and awslocal
+          pip install localstack awscli-local[ver1]
+          # Make sure to pull the latest version of the image
+          docker pull localstack/localstack 
     - name: Execute tests
+      env:
+        LOCALSTACK_API_KEY: ${{ secrets.LOCALSTACK_API_KEY }}
       run: make test-ci-all
