@@ -2,6 +2,7 @@ export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export AWS_DEFAULT_REGION ?= us-east-1
 
+
 usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
@@ -10,16 +11,7 @@ install:     ## Install dependencies
 	@which serverless || npm install -g serverless
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
-
-start:
-	localstack start -d
-
-stop:
-	localstack stop
-
-ready:
-	@localstack wait -t 30; echo "Localstack is ready to use!"
-
+	
 cert:        ## Create test SSL certificate
 	mkdir -p sslcert
 	cd sslcert; \
@@ -40,11 +32,26 @@ run:         ## Deploy the app locally and run an API GW test invocation
 		SLS_DEBUG=1 npm run deploy && \
 		echo "Serverless app successfully deployed. Now trying to invoke the API Gateway endpoints with custom domains." && \
 		echo && echo "Invoking endpoint 1: http://test.example.com:4566/hello" && \
-		curl -H 'Host: test.example.com' http://localhost:4566/hello && \
+		response1=`curl -H 'Host: test.example.com' http://localhost:4566/hello` && \
+		../assert "$$response1" == "hello world" && \
 		echo && echo && echo "Invoking endpoint 2: http://test.example.com:4566/goodbye" && \
-		curl -H 'Host: test.example.com' http://localhost:4566/goodbye
+		response2=`curl -H 'Host: test.example.com' http://localhost:4566/goodbye` && \
+		../assert "$$response2" == "goodbye"
+
+start:
+	localstack start -d
+
+stop:
+	@echo
+	localstack stop
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
 
 test-ci:
-	make start install run stop
+	make start install ready run; make logs; make stop
 
 .PHONY: usage install run cert

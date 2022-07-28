@@ -15,10 +15,21 @@ install:     ## Install dependencies
 	@test -e .venv || (python3 -m venv .venv; source .venv/bin/activate; pip install -r requirements.txt)
 
 run:         ## Deploy the app locally and run an AppSync GraphQL test invocation
-	@make install; \
 	./run.sh
+start:
+	localstack start -d
+
+stop:
+	@echo
+	localstack stop
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
 
 test-ci:
-	make install && make run
+	make start install ready run; make logs; make stop
 
 .PHONY: usage install start lint
