@@ -14,7 +14,16 @@ stop:          ## Stop LocalStack infrastructure
 	nohup localstack stop
 
 for-each-dir:
-	for d in $$(ls -d */); do echo "Making $$MAKE_TARGET in $$d"; ((cd $$d; $(CMD)) || echo "$$MAKE_TARGET in $$d FAILED"); done
+	for d in $$(ls -d */); do
+          echo "Making $$MAKE_TARGET in $$d"
+          ((cd $$d; $(CMD)) || (echo "$$MAKE_TARGET in $$d FAILED"; failures+=($$d))
+        done
+	for f in failures; do
+	  echo "$$MAKE_TARGET FAILURE for $$d"
+	done
+	for f in failures; do
+	  echo "\nLogs for $$d:\n"
+	  cat $(d)logs
 
 show-logs:
 	MAKE_TARGET='logs'; CMD='cat ./log.txt' make for-each-dir

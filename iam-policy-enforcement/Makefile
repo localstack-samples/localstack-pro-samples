@@ -1,7 +1,7 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export AWS_DEFAULT_REGION=us-east-1
-export IAM_ENFORCEMENT=1
+export ENFORCE_IAM=1
 
 usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -28,6 +28,6 @@ logs:
 	@localstack logs > logs.txt
 
 test-ci:
-	make start install ready run; make logs; make stop; unset IAM_ENFORCEMENT
+	make start install ready run; make logs; make stop; #unset ENFORCE_IAM
 
 .PHONY: usage install run
