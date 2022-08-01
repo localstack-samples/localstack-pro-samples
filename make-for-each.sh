@@ -15,24 +15,22 @@ for d in $(ls -d */); do
     if [ $? != 0 ]; then
       fail[$c]=$d
       c=$((c+1))
-      echo "$1 in $d FAILED" && echo
+      echo && echo "$1 in $d FAILED" && echo
+      if [ $1 == test-ci ]; then 
+        echo && echo "LocalStack logs for $d" && echo
+        cat ${d}logs.txt
+      fi
     fi
-
+    # TODO: do we still need an extra command, and if yes, should it be executed regargless of the make success?
     $cmd
   fi
 cd ..
 done
-echo && echo && echo && echo "TEST SUMMARY" && echo
+echo && echo && echo "TEST SUMMARY" && echo
 if [ $c -gt 0 ]; then
   for f in ${fail[@]}; do
     echo "$1 FAILURE for $f"
   done
-  if [ $1 == test-ci ]; then
-    echo && echo && echo "LOGS"
-    for f in ${fail[@]}; do
-      echo && echo "Logs for $f" && echo
-      cat ${f}logs.txt
-    done
     echo && echo
   fi
   exit 1
