@@ -28,6 +28,6 @@ logs:
 	@localstack logs > logs.txt
 
 test-ci:
-	make start install ready run; make logs; make stop; #unset ENFORCE_IAM
+	make start install ready run; make logs; make stop; unset ENFORCE_IAM
 
 .PHONY: usage install run
