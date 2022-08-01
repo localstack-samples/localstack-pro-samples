@@ -3,16 +3,18 @@
 echo "invokation: $@"
 echo "command: ${@:2}"
 cmd=${@:2}
-declare -A fail
+c=0
+declare -a fail
 for d in $(ls -d */); do
   cd $d
   if ! [ -e Makefile ]; then
     echo SKIPPING TESTS in $d because there is no Makefile
   else
-    echo "Making $1 in $d"
+    echo && echo "Making $1 in $d" && echo
     make $1 || false
     if [ $? != 0 ]; then
-      fail[$d]=$d
+      fail[$c]=$d
+      c=c+1
       echo "$1 in $d FAILED" && echo
     fi
 
@@ -21,7 +23,7 @@ for d in $(ls -d */); do
 cd ..
 done
 echo && echo && echo && echo "TEST SUMMARY" && echo
-if [ ${#fail[@]} -gt 0 ]; then
+if [ $c -gt 0 ]; then
   for f in ${fail[@]}; do
     echo "$1 FAILURE for $f"
   done

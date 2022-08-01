@@ -14,7 +14,7 @@ install:         ## Install dependencies
 	
 
 run:           ## Deploy and start the app locally
-	@(test -d .terraform || terraform init) && terraform apply
+	@(test -d .terraform || terraform init) && terraform apply --auto-approve
 
 clear: 		 ## remove remnants from older deployments
 	@rm -f terraform.tfstate terraform.tfstate.backup
