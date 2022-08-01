@@ -20,11 +20,10 @@ jobs:
       run: pip install virtualenv paho-mqtt
 
     - name: Setup config
-    # for codecommit sample
       run: |
-      echo "Configuring git for codecommit sample"
-      git config --global user.email "localstack.sample@localstack.cloud"
-      git config --global user.name "Localstack Pro-Samples"
+        echo "Configuring git for codecommit sample"
+        git config --global user.email "localstack.sample@localstack.cloud"
+        git config --global user.name "Localstack Pro-Samples"
 
     - name: Pull the latest docker image
       run: docker pull localstack/localstack
