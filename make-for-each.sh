@@ -14,7 +14,7 @@ for d in $(ls -d */); do
     make $1 || false
     if [ $? != 0 ]; then
       fail[$c]=$d
-      c=c+1
+      c=$((c+1))
       echo "$1 in $d FAILED" && echo
     fi
 
