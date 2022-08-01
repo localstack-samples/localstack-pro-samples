@@ -52,6 +52,7 @@ logs:
 	@localstack logs > logs.txt
 
 test-ci:
-	make start install ready run; make logs; make stop
+	make start install ready run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;
 
 .PHONY: usage install run cert
