@@ -15,10 +15,13 @@ jobs:
 
     - name: Install LocalStack
       run:  pip install localstack awscli-local[ver1]
-    
+
+    - name: Install Dependencies
+      run: pip install virtualenv
+
     - name: Pull the latest docker image
       run: docker pull localstack/localstack
-    
+
     - name: Execute tests
       env:
         LOCALSTACK_API_KEY: ${{ secrets.TEST_LOCALSTACK_API_KEY }}
