@@ -18,7 +18,7 @@ for d in $(ls -d */); do
       echo && echo "$1 in $d FAILED" && echo
       if [ $1 == test-ci ]; then 
         echo && echo "LocalStack logs for $d" && echo
-        cat ${d}logs.txt
+        cat logs.txt
       fi
     fi
     # TODO: do we still need an extra command, and if yes, should it be executed regargless of the make success?

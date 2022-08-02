@@ -16,9 +16,6 @@ stop:          ## Stop LocalStack infrastructure
 for-each-dir:
 	./make-for-each.sh $$MAKE_TARGET $$CMD
 
-show-logs:
-	MAKE_TARGET='logs'; CMD='cat ./log.txt' make for-each-dir
-
 test-ci-all:
 	MAKE_TARGET='test-ci' make for-each-dir
 
