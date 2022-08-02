@@ -17,7 +17,9 @@ jobs:
       run:  pip install localstack awscli-local[ver1]
 
     - name: Install Dependencies
-      run: pip install virtualenv paho-mqtt
+      run: |
+        pip install virtualenv
+        npm install -g serverless
 
     - name: Setup config
       run: |
