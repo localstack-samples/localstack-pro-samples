@@ -13,6 +13,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: Setup Nodejs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 12
+        
     - name: Install LocalStack
       run:  pip install localstack awscli-local[ver1]
 

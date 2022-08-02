@@ -1,14 +1,14 @@
 #!/bin/bash
 #set -x
-echo "invokation: $@"
-echo "command: ${@:2}"
+#echo "invokation: $@"
+#echo "command: ${@:2}"
 cmd=${@:2}
 c=0
 declare -a fail
 for d in $(ls -d */); do
   cd $d
   if ! [ -e Makefile ]; then
-    echo SKIPPING TESTS in $d because there is no Makefile
+    echo && echo SKIPPING TESTS in $d because there is no Makefile
   else
     echo && echo "Making $1 in $d" && echo
     make $1 || false
@@ -35,5 +35,5 @@ if [ $c -gt 0 ]; then
   fi
   exit 1
 else
-echo "All tests successful!"
+echo && echo "All tests successful!" && echo
 fi
