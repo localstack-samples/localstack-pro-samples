@@ -10,7 +10,7 @@ install:     ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
 
-deploy:      ## Build and deploy the app locally
+run:      ## Build and deploy the app locally
 		echo "Creating a new ECR repository locally"; \
 		repoUri=$$(awslocal ecr create-repository --repository-name repo1 | jq -r '.repository.repositoryUri'); \
 		echo "Building the Docker image, pushing it to local ECR URL: $$repoUri"; \
