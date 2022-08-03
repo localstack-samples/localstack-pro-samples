@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "Step 1: Trying to create Kinesis stream - should get DENIED ..."
 awslocal kinesis create-stream --stream-name s1 --shard-count 1
