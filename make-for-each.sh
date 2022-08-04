@@ -36,4 +36,5 @@ if [ $c -gt 0 ]; then
   exit 1
 else
 echo && echo "All tests successful!" && echo
+exit 0
 fi
