@@ -32,7 +32,6 @@ if [ $c -gt 0 ]; then
     echo "$1 FAILURE for $f"
   done
     echo && echo
-  fi
   exit 1
 else
 echo && echo "All tests successful!" && echo
