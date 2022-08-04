@@ -29,6 +29,7 @@ run:      ## Build and deploy the app locally
 		cluster_arn=$$(awslocal ecs list-clusters | jq -r '.clusterArns[0]') && \
 		for i in {1..5}; do task_arn=$$(awslocal ecs list-tasks --cluster $$cluster_arn | jq -r '.taskArns[0]'); if [ "$$task_arn" != "null" ]; then break; fi; sleep 2; done && \
 		app_port=$$(awslocal ecs describe-tasks --cluster $$cluster_arn --tasks $$task_arn | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort') && \
+		echo "curling localhost:$$app_port" && \
 		curl localhost:$$app_port && \
 		echo "Sample app (nginx) successfully deployed. You can access it under http://localhost:$$app_port"
 

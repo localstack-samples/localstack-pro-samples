@@ -74,7 +74,7 @@ def create_graph_db():
         clusters = client.describe_db_clusters()
         return clusters["DBClusters"][0]["Status"] == "available"
 
-    cluster_available = poll_condition(is_cluster_available, timeout=10, interval=1)
+    cluster_available = poll_condition(is_cluster_available, timeout=15, interval=1)
     if not cluster_available:
         raise Exception("The server took too much time to start")
 
