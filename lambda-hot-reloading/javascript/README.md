@@ -42,7 +42,7 @@ Push the following command to create the Lambda function:
 
 ```bash
 awslocal lambda create-function --function-name myfirstlambda \
-    --code S3Bucket="__local__",S3Key="<PATH_TO_THE_LAMBDA_FUNCTION" \
+    --code S3Bucket="__local__",S3Key="/path/to/local/lambda/code" \
     --handler index.handler \
     --runtime nodejs14.x  \
     --role arn:aws:iam::000000000000:role/lambda-example
