@@ -42,4 +42,5 @@ test-ci:
 	make start install ready run; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
 	
-.PHONY: usage install run
+.PHONY: usage install test-mqtt start run stop ready logs test-ci
+

@@ -32,4 +32,5 @@ test-ci:
 	#make start install ready run; return_code=`echo $$?`;\
 	#make logs; make stop; exit $$return_code;
 	echo "SKIPPING neptune test for now, @FIXME!!"
-.PHONY: usage install run
+.PHONY: usage install start run stop ready logs test-ci
+

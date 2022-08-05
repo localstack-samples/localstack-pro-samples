@@ -31,4 +31,5 @@ test-ci:
 	#make start install ready run; return_code=`echo $$?`;\
 	#make logs; make stop; unset ENFORCE_IAM exit $$return_code;
 	echo "SKIPPING IAM test for now, @FIXME!!"
-.PHONY: usage install run
+.PHONY: usage install start run stop ready logs test-ci
+

@@ -1,5 +1,3 @@
-.PHONY: install run test-ci
-
 # Install requirements
 install:    
 	docker pull ubuntu:focal
@@ -26,3 +24,5 @@ logs:
 test-ci:
 	make start install ready run; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
+
+.PHONY: install start run stop ready logs test-ci

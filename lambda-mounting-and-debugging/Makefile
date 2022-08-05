@@ -33,4 +33,5 @@ test-ci:
 	make start install ready run; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
 	
-.PHONY: usage install deploy
+.PHONY: usage install start run stop ready logs test-ci
+

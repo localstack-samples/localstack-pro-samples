@@ -32,4 +32,5 @@ logs:
 test-ci:
 	# skip Athena tests for now, to avoid downloading large images in CI
 
-.PHONY: usage install run
+.PHONY: usage install start run stop ready logs test-ci
+
