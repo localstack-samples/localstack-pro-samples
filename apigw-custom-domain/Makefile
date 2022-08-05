@@ -55,4 +55,4 @@ test-ci:
 	make start install ready run; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
 
-.PHONY: usage install run cert
+.PHONY: usage install run cert ready stop logs test-ci

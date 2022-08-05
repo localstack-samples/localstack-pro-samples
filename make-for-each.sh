@@ -1,8 +1,4 @@
 #!/bin/bash
-#set -x
-#echo "invokation: $@"
-#echo "command: ${@:2}"
-cmd=${@:2}
 c=0
 declare -a fail
 for d in $(ls -d */); do
@@ -16,13 +12,11 @@ for d in $(ls -d */); do
       fail[$c]=$d
       c=$((c+1))
       echo && echo "$1 in $d FAILED" && echo
-      if [ $1 == test-ci ]; then 
+      if [ $1 == test-ci ]; then
         echo && echo "LocalStack logs for $d" && echo
         cat logs.txt
       fi
     fi
-    # TODO: do we still need an extra command, and if yes, should it be executed regargless of the make success?
-    $cmd
   fi
 cd ..
 done
