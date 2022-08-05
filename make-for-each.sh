@@ -11,7 +11,7 @@ for d in $(ls -d */); do
     echo && echo SKIPPING TESTS in $d because there is no Makefile
   else
     echo && echo "Making $1 in $d" && echo
-    make $1 || false
+    make $1
     if [ $? != 0 ]; then
       fail[$c]=$d
       c=$((c+1))
