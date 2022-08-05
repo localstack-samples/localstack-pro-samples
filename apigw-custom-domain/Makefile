@@ -33,10 +33,10 @@ run:         ## Deploy the app locally and run an API GW test invocation
 		echo "Serverless app successfully deployed. Now trying to invoke the API Gateway endpoints with custom domains." && \
 		echo && echo "Invoking endpoint 1: http://test.example.com:4566/hello" && \
 		response1=`curl -H 'Host: test.example.com' http://localhost:4566/hello` && \
-		../assert "$$response1" == "hello world" && \
+		../assert "$$response1" = "hello world" && \
 		echo && echo && echo "Invoking endpoint 2: http://test.example.com:4566/goodbye" && \
 		response2=`curl -H 'Host: test.example.com' http://localhost:4566/goodbye` && \
-		../assert "$$response2" == "goodbye"
+		../assert "$$response2" = "goodbye"
 
 start:
 	localstack start -d
