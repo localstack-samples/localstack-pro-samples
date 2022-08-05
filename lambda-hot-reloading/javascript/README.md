@@ -54,7 +54,7 @@ We can quickly make sure that it works by invoking it with a simple payload:
 awslocal lambda invoke --function-name myfirstlambda output.txt
 ```
 
-The invocation returns itself returns:
+The invocation itself returns:
 
 ```json
 {
