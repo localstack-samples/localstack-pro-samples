@@ -33,7 +33,7 @@ else
 fi
 
 step "Start with creating a Kafka cluster..."
-cluster_arn=$(awslocal kafka create-cluster \
+cluster_arn=$(set -x;awslocal kafka create-cluster \
   --cluster-name "unicorn-ride-cluster" \
   --kafka-version "2.2.1" \
   --number-of-broker-nodes 1 \
