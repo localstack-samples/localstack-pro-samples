@@ -5,7 +5,10 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
+  schedule:
+    - cron '0 13 * * *' # 13:00 server time, meaning 14/15:00 our time. For regular commits in LS
+    - cron '0 17 * * *' # 17:00 server time, meaning 18/19:00 our time. For the "This needs to be done today" folks.
+    - cron '0 7 * * *'  # 08:00 server time, meaning 09/10:00 our time. For the night owls and early birds.
 jobs:
   test:
     runs-on: ubuntu-latest
