@@ -19,7 +19,7 @@ run:         ## Deploy and run the sample locally
 		test -e $(REPO_FOLDER) || git clone $$gitUrl $(REPO_FOLDER); \
 		echo 'test file content 123' >> $(REPO_FOLDER)/test.txt; \
 		echo "-----\nStep 3: Committing and pushing new file to the repository"; \
-		(cd $(REPO_FOLDER); git add test.txt; git commit -am test_commit; git push); \
+		(cd $(REPO_FOLDER) && git add test.txt && git commit -m test_commit && git push); \
 		echo "-----\nStep 4: Cloning repo to second temporary folder"; \
 		test -e $(REPO_FOLDER).copy || git clone $$gitUrl $(REPO_FOLDER).copy; \
 		echo "-----\nStep 5: Printing file content from second clone of repo"; \
