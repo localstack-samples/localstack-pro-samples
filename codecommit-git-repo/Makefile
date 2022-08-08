@@ -1,6 +1,5 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = s3,codecommit
 export AWS_DEFAULT_REGION=us-east-1
 export REPO_FOLDER = /tmp/test.codecommit.repo1
 
@@ -20,13 +19,29 @@ run:         ## Deploy and run the sample locally
 		test -e $(REPO_FOLDER) || git clone $$gitUrl $(REPO_FOLDER); \
 		echo 'test file content 123' >> $(REPO_FOLDER)/test.txt; \
 		echo "-----\nStep 3: Committing and pushing new file to the repository"; \
-		(cd $(REPO_FOLDER); git add test.txt; git commit -am test_commit; git push); \
+		(cd $(REPO_FOLDER) && git add test.txt && git commit -m test_commit && git push); \
 		echo "-----\nStep 4: Cloning repo to second temporary folder"; \
 		test -e $(REPO_FOLDER).copy || git clone $$gitUrl $(REPO_FOLDER).copy; \
 		echo "-----\nStep 5: Printing file content from second clone of repo"; \
 		cat $(REPO_FOLDER).copy/test.txt
 
-test-ci:
-	make install && make run || true
 
-.PHONY: usage install run
+start:
+	localstack start -d
+
+stop:
+	@echo
+	localstack stop
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
+
+test-ci:
+	make start install ready run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;
+		
+.PHONY: usage install start run stop ready logs test-ci
+

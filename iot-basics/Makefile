@@ -15,18 +15,32 @@ test-mqtt:
 		(. .venv/bin/activate; python mqtt_test.py)
 
 run:         ## Deploy the app locally
-	@make install; \
-		echo "Deploying app to local environment"; \
-		awslocal cloudformation create-stack --stack-name test-iot --template-body file://iot.cf.yml; \
-		echo "IoT stack successfully deployed. Now checking whether all resources have been created."; \
-		sleep 3; \
-		awslocal iot list-things; \
-		awslocal iot list-policies; \
-		awslocal iot create-job --job-id j1 --targets t1; \
-		awslocal iot list-jobs; \
-		make test-mqtt
+	echo "Deploying app to local environment"; \
+	awslocal cloudformation create-stack --stack-name test-iot --template-body file://iot.cf.yml; \
+	echo "IoT stack successfully deployed. Now checking whether all resources have been created."; \
+	sleep 3; \
+	awslocal iot list-things; \
+	awslocal iot list-policies; \
+	awslocal iot create-job --job-id j1 --targets t1; \
+	awslocal iot list-jobs; \
+	make test-mqtt
+
+start:
+	localstack start -d
+
+stop:
+	@echo
+	localstack stop
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
 
 test-ci:
-	make install && make run
+	make start install ready run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;
+	
+.PHONY: usage install test-mqtt start run stop ready logs test-ci
 
-.PHONY: usage install run

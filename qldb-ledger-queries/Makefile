@@ -1,7 +1,6 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export AWS_DEFAULT_REGION = us-east-1
-export SERVICES = qldb
 PYTHON_BIN ?= $(shell which python3 || which python)
 
 usage:      ## Show this help
@@ -15,7 +14,22 @@ install:    ## Install dependencies
 run:        ## Run the sample queries against the local QLDB API
 	@$(PYTHON_BIN) query.py
 
-test-ci:
-	make install && make run || true
+start:
+	localstack start -d
 
-.PHONY: usage install run test-ci
+stop:
+	@echo
+	localstack stop
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
+
+test-ci:
+	make start install ready run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;
+	
+.PHONY: usage install start run stop ready logs test-ci
+

@@ -9,13 +9,28 @@ install:   ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
 
-run-interactive: install  ## Prepare environment and run sample Glue MSK environment (interactive example)
+run-interactive:  ## Prepare environment and run sample Glue MSK environment (interactive example)
 	./run.sh -it
 
-run run-quiet: install    ## Prepare environment and run sample Glue MSK environment (non-interactive example)
+run run-quiet:    ## Prepare environment and run sample Glue MSK environment (non-interactive example)
 	./run.sh
 
-test-ci:
-	make install && make run
+start:
+	localstack start -d
 
-.PHONY: usage install run-interactive run-quiet run run-quiet
+stop:
+	@echo
+	localstack stop
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
+
+test-ci:
+	make start install ready run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;
+	
+.PHONY: usage install start run-interactive run-quiet run stop ready logs test-ci
+

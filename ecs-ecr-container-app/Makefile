@@ -1,6 +1,5 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = cloudformation,ecs,ec2
 export AWS_DEFAULT_REGION = us-east-1
 DOCKER_CONTAINER = localstack_nginx_1_0
 
@@ -11,8 +10,7 @@ install:     ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
 
-deploy:      ## Build and deploy the app locally
-	@make install && make clean; \
+run:      ## Build and deploy the app locally
 		echo "Creating a new ECR repository locally"; \
 		repoUri=$$(awslocal ecr create-repository --repository-name repo1 | jq -r '.repository.repositoryUri'); \
 		echo "Building the Docker image, pushing it to local ECR URL: $$repoUri"; \
@@ -30,14 +28,30 @@ deploy:      ## Build and deploy the app locally
 		sleep 5 && \
 		cluster_arn=$$(awslocal ecs list-clusters | jq -r '.clusterArns[0]') && \
 		for i in {1..5}; do task_arn=$$(awslocal ecs list-tasks --cluster $$cluster_arn | jq -r '.taskArns[0]'); if [ "$$task_arn" != "null" ]; then break; fi; sleep 2; done && \
-		app_port=$$(awslocal ecs describe-tasks --cluster $$cluster_arn --tasks $$task_arn | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort') && \
+		for i in {1..5}; do app_port=$$(awslocal ecs describe-tasks --cluster $$cluster_arn --tasks $$task_arn | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort'); if [ "$$app_port" != "null" ]; then break; fi; sleep 2; done && \
+		echo "curling localhost:$$app_port" && \
 		curl localhost:$$app_port && \
 		echo "Sample app (nginx) successfully deployed. You can access it under http://localhost:$$app_port"
 
 clean:        ## stop and remove created containers
 	@((docker stop $(DOCKER_CONTAINER) && docker rm $(DOCKER_CONTAINER))>/dev/null 2>/dev/null) ||:
 
-test-ci:
-	make install && make deploy || true
+start:
+	localstack start -d
 
-.PHONY: usage install deploy
+stop:
+	@echo
+	localstack stop
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
+
+test-ci:
+	make start install ready run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;
+	
+.PHONY: usage install start run stop clean ready logs test-ci
+

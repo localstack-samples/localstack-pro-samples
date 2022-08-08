@@ -13,17 +13,32 @@ install:     ## Install dependencies
 	@which awslocal || pip install awscli-local
 
 run:         ## Deploy the app locally and run a Lambda test invocation
-	@make install; \
-		echo "Deploying Serverless app to local environment"; \
-		awslocal s3api create-bucket --bucket testbucket; \
-		SLS_DEBUG=1 npm run deploy && \
-		echo "Serverless app successfully deployed. Now trying to invoke the Lambda functions via ELB endpoint." && \
-		echo && echo "Invoking endpoint 1: http://lb-test-1.elb.localhost.localstack.cloud:4566/hello1" && \
-		curl http://lb-test-1.elb.localhost.localstack.cloud:4566/hello1 && \
-		echo && echo && echo "Invoking endpoint 2: http://lb-test-1.elb.localhost.localstack.cloud:4566/hello2" && \
-		curl http://lb-test-1.elb.localhost.localstack.cloud:4566/hello2
+	echo "Deploying Serverless app to local environment"; \
+	awslocal s3api create-bucket --bucket testbucket; \
+	SLS_DEBUG=1 npm run deploy && \
+	echo "Serverless app successfully deployed. Now trying to invoke the Lambda functions via ELB endpoint." && \
+	echo && echo "Invoking endpoint 1: http://lb-test-1.elb.localhost.localstack.cloud:4566/hello1" && \
+	curl http://lb-test-1.elb.localhost.localstack.cloud:4566/hello1 && \
+	echo && echo && echo "Invoking endpoint 2: http://lb-test-1.elb.localhost.localstack.cloud:4566/hello2" && \
+	curl http://lb-test-1.elb.localhost.localstack.cloud:4566/hello2
+
+
+start:
+	localstack start -d
+
+stop:
+	@echo
+	localstack stop
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
 
 test-ci:
-	make install && make run || true
+	make start install ready run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;
+	
+.PHONY: usage install start run stop ready logs test-ci
 
-.PHONY: usage install start lint

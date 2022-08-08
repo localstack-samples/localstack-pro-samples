@@ -1,0 +1,46 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  schedule:
+    - cron: '0 13 * * *' # 13:00 server time, meaning 14/15:00 our time. For regular commits in LS
+    - cron: '0 17 * * *' # 17:00 server time, meaning 18/19:00 our time. For the "This needs to be done today" folks.
+    - cron: '0 7 * * *'  # 08:00 server time, meaning 09/10:00 our time. For the night owls and early birds.
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Nodejs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 12
+        
+    - name: Install LocalStack
+      run:  pip install localstack awscli-local[ver1]
+
+    - name: Install Dependencies
+      run: |
+        pip install virtualenv
+        npm install -g serverless
+
+    - name: Setup config
+      run: |
+        echo "Configuring git for codecommit sample"
+        git config --global user.email "localstack.sample@localstack.cloud"
+        git config --global user.name "Localstack Pro-Samples"
+
+    - name: Pull the latest docker image
+      run: docker pull localstack/localstack
+
+    - name: Execute tests
+      env:
+        LOCALSTACK_API_KEY: ${{ secrets.TEST_LOCALSTACK_API_KEY }}
+        DNS_ADDRESS: 127.0.0.1
+        DEBUG: 1
+      run: make test-ci-all

@@ -10,10 +10,25 @@ install:   ## Install dependencies
 	@which awslocal || pip install awscli-local
 	docker pull localstack/bigdata
 
-run: install    ## Prepare environment and run sample
+run:    ## Prepare environment and run sample
 	./run.sh
 
-test-ci:
-	make install && make run
+start:
+	localstack start -d
 
-.PHONY: usage install run test-ci
+stop:
+	@echo
+	localstack stop
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
+
+test-ci:
+	make start install ready run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;
+	
+.PHONY: usage install start run stop ready logs test-ci
+

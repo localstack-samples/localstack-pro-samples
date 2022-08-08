@@ -16,4 +16,4 @@ run:        ## Run the scenario with the Cognito commands
 test-ci:
 	# skip cognito tests in CI for now, as they require interactive input
 
-.PHONY: usage install run test
+.PHONY: usage install run test-ci

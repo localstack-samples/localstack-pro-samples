@@ -4,6 +4,7 @@ node_modules/
 .classpath
 .project
 .settings/
+.vscode/
 target/
 
 .idea/
@@ -27,3 +28,5 @@ testdata/
 
 glacier-s3-select/*result.csv
 azure-functions/.python_packages/
+
+*/logs.txt

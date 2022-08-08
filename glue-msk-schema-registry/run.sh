@@ -33,19 +33,30 @@ else
 fi
 
 step "Start with creating a Kafka cluster..."
-cluster_arn=$(set -x; awslocal kafka create-cluster \
+cluster_arn=$(set -x;awslocal kafka create-cluster \
   --cluster-name "unicorn-ride-cluster" \
   --kafka-version "2.2.1" \
   --number-of-broker-nodes 1 \
   --broker-node-group-info "{\"ClientSubnets\": [], \"InstanceType\":\"kafka.m5.xlarge\"}" | jq -r .ClusterArn)
 
 state=$(set -x; awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
-while [ "$state" != ACTIVE ]; do
+
+for i in {1..35}; do
   echo "Waiting for Kafka cluster to become ACTIVE (current status: $state)..."
   sleep 4
+  if [ "$state" == ACTIVE ]; then
+    break
+  elif [ "$state" == FAILED ]; then
+    echo "Cluster creation FAILED, exiting..."
+    exit 1
+  fi
   state=$(awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
 done
 
+if [ "$state" != ACTIVE  ]; then
+  echo "Gave up waiting on Cluster, exiting..."
+  exit 1
+fi
 bootstrap_broker=$(set -x; awslocal kafka get-bootstrap-brokers --cluster-arn  $cluster_arn | jq -r .BootstrapBrokerString)
 echo "Kafka Bootstrap Broker: $bootstrap_broker"
 

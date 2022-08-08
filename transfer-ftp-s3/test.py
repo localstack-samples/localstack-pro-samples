@@ -56,15 +56,13 @@ def upload_files(server_id, ftp_port):
 
     # upload file to root dir
     print('Uploading file to FTP root directory')
-    ftp.storbinary('STOR %s' % S3_FILENAME, io.BytesIO(FILE_CONTENT))
-    time.sleep(1)
+    retry(ftp.storbinary, cmd='STOR %s' % S3_FILENAME, fp=io.BytesIO(FILE_CONTENT))
 
     # upload file to sub dir
     print('Uploading file to FTP sub-directory')
     ftp.mkd(S3_DIR)
     ftp.cwd(S3_DIR)
-    ftp.storbinary('STOR %s' % S3_FILENAME, io.BytesIO(FILE_CONTENT))
-    time.sleep(1)
+    retry(ftp.storbinary, cmd='STOR %s' % S3_FILENAME,fp=io.BytesIO(FILE_CONTENT))
 
     ftp.quit()
 
@@ -84,6 +82,20 @@ def download_files(server_id, ftp_port):
 def get_clients():
     return boto3.client('transfer', endpoint_url=EDGE_URL), boto3.client('s3', endpoint_url=EDGE_URL)
 
+# copied from localstack, to avoid "connection refused" errors
+
+def retry(function, retries=3, sleep=1.0, sleep_before=0, **kwargs):
+    raise_error = None
+    if sleep_before > 0:
+        time.sleep(sleep_before)
+    retries = int(retries)
+    for i in range(0, retries + 1):
+        try:
+            return function(**kwargs)
+        except Exception as error:
+            raise_error = error
+            time.sleep(sleep)
+    raise raise_error
 
 def main():
     server_id, ftp_port = create_transfer_api()

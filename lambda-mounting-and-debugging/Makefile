@@ -1,6 +1,5 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = serverless
 export AWS_DEFAULT_REGION = us-east-1
 VENV_DIR ?= .venv
 
@@ -13,12 +12,26 @@ install:     ## Install dependencies
 	. $(VENV_DIR)/bin/activate; pip install debugpy
 
 run:         ## Deploy and invoke the Lambda container locally
-	@make install; \
-		echo "Deploying Lambda locally"; \
-		./run.sh; \
-		echo "Done - test successfully finished."
+	echo "Deploying Lambda locally"; \
+	./run.sh; \
+	echo "Done - test successfully finished."
+
+start:
+	localstack start -d
+
+stop:
+	@echo
+	localstack stop
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
 
 test-ci:
-	make install && make deploy || true
+	make start install ready run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;
+	
+.PHONY: usage install start run stop ready logs test-ci
 
-.PHONY: usage install deploy
