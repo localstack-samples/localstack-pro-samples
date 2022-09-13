@@ -31,6 +31,7 @@ jobs:
     - name: Install Dependencies
       run: |
         pip install virtualenv
+        pip install --upgrade pyopenssl
         npm install -g serverless
 
     - name: Setup config
