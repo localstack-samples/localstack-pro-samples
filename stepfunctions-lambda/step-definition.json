@@ -1,0 +1,48 @@
+{
+    "Comment": "Parallel Demo",
+    "StartAt": "Parallel State",
+    "States": 
+    {
+      "Parallel State": {
+        "Type": "Parallel",
+        "Next": "combine",
+        "Branches": [
+          {
+            "StartAt": "adam",
+            "States": {
+              "adam": {
+                "Type": "Task",
+                "Resource": "arn:aws:states:::lambda:invoke",
+                "Parameters": {
+                  "FunctionName": "arn:aws:lambda:us-east-1:000000000000:function:adam",
+                  "Payload": {"input.$": "$"}},
+                "OutputPath": "$.Payload",
+                "End": true}}
+          },
+          {
+            "StartAt": "cole",
+            "States": {
+              "cole": {
+                "Type": "Task",
+                "Resource": "arn:aws:states:::lambda:invoke",
+                "Parameters": {
+                  "FunctionName": "arn:aws:lambda:us-east-1:000000000000:function:cole",
+                  "Payload": {"input.$": "$"}},
+                "OutputPath": "$.Payload",
+                "End": true
+              }
+            }
+          }
+        ]
+      },
+      "combine": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:us-east-1:000000000000:function:combine",
+          "Payload": {"input.$": "$"}},
+        "OutputPath": "$.Payload",
+        "End": true}
+    }
+  }
+  
