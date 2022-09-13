@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+
+  ProcessDynamoDBStreamFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.processDynamo
+      CodeUri: .
+      Runtime: nodejs14.x
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt DynamoDBTable.StreamArn
+            BatchSize: 1
+            StartingPosition: TRIM_HORIZON
+            FilterCriteria:
+              Filters: 
+                - Pattern: "{ \"eventName\" : [\"INSERT\"] }"
+
+  ProcessASQSFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.processASQS
+      CodeUri: .
+      Runtime: nodejs14.x
+      Events:
+        MySQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt MyQueue.Arn
+            BatchSize: 1
+            MaximumBatchingWindowInSeconds: 0
+            FilterCriteria:
+              Filters: 
+                - Pattern: "{\"body\": { \"data\" : [\"A\"] }}"
+
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - AttributeName: id
+          AttributeType: S
+      KeySchema: 
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+
+  MyQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: MyQueue
