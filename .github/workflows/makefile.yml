@@ -19,7 +19,12 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 12
-        
+
+# see https://github.com/localstack/localstack/pull/6831
+# remove once no longer needed
+    - name: Fix pyOpenSSL version
+      run:  pip install --upgrade pyOpenSSL
+
     - name: Install LocalStack
       run:  pip install localstack awscli-local[ver1]
 
