@@ -47,4 +47,5 @@ jobs:
         LOCALSTACK_API_KEY: ${{ secrets.TEST_LOCALSTACK_API_KEY }}
         DNS_ADDRESS: 127.0.0.1
         DEBUG: 1
+      timeout: 50
       run: make test-ci-all
