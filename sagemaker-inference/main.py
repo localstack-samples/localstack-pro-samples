@@ -24,24 +24,25 @@ sagemaker_runtime: SageMakerRuntimeClient = boto3.client("sagemaker-runtime", en
 s3: S3Client = boto3.client("s3", endpoint_url=LOCALSTACK_ENDPOINT)
 
 
-def deploy_model():
+def deploy_model(run_id: str = "0"):
     # Put the Model into the correct bucket
-    s3.create_bucket(Bucket=MODEL_BUCKET)
-    s3.upload_file(MODEL_TAR, MODEL_BUCKET, f"{MODEL_NAME}.tar.gz")
+    s3.create_bucket(Bucket=f"{MODEL_BUCKET}-{run_id}")
+    s3.upload_file(MODEL_TAR, f"{MODEL_BUCKET}-{run_id}", f"{MODEL_NAME}.tar.gz")
 
     # Create the model in sagemaker
-    sagemaker.create_model(ModelName=MODEL_NAME, ExecutionRoleArn=EXECUTION_ROLE_ARN,
+    sagemaker.create_model(ModelName=f"{MODEL_NAME}-{run_id}", ExecutionRoleArn=EXECUTION_ROLE_ARN,
                            PrimaryContainer={"Image": CONTAINER_IMAGE,
-                                             "ModelDataUrl": f"s3://{MODEL_BUCKET}/{MODEL_NAME}.tar.gz"})
-    sagemaker.create_endpoint_config(EndpointConfigName=CONFIG_NAME, ProductionVariants=[{
-        "VariantName": "var1", "ModelName": MODEL_NAME, "InitialInstanceCount": 1, "InstanceType": "ml.m5.large"
+                                             "ModelDataUrl": f"s3://{MODEL_BUCKET}-{run_id}/{MODEL_NAME}.tar.gz"})
+    sagemaker.create_endpoint_config(EndpointConfigName=f"{CONFIG_NAME}-{run_id}", ProductionVariants=[{
+        "VariantName": f"var-{run_id}", "ModelName": f"{MODEL_NAME}-{run_id}", "InitialInstanceCount": 1,
+        "InstanceType": "ml.m5.large"
     }])
-    sagemaker.create_endpoint(EndpointName=ENDPOINT_NAME, EndpointConfigName=CONFIG_NAME)
+    sagemaker.create_endpoint(EndpointName=f"{ENDPOINT_NAME}-{run_id}", EndpointConfigName=f"{CONFIG_NAME}-{run_id}")
 
 
 def _get_input_dict():
     X, Y = mnist_to_numpy("data/mnist", train=False)
-    mask = random.sample(range(X.shape[0]), 16)
+    mask = random.sample(range(X.shape[0]), 2)
     samples = X[mask]
 
     samples = normalize(samples.astype(np.float32), axis=(1, 2))
@@ -49,26 +50,36 @@ def _get_input_dict():
         "inputs": np.expand_dims(samples, axis=1).tolist()
     }
 
+
 def _show_predictions(response):
     predictions = np.argmax(np.array(response, dtype=np.float32), axis=1).tolist()
     print(f"Predicted digits: {predictions}")
 
 
-def inference_model_container():
+def inference_model_container(run_id: str = "0"):
+    # TODO find corect port of container
     inputs = _get_input_dict()
     response = httpx.post("http://localhost.localstack.cloud:4510/invocations", json=inputs,
                           headers={"Content-Type": "application/json", "Accept": "application/json"})
     _show_predictions(json.loads(response.text))
 
 
+def inference_model_boto3(run_id: str = "0"):
+    inputs = _get_input_dict()
+    response = sagemaker_runtime.invoke_endpoint(EndpointName=f"{ENDPOINT_NAME}-{run_id}", Body=json.dumps(inputs),
+                                                 Accept="application/json",
+                                                 ContentType="application/json")
+    _show_predictions(json.loads(response["Body"].read()))
 
-def inference_model_boto3():
-    print("inference...")
-    sagemaker_runtime.invoke_endpoint(EndpointName=ENDPOINT_NAME, Body="", Accept="application/json")
 
+def _short_uid():
+    import uuid
+
+    return str(uuid.uuid4())[:8]
 
 
 if __name__ == '__main__':
-    deploy_model()
-    inference_model_container()
-    # inference_model_boto3()
+    test_run = _short_uid()
+    deploy_model(test_run)
+    inference_model_boto3(test_run)
+    inference_model_container(test_run)
