@@ -1,5 +1,6 @@
 import json
 import random
+import time
 
 import boto3
 import httpx
@@ -57,9 +58,15 @@ def _show_predictions(response):
 
 
 def inference_model_container(run_id: str = "0"):
-    # TODO find corect port of container
+    ep = sagemaker.describe_endpoint(EndpointName=f"{ENDPOINT_NAME}-{run_id}")
+    arn = ep["EndpointArn"]
+    tag_list = sagemaker.list_tags(ResourceArn=arn)
+    port = "4510"
+    for tag in tag_list["Tags"]:
+        if tag["Key"] == "_LS_ENDPOINT_PORT_":
+            port = tag["Value"]
     inputs = _get_input_dict()
-    response = httpx.post("http://localhost.localstack.cloud:4510/invocations", json=inputs,
+    response = httpx.post(f"http://localhost.localstack.cloud:{port}/invocations", json=inputs,
                           headers={"Content-Type": "application/json", "Accept": "application/json"})
     _show_predictions(json.loads(response.text))
 
@@ -81,5 +88,8 @@ def _short_uid():
 if __name__ == '__main__':
     test_run = _short_uid()
     deploy_model(test_run)
+    # wait some time to avoid connection resets in log output
+    # -> not essential as the container spins up quickly enough within the retries of boto
+    time.sleep(2)
     inference_model_boto3(test_run)
     inference_model_container(test_run)
