@@ -2,7 +2,7 @@
 
 
 # set your mail here
-my_email=bernhard.matyas@localstack.cloud
+my_email=put.yourmail@here.com
 
 echo "using email $my_email for the example"
 
