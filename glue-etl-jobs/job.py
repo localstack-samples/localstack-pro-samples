@@ -66,7 +66,9 @@ def main():
         m_df = dfc.select(df_name)
         print("Writing to Postgres table:", df_name)
         glueContext.write_dynamic_frame.from_jdbc_conf(
-            frame = m_df, catalog_connection = "c1",
+            frame = m_df,
+            # should be same as CONNECTION_NAME in the bash script
+            catalog_connection = "glue-etl-cluster1-connection",
             connection_options = {"dbtable": df_name, "database": "test"},
             redshift_tmp_dir = redshift_temp_dir)
 
