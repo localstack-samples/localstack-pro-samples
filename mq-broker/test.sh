@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Creating MQ broker in LocalStack ..."
-UUID=$(cat /proc/sys/kernel/random/uuid)
-broker_name="broker_${UUID:24}"
+UUID=$(echo $RANDOM | md5sum | head -c 20)
+broker_name="broker_${UUID}"
 broker_id=$(awslocal mq create-broker --broker-name $broker_name --deployment-mode SINGLE_INSTANCE --engine-type ACTIVEMQ --engine-version='5.16.5' --host-instance-type 'mq.t2.micro' --auto-minor-version-upgrade --publicly-accessible --users='{"ConsoleAccess": true, "Groups": ["testgroup"],"Password": "QXwV*$iUM9USHnVv&!^7s3c@", "Username": "admin"}' | jq -r '.BrokerId')
 echo "Created MQ broker with id: ${broker_id}"
 
