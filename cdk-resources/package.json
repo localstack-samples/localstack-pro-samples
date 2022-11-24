@@ -11,7 +11,7 @@
     "cdk": "cdk"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.85.0",
+    "@aws-cdk/assert": "1.181.0",
     "@types/aws-lambda": "^8.10.97",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
@@ -22,16 +22,16 @@
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/aws-appsync": "1.85.0",
-    "@aws-cdk/aws-cognito": "1.85.0",
-    "@aws-cdk/aws-dynamodb": "1.85.0",
-    "@aws-cdk/aws-events-targets": "1.85.0",
-    "@aws-cdk/aws-iam": "1.85.0",
-    "@aws-cdk/aws-lambda-event-sources": "1.85.0",
-    "@aws-cdk/aws-lambda-nodejs": "1.85.0",
-    "@aws-cdk/aws-sns": "1.85.0",
-    "@aws-cdk/aws-sns-subscriptions": "1.85.0",
-    "@aws-cdk/aws-sqs": "1.85.0",
-    "@aws-cdk/core": "1.85.0"
+    "@aws-cdk/aws-appsync": "1.181.0",
+    "@aws-cdk/aws-cognito": "1.181.0",
+    "@aws-cdk/aws-dynamodb": "1.181.0",
+    "@aws-cdk/aws-events-targets": "1.181.0",
+    "@aws-cdk/aws-iam": "1.181.0",
+    "@aws-cdk/aws-lambda-event-sources": "1.181.0",
+    "@aws-cdk/aws-lambda-nodejs": "1.181.0",
+    "@aws-cdk/aws-sns": "1.181.0",
+    "@aws-cdk/aws-sns-subscriptions": "1.181.0",
+    "@aws-cdk/aws-sqs": "1.181.0",
+    "@aws-cdk/core": "1.181.0"
   }
 }
