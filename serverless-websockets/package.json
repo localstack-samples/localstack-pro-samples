@@ -3,7 +3,7 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/localstack/localstack-pro-samples",
   "devDependencies": {
-    "serverless": "^2.50.0",
+    "serverless": "^3.25.1",
     "serverless-deployment-bucket": "^1.5.1",
     "serverless-localstack": "^0.4.34"
   },
