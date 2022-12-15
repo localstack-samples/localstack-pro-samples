@@ -20,9 +20,10 @@ ENDPOINT_NAME = "sample-ep"
 CONTAINER_IMAGE = "763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.5.0-cpu-py3"
 EXECUTION_ROLE_ARN = "arn:aws:iam::0000000000000:role/sagemaker-role"
 
-sagemaker: SageMakerClient = boto3.client("sagemaker", endpoint_url=LOCALSTACK_ENDPOINT)
-sagemaker_runtime: SageMakerRuntimeClient = boto3.client("sagemaker-runtime", endpoint_url=LOCALSTACK_ENDPOINT)
-s3: S3Client = boto3.client("s3", endpoint_url=LOCALSTACK_ENDPOINT)
+sagemaker: SageMakerClient = boto3.client("sagemaker", endpoint_url=LOCALSTACK_ENDPOINT, region_name="us-east-1")
+sagemaker_runtime: SageMakerRuntimeClient = boto3.client("sagemaker-runtime", endpoint_url=LOCALSTACK_ENDPOINT,
+                                                         region_name="us-east-1")
+s3: S3Client = boto3.client("s3", endpoint_url=LOCALSTACK_ENDPOINT, region_name="us-east-1")
 
 
 def deploy_model(run_id: str = "0"):
