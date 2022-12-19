@@ -22,7 +22,11 @@ For example, when using smtp4dev, simply run:
 
     docker run --rm -it -p 3000:80 -p 2525:25 rnwood/smtp4dev
 
-and set `SMTP_HOST=localhost:2525`.
 Navigating to `http://localhost:3000` will open a UI to access the email notifications.
+
+Set the environment variable `SMTP_HOST=<host-name>:2525` to start LocalStack, where `host-name` is the name or IP of the host where the SMTP server can be reached. 
+
+If you start LocalStack in docker mode, it should be possible to use `host.docker.internal`. For most operating systems this should resolve the address correctly, e.g.: `SMTP_HOST=host.docker.internal:2525`.
+
 
 Alternatively, you can use your real smtp server. Please refer to your provider to set the proper values for `SMTP_HOST`, `SMTP_USER` and `SMTP_PASS`
