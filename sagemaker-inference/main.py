@@ -28,18 +28,37 @@ s3: S3Client = boto3.client("s3", endpoint_url=LOCALSTACK_ENDPOINT, region_name=
 
 def deploy_model(run_id: str = "0"):
     # Put the Model into the correct bucket
+    print("Creating bucket...")
     s3.create_bucket(Bucket=f"{MODEL_BUCKET}-{run_id}")
+    print("Uploading model data to bucket...")
     s3.upload_file(MODEL_TAR, f"{MODEL_BUCKET}-{run_id}", f"{MODEL_NAME}.tar.gz")
 
     # Create the model in sagemaker
+    print("Creating model in SageMaker...")
     sagemaker.create_model(ModelName=f"{MODEL_NAME}-{run_id}", ExecutionRoleArn=EXECUTION_ROLE_ARN,
                            PrimaryContainer={"Image": CONTAINER_IMAGE,
                                              "ModelDataUrl": f"s3://{MODEL_BUCKET}-{run_id}/{MODEL_NAME}.tar.gz"})
+    print("Adding endpoint configuration...")
     sagemaker.create_endpoint_config(EndpointConfigName=f"{CONFIG_NAME}-{run_id}", ProductionVariants=[{
         "VariantName": f"var-{run_id}", "ModelName": f"{MODEL_NAME}-{run_id}", "InitialInstanceCount": 1,
         "InstanceType": "ml.m5.large"
     }])
+    print("Creating endpoint...")
     sagemaker.create_endpoint(EndpointName=f"{ENDPOINT_NAME}-{run_id}", EndpointConfigName=f"{CONFIG_NAME}-{run_id}")
+
+
+def await_endpoint(run_id: str = "0", wait: float = 0.5, max_retries=10, _retries: int = 0):
+    print("Checking endpoint status...")
+    status = sagemaker.describe_endpoint(EndpointName=f"{ENDPOINT_NAME}-{run_id}")["EndpointStatus"]
+    if status == "InService":
+        print("Endpoint ready!")
+        return True
+    if _retries == max_retries:
+        print("Endpoint unreachable!")
+        return False
+    print("Endpoint not ready - waiting...")
+    time.sleep(wait)
+    return await_endpoint(run_id, wait * 2, max_retries, _retries + 1)
 
 
 def _get_input_dict():
@@ -67,6 +86,7 @@ def inference_model_container(run_id: str = "0"):
         if tag["Key"] == "_LS_ENDPOINT_PORT_":
             port = tag["Value"]
     inputs = _get_input_dict()
+    print("Invoking endpoint directly...")
     response = httpx.post(f"http://localhost.localstack.cloud:{port}/invocations", json=inputs,
                           headers={"Content-Type": "application/json", "Accept": "application/json"})
     _show_predictions(json.loads(response.text))
@@ -74,6 +94,7 @@ def inference_model_container(run_id: str = "0"):
 
 def inference_model_boto3(run_id: str = "0"):
     inputs = _get_input_dict()
+    print("Invoking via boto...")
     response = sagemaker_runtime.invoke_endpoint(EndpointName=f"{ENDPOINT_NAME}-{run_id}", Body=json.dumps(inputs),
                                                  Accept="application/json",
                                                  ContentType="application/json")
@@ -89,8 +110,7 @@ def _short_uid():
 if __name__ == '__main__':
     test_run = _short_uid()
     deploy_model(test_run)
-    # wait some time to avoid connection resets in log output
-    # -> not essential as the container spins up quickly enough within the retries of boto
-    time.sleep(2)
+    if not await_endpoint(test_run):
+        exit(-1)
     inference_model_boto3(test_run)
     inference_model_container(test_run)
