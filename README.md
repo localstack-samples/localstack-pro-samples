@@ -18,42 +18,43 @@ Some of the samples require LocalStack Pro features. Please make sure to properl
 
 ## Outline
 
-| Directory Name | Description |
-|----------------|-------------|
-| [Serverless Websockets](serverless-websockets) | API Gateway V2 websocket APIs deployed via the Serverless framework |
-| [RDS Database Queries](rds-db-queries) | Running queries locally against an RDS database |
-| [Neptune Graph Database](neptune-graph-db) | Running queries locally against a Neptune Graph database |
-| [Lambda Event Filtering](lambda-event-filtering) | Lambda event source filtering with DynamoDB and SQS |
-| [Glacier & S3 select queries](glacier-s3-select) | Using Glacier API and running S3 Select queries locally |
-| [Cloudwatch Metrics alarm](cloudwatch-metrics-aws) | Triggering a Cloudwatch metrics alarm based on a failing Lambda |
-| [EC2 with Docker backend](ec2-docker-instances) | Running EC2 instances with Docker backend |
-| [QLDB ledger queries](qldb-ledger-queries) | Running queries locally against a QLDB ledger |
-| [Cognito with JWT](cognito-jwt) | Running Cognito authentication and user pools locally |
-| [Transfer API with S3](transfer-ftp-s3) | Using the Transfer API to upload files to S3 |
-| [Codecommit with Git repository](codecommit-git-repo) | Using the Codecommit API to create and push to a Git repository |
-| [Lambda Mounting and Debugging](lambda-mounting-and-debugging) | Debugging Lambda functions locally |
-| [IAM Policy Enforcement](iam-policy-enforcement) | Enforcement of IAM policies when working with local cloud APIs |
-| [Lambda Hot Reloading](lambda-hot-reloading) | Hot reloading Lambda functions locally |
-| [IoT Basics](iot-basics) | Usage of IoT APIs locally |
-| [REST API using Chalice](chalice-rest-api) | Deploying a REST API using the Chalice framework |
-| [ECS ECR Container application](ecs-ecr-container-app) | Pushing Docker images to ECR and running them locally on ECS |
-| [Athena queries over S3](athena-s3-queries) | Running Athena queries over S3 files locally |
-| [Terraform resources](terraform-resources) | Deploying various AWS resources via Terraform |
-| [Lambda Function URLs](lambda-function-urls) | Invoking Lambda functions via HTTP(s) URLs |
-| [Sagemaker inference](sagemaker-inference) | Creating & invoking a Sagemaker endpoint locally with MNIST dataset |
-| [MSK with Glue Schema Registry](glue-msk-schema-registry) | Use of MSK, Glue Schema Registry, Glue ETL, and RDS |
-| [AppSync GraphQL](appsync-graphql-api) | Deploying a GraphQL API using AppSync |
-| [Lambda XRay tracing](lambda-xray) | Using Lambda XRay tracing locally |
-| [Mediastore Uploads](mediastore-uploads) | Using MediaStore API locally |
-| [Serverless Lambda Layers](serverless-lambda-layers) | Using Lambda layers locally deployed via the Serverless framework |
-| [Java Notification App](java-notification-app) | Notification app using AWS Java SDK, SNS, SQS, SES, deployed via CloudFormation |
-| [Lambda Container images](lambda-container-image) | Deploying Lambda functions as container images |
-| [Glue crawler with RedShift](glue-redshift-crawler) | Glue Crawler to populate the Glue metadata store with the table schema of RedShift database tables |
-| [API Gateway custom domain](apigw-custom-domain) | Using API Gateway v2 endpoints using custom domain names, deployed via the Serverless framework |
-| [CDK resources](cdk-resources) | Deploying various AWS resources via CDK |
-| [Glue for ETL jobs](glue-etl-jobs) | Using Glue API to run local ETL jobs |
-| [Message Queue broker](mq-broker) | Using MQ API to run local message queue brokers |
-| [ELB Load Balancing](elb-load-balancing) | Using ELBv2 Application Load Balancers locally, deployed via the Serverless framework |
+| Sample Name                                                 | Description                                                                                        |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [Serverless Websockets](serverless-websockets)                 | API Gateway V2 websocket APIs deployed via the Serverless framework                                |
+| [RDS Database Queries](rds-db-queries)                         | Running queries locally against an RDS database                                                    |
+| [Neptune Graph Database](neptune-graph-db)                     | Running queries locally against a Neptune Graph database                                           |
+| [Lambda Event Filtering](lambda-event-filtering)               | Lambda event source filtering with DynamoDB and SQS                                                |
+| [Glacier & S3 select queries](glacier-s3-select)               | Using Glacier API and running S3 Select queries locally                                            |
+| [Cloudwatch Metrics alarm](cloudwatch-metrics-aws)             | Triggering a Cloudwatch metrics alarm based on a failing Lambda                                    |
+| [EC2 with Docker backend](ec2-docker-instances)                | Running EC2 instances with Docker backend                                                          |
+| [QLDB ledger queries](qldb-ledger-queries)                     | Running queries locally against a QLDB ledger                                                      |
+| [Cognito with JWT](cognito-jwt)                                | Running Cognito authentication and user pools locally                                              |
+| [Transfer API with S3](transfer-ftp-s3)                        | Using the Transfer API to upload files to S3                                                       |
+| [Codecommit with Git repository](codecommit-git-repo)          | Using the Codecommit API to create and push to a Git repository                                    |
+| [Lambda Mounting and Debugging](lambda-mounting-and-debugging) | Debugging Lambda functions locally                                                                 |
+| [IAM Policy Enforcement](iam-policy-enforcement)               | Enforcement of IAM policies when working with local cloud APIs                                     |
+| [Lambda Hot Reloading](lambda-hot-reloading)                   | Hot reloading Lambda functions locally                                                             |
+| [IoT Basics](iot-basics)                                       | Usage of IoT APIs locally                                                                          |
+| [REST API using Chalice](chalice-rest-api)                     | Deploying a REST API using the Chalice framework                                                   |
+| [ECS ECR Container application](ecs-ecr-container-app)         | Pushing Docker images to ECR and running them locally on ECS                                       |
+| [Athena queries over S3](athena-s3-queries)                    | Running Athena queries over S3 files locally                                                       |
+| [Terraform resources](terraform-resources)                     | Deploying various AWS resources via Terraform                                                      |
+| [Lambda Function URLs](lambda-function-urls)                   | Invoking Lambda functions via HTTP(s) URLs                                                         |
+| [Sagemaker inference](sagemaker-inference)                     | Creating & invoking a Sagemaker endpoint locally with MNIST dataset                                |
+| [MSK with Glue Schema Registry](glue-msk-schema-registry)      | Use of MSK, Glue Schema Registry, Glue ETL, and RDS                                                |
+| [AppSync GraphQL](appsync-graphql-api)                         | Deploying a GraphQL API using AppSync                                                              |
+| [Lambda XRay tracing](lambda-xray)                             | Using Lambda XRay tracing locally                                                                  |
+| [Mediastore Uploads](mediastore-uploads)                       | Using MediaStore API locally                                                                       |
+| [Serverless Lambda Layers](serverless-lambda-layers)           | Using Lambda layers locally deployed via the Serverless framework                                  |
+| [Java Notification App](java-notification-app)                 | Notification app using AWS Java SDK, SNS, SQS, SES, deployed via CloudFormation                    |
+| [Lambda Container images](lambda-container-image)              | Deploying Lambda functions as container images                                                     |
+| [Glue crawler with RedShift](glue-redshift-crawler)            | Glue Crawler to populate the Glue metadata store with the table schema of RedShift database tables |
+| [API Gateway custom domain](apigw-custom-domain)               | Using API Gateway v2 endpoints using custom domain names, deployed via the Serverless framework    |
+| [CDK resources](cdk-resources)                                 | Deploying various AWS resources via CDK                                                            |
+| [Glue for ETL jobs](glue-etl-jobs)                             | Using Glue API to run local ETL jobs                                                               |
+| [Message Queue broker](mq-broker)                              | Using MQ API to run local message queue brokers                                                    |
+| [ELB Load Balancing](elb-load-balancing)                       | Using ELBv2 Application Load Balancers locally, deployed via the Serverless framework              |
+
 
 ## Checking out a single sample
 
