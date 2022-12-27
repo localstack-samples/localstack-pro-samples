@@ -6,7 +6,7 @@ We will use the following services:
 * an S3 bucket to host our training data;
 * a Lambda function to train and save the model to an S3 bucket;
 * a Lambda layer that contains the dependencies for our training code;
-* a second Lambda function to download and evaluate the saved model.
+* a second Lambda function to download the saved model and perform a prediction with it.
 
 ## Prerequisites
 
