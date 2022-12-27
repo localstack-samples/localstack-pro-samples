@@ -54,7 +54,7 @@ Some of the samples require LocalStack Pro features. Please make sure to properl
 | [Glue for ETL jobs](glue-etl-jobs)                             | Using Glue API to run local ETL jobs                                                               |
 | [Message Queue broker](mq-broker)                              | Using MQ API to run local message queue brokers                                                    |
 | [ELB Load Balancing](elb-load-balancing)                       | Using ELBv2 Application Load Balancers locally, deployed via the Serverless framework              |
-| [Reproducible ML](reproducible-ml)                             | Train, save and evaluate a sklearn machine learning model using AWS Lambda and S3                  |
+| [Reproducible ML](reproducible-ml)                             | Train, save and evaluate a scikit-learn machine learning model using AWS Lambda and S3                  |
 
 
 ## Checking out a single sample
