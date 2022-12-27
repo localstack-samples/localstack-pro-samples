@@ -1,4 +1,4 @@
-# LocalStack Demo: Train, save and evaluate a sklearn machine learning model
+# LocalStack Demo: Train, save and evaluate a scikit-learn machine learning model
 
 In this tutorial, we will train a simple machine-learning model that recognizes handwritten digits on an image. 
 We will use the following services:
