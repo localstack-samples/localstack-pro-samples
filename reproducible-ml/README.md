@@ -35,7 +35,7 @@ The entire workflow is executed by the `run.sh` script. To trigger it, execute:
 make run
 ```
 The model will be first trained by the `ml-train` Lambda function and then uploaded on the S3 bucket.
-A second Lambda function will download the model and evaluate its performance.
+A second Lambda function will download the model and run predictions on a test set of character inputs.
 The logs of the Lambda invocation should be visible in the LocalStack container output (with DEBUG=1 enabled):
 
 ```bash
