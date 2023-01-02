@@ -27,6 +27,7 @@ run:         ## Build, deploy, and invoke the Lambda container image locally
 	awslocal lambda invoke --function-name ruby-lambda-image \
 		--cli-binary-format raw-in-base64-out \
 		--payload '{"test":"test"}' /tmp/lambda.out; \
+	cat /tmp/lambda.out; \
 	echo "Done - test successfully finished."
 
 start:
