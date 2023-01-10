@@ -62,6 +62,20 @@ Starting DNS server loop on UDP port 53
 Hello from LocalStack Lambda container image!
 ```
 
+## Troubleshooting
+
+### UnsupportedMediaTypeException
+
+```plain
+An error occurred (UnsupportedMediaTypeException) when calling the Invoke operation (reached max retries: 0): The payload is not JSON: b'\xb5\xeb-\xb5\xeb-'
+```
+
+**Solution**: Downgrade your awslocal CLI to version 1 because invoking lambda functions differs in version 2 (see [major changes in aws cli](https://docs.aws.amazon.com/cli/latest/userguide/cliv2-migration-changes.html) and limitations of [awscli-local](https://github.com/localstack/awscli-local)) or update the lambda invocation:
+
+```bash
+awslocal lambda invoke --cli-binary-format raw-in-base64-out --function-name ls-lambda-image --payload '{"test": "test"}' /tmp/lambda.out --log-type Tail --query 'LogResult' --output text |  base64 -d
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.
