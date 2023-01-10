@@ -17,10 +17,12 @@ run:         ## Build, deploy, and invoke the Lambda container image locally
 	docker rmi "$$repoUri"; \
 	echo "Deploying Lambda function from container image locally"; \
 	awslocal lambda create-function --function-name ls-lambda-image --package-type Image \
-		--code ImageUri=$$repoUri --role arn:aws:iam::000000000:role/lambda-r1 \
+		--code ImageUri=$$repoUri --role arn:aws:iam::000000000000:role/lambda-r1 \
 		--handler handler.handler; \
+	echo "Waiting until Lambda function becomes active"; \
+	awslocal lambda wait function-active-v2 --function-name ls-lambda-image; \
 	echo "Invoking Lambda function from container image"; \
-	awslocal lambda invoke --function-name ls-lambda-image --payload '{"test":"test"}' /tmp/lambda.out; \
+	awslocal lambda invoke --function-name ls-lambda-image --payload '{"test":"test"}' /tmp/lambda.out && \
 	echo "Done - test successfully finished."
 
 start:
