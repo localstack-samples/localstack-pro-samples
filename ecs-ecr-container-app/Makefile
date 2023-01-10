@@ -19,13 +19,14 @@ run:      ## Build and deploy the app locally
 		docker push "$$repoUri"; \
 		docker rmi "$$repoUri"; \
 		echo "Creating ECS infrastructure locally"; \
-		awslocal cloudformation create-stack --stack-name infra --template-body file://templates/ecs.infra.yml; \
+		awslocal cloudformation create-stack --stack-name infra --template-body file://templates/ecs.infra.yml && \
+		awslocal cloudformation wait stack-create-complete --stack-name infra && \
 		echo "Deploying ECS app to local environment"; \
-		sleep 3 && awslocal cloudformation create-stack --stack-name sample \
+		awslocal cloudformation create-stack --stack-name sample \
 			--template-body file://templates/ecs.sample.yml \
 			--parameters ParameterKey=ImageUrl,ParameterValue=$$repoUri && \
-		echo "ECS app successfully deployed. Sleeping a bit, then trying to access the app endpoint." && \
-		sleep 5 && \
+		awslocal cloudformation wait stack-create-complete --stack-name sample && \
+		echo "ECS app successfully deployed. Trying to access app endpoint." && \
 		cluster_arn=$$(awslocal ecs list-clusters | jq -r '.clusterArns[0]') && \
 		for i in {1..5}; do task_arn=$$(awslocal ecs list-tasks --cluster $$cluster_arn | jq -r '.taskArns[0]'); if [ "$$task_arn" != "null" ]; then break; fi; sleep 2; done && \
 		for i in {1..5}; do app_port=$$(awslocal ecs describe-tasks --cluster $$cluster_arn --tasks $$task_arn | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort'); if [ "$$app_port" != "null" ]; then break; fi; sleep 2; done && \

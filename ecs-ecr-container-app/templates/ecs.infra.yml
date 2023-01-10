@@ -287,16 +287,12 @@ Outputs:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'VPCId' ] ]
   PublicSubnetOne:
     Description: Public subnet one
-    # TODO
-    # Value: !Ref 'PublicSubnetOne'
-    Value: sub-123
+    Value: !Ref 'PublicSubnetOne'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'PublicSubnetOne' ] ]
   PublicSubnetTwo:
     Description: Public subnet two
-    # TODO
-    # Value: !Ref 'PublicSubnetTwo'
-    Value: sub-234
+    Value: !Ref 'PublicSubnetTwo'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'PublicSubnetTwo' ] ]
   FargateContainerSecurityGroup:
