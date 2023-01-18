@@ -4,7 +4,6 @@ node_modules/
 .classpath
 .project
 .settings/
-.vscode/
 target/
 
 .idea/
