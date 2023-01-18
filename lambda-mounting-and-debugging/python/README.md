@@ -1,6 +1,6 @@
 # LocalStack Demo: Lambda Code Mounting and Debugging
 
-Simple demo application to illustrate debugging Lambdas locally.
+Simple demo application to illustrate debugging Python Lambdas locally.
 
 ## Prerequisites
 

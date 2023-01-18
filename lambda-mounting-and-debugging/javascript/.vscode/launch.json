@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "address": "127.0.0.1",
+            "localRoot": "${workspaceFolder}",
+            "name": "Attach to Remote Node.js",
+            "port": 9229,
+            "remoteRoot": "/var/task/",
+            "request": "attach",
+            "type": "node",
+            "preLaunchTask": "Wait Remote Debugger Server"
+        },
+    ]
+}
