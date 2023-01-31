@@ -9,15 +9,16 @@ api_id=$(awslocal appsync list-graphql-apis | jq -r '(.graphqlApis[] | select(.n
 echo "DEBUG: api_id is: $api_id" && \
 api_key=$(awslocal appsync create-api-key --api-id $api_id | jq -r .apiKey.id) && \
 echo "DEBUG: api_key is: $api_key" && \
-echo "Starting a WebSocket client to subscribe to GraphQL mutation operations." && \
-source .venv/bin/activate && \
-(python websocket_client.py "$api_id" &) && sleep 2 && \
+# echo "Starting a WebSocket client to subscribe to GraphQL mutation operations." && \
+# source .venv/bin/activate && \
+# (python websocket_client.py "$api_id" &) && sleep 2 && \
 echo "Now trying to invoke the AppSync API for DynamoDB integration under $APPSYNC_URL/$api_id." && \
-curl -H "Content-Type: application/json" -H "x-api-key: $api_key" -d '{"query":"mutation {addPostDDB(id: \"id123\"){id}}"}' $APPSYNC_URL/$api_id && \
-curl -H "Content-Type: application/json" -H "x-api-key: $api_key" -d '{"query":"query {getPostsDDB{id}}"}' $APPSYNC_URL/$api_id && \
-echo "Scanning items from DynamoDB table - should include entry with 'id123':" && \
-awslocal dynamodb scan --table-name table1 && \
-echo "Now trying to invoke the AppSync API for RDS integration." && \
-curl -H "Content-Type: application/json" -H "x-api-key: $api_key" -d '{"query":"mutation {addPostRDS(id: \"id123\"){id}}"}' $APPSYNC_URL/$api_id && \
-curl -H "Content-Type: application/json" -H "x-api-key: $api_key" -d '{"query":"query {getPostsRDS{id}}"}' $APPSYNC_URL/$api_id
+curl -H "Content-Type: application/json" -H "x-api-key: $api_key" -d '{"query":"mutation {addPostDDB(id: \"id-123\"){id}}"}' $APPSYNC_URL/$api_id && \
+curl -H "Content-Type: application/json" -H "x-api-key: $api_key" -d '{"query":"mutation {addPostDDB(id: \"id-abc\"){id}}"}' $APPSYNC_URL/$api_id && \
+curl -H "Content-Type: application/json" -H "x-api-key: $api_key" -d '{"query":"query {getPostsDDB{id}}"}' $APPSYNC_URL/$api_id
 
+echo -e "\n"
+echo "************************************************"
+echo "* Logs for data returned from \$context.result  *"
+echo "************************************************"
+docker logs $(docker ps -q --filter name=localstack-pro-samples_devcontainer-localstack-1) | tail -n 2 | head -n 1

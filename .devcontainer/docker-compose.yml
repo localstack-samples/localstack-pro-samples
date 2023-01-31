@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  dev:
+    build:
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: '2048M'
+    volumes:
+      - ~/.aws:/home/node/.aws
+    links:
+      - localstack
+    command: socat tcp-listen:4566,reuseaddr,fork tcp:localstack:4566
+
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      - PERSISTENCE=1
+      - DEBUG=1
+      - LOCALSTACK_API_KEY=
+    expose:
+      - "4566"
+    deploy:
+      resources:
+        limits:
+          memory: '1048M'
