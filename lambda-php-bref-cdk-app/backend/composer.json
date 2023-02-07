@@ -1,0 +1,7 @@
+{
+    "name": "localstack/bref-hello-world",
+    "type": "project",
+    "require": {
+        "bref/bref": "^1.7.16"
+    }
+}
