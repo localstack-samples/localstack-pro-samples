@@ -22,7 +22,7 @@ install-bref:
 
 install-bref-docker:	## Install Bref dependencies via composer into backend/vendor
 	cd backend && \
-	docker run --rm --interactive --tty --volume $$PWD:/app --user $$(id -u):$$(id -g) $(DOCKER_COMPOSER_IMAGE) composer install
+	docker run --rm --volume $$PWD:/app --user $$(id -u):$$(id -g) $(DOCKER_COMPOSER_IMAGE) composer install
 
 run:         ## Deploy the app locally and invoke Lambda through API gateway
 	echo "Bootstrapping CDK"; \
@@ -38,7 +38,7 @@ invoke:
 	curl $${endpoint}?name=LocalStack!
 
 start:
-	PROVIDER_OVERRIDE_lambda=v2 LAMBDA_DOCKER_FLAGS="--user=nobody --platform linux/amd64" localstack start -d
+	PROVIDER_OVERRIDE_lambda=v2 localstack start -d
 
 stop:
 	@echo
