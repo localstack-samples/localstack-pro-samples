@@ -38,7 +38,7 @@ invoke:
 	curl $${endpoint}?name=LocalStack!
 
 start:
-	localstack start -d
+	PROVIDER_OVERRIDE_lambda=v2 LAMBDA_DOCKER_FLAGS="--user=nobody --platform linux/amd64" localstack start -d
 
 stop:
 	@echo

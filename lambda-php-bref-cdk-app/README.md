@@ -47,8 +47,9 @@ To deploy the `php-fpm` Laravel [base](https://github.com/brefphp/examples/tree/
 
 Note: Start localstack with:
 
-* `LAMBDA_DOCKER_FLAGS=--user=nobody` until [this user permission issue](https://github.com/localstack/localstack/pull/6724#issuecomment-1227314083) is resolved for running `fpm`.
-* `PROVIDER_OVERRIDE_lambda=asf` until the [new Lambda provider implementation](https://github.com/localstack/localstack/pull/6724) becomes default in v2.
+* `LAMBDA_DOCKER_FLAGS=--user nobody` until [this user permission issue](https://github.com/localstack/localstack/pull/6724#issuecomment-1227314083) is resolved for running `fpm`.
+* `PROVIDER_OVERRIDE_lambda=v2` until the [new Lambda provider implementation](https://github.com/localstack/localstack/pull/6724) becomes the default in LocalStack Version 2.
+* `LAMBDA_DOCKER_FLAGS=--user nobody --platform linux/amd64` on ARM hosts (e.g., Apple Silicon M1/M2) until [this ARM issue](https://github.com/localstack/localstack/issues/7637) is resolved.
 
 ## Prerequisites
 
@@ -71,7 +72,7 @@ make install
 
 Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... PROVIDER_OVERRIDE_lambda=asf DEBUG=1 localstack start
+LOCALSTACK_API_KEY=... PROVIDER_OVERRIDE_lambda=v2 DEBUG=1 localstack start
 ```
 
 ## Running
