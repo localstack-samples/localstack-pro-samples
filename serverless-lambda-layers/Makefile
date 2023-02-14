@@ -14,7 +14,7 @@ install:     ## Install dependencies
 
 run:         ## Deploy the app locally and run a Lambda test invocation
 	echo "Deploying Serverless app to local environment"; \
-	awslocal s3api create-bucket --bucket testbucket; \
+	awslocal s3api create-bucket --bucket testbucket --region us-east-1; \
 	SLS_DEBUG=1 npm run deploy && \
 	echo "Serverless app successfully deployed. Now trying to invoke the Lambda function with layer." && \
 	awslocal lambda invoke --function-name test-layers-local-hello /tmp/out.tmp
