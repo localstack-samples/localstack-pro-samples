@@ -35,8 +35,6 @@ To deploy the `php-fpm` Laravel [base](https://github.com/brefphp/examples/tree/
         # list of stages for which the plugin should be enabled
         stages:
           - local
-        # workaround for Node >= v17: https://github.com/localstack/serverless-localstack/issues/125
-        host: http://127.0.0.1
     ```
 
 4. Deploy to LocalStack
@@ -45,11 +43,10 @@ To deploy the `php-fpm` Laravel [base](https://github.com/brefphp/examples/tree/
     serverless deploy --stage local
     ```
 
-Note: Start localstack with:
+Start localstack with:
 
-* `LAMBDA_DOCKER_FLAGS=--user nobody` until [this user permission issue](https://github.com/localstack/localstack/pull/6724#issuecomment-1227314083) is resolved for running `fpm`.
-* `PROVIDER_OVERRIDE_lambda=v2` until the [new Lambda provider implementation](https://github.com/localstack/localstack/pull/6724) becomes the default in LocalStack Version 2.
-* `LAMBDA_DOCKER_FLAGS=--user nobody --platform linux/amd64` on ARM hosts (e.g., Apple Silicon M1/M2) until [this ARM issue](https://github.com/localstack/localstack/issues/7637) is resolved.
+* `LAMBDA_DOCKER_FLAGS=--user nobody` until [this user permission issue](https://github.com/localstack/localstack/issues/7722) is resolved for running `fpm`.
+* `PROVIDER_OVERRIDE_LAMBDA=v2` until the [new Lambda provider implementation](https://github.com/localstack/localstack/pull/6724) becomes the default in LocalStack Version 2.
 
 ## Prerequisites
 
@@ -72,16 +69,13 @@ make install
 
 Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... PROVIDER_OVERRIDE_lambda=v2 DEBUG=1 localstack start
+LOCALSTACK_API_KEY=... PROVIDER_OVERRIDE_LAMBDA=v2 LAMBDA_DOCKER_FLAGS="--user nobody" DEBUG=1 localstack start
 ```
 
 ## Running
 
 Deploy the app locally and run an HTTP test invocation:
 ```bash
-# Until this cdklocal issue with Node >= 17 is fixed: https://github.com/localstack/aws-cdk-local/issues/76
-export LOCALSTACK_HOSTNAME=127.0.0.1
-
 make run
 ```
 
