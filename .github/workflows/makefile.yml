@@ -18,7 +18,7 @@ jobs:
     - name: Setup Nodejs
       uses: actions/setup-node@v3
       with:
-        node-version: 12
+        node-version: 14
 
 # see https://github.com/localstack/localstack/pull/6831
 # remove once no longer needed

@@ -1,0 +1,6 @@
+pyqldb~=3.2.2
+# amazon.ion 0.10.0 currently breaks pyqldb
+# https://github.com/awslabs/amazon-qldb-driver-python/issues/164
+# https://github.com/awslabs/amazon-qldb-driver-python/pull/161
+amazon.ion~=0.9.3
+boto3~=1.24

@@ -9,7 +9,7 @@ usage:      ## Show this help
 install:    ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
-	@pip install pyqldb boto3
+	@pip install -r requirements.txt
 
 run:        ## Run the sample queries against the local QLDB API
 	@$(PYTHON_BIN) query.py
