@@ -12,12 +12,12 @@ awslocal s3 cp digits.csv.gz s3://reproducible-ml/digits.csv.gz
 
 # define lamba function to training the ML data
 awslocal lambda create-function --function-name ml-train \
-  --runtime python3.8 --role r1 --handler train.handler --timeout 600 \
+  --runtime python3.8 --role arn:aws:iam::000000000000:role/r1 --handler train.handler --timeout 600 \
    --code '{"S3Bucket":"reproducible-ml","S3Key":"lambda.zip"}' \
    --layers arn:aws:lambda:us-east-1:446751924810:layer:python-3-8-scikit-learn-0-22-0:3
 
 awslocal lambda create-function --function-name ml-predict \
-  --runtime python3.8 --role r1 --handler infer.handler --timeout 600 \
+  --runtime python3.8 --role arn:aws:iam::000000000000:role/r1 --handler infer.handler --timeout 600 \
    --code '{"S3Bucket":"reproducible-ml","S3Key":"infer.zip"}' \
    --layers arn:aws:lambda:us-east-1:446751924810:layer:python-3-8-scikit-learn-0-22-0:3
 

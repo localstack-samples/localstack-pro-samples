@@ -18,7 +18,7 @@ run:         ## Build, deploy, and invoke the Lambda function URL
 		--timeout 10 \
 		--zip-file fileb://function.zip \
 		--handler lambda_function.lambda_handler \
-		--role cool-stacklifter
+		--role arn:aws:iam::000000000000:role/cool-stacklifter
 
 	awslocal lambda create-function-url-config \
 		--function-name trending \

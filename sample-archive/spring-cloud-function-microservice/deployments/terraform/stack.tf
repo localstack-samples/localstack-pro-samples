@@ -74,7 +74,7 @@ EOF
 }
 
 resource "aws_lambda_function" "restApiLambdaFunction" {
-    s3_bucket     = var.STAGE == "local" ? "__local__" : null
+    s3_bucket     = var.STAGE == "local" ? "hot-reload" : null
     s3_key        = var.STAGE == "local" ? var.LAMBDA_MOUNT_CWD : null
     filename      = var.STAGE == "local" ? null : var.JAR_PATH
     function_name = "RestApiFunction"
@@ -139,7 +139,7 @@ resource "aws_lambda_permission" "warmup-permission" {
 }
 
 resource "aws_lambda_function" "exampleFunctionOne" {
-    s3_bucket     = var.STAGE == "local" ? "__local__" : null
+    s3_bucket     = var.STAGE == "local" ? "hot-reload" : null
     s3_key        = var.STAGE == "local" ? var.LAMBDA_MOUNT_CWD : null
     filename      = var.STAGE == "local" ? null : var.JAR_PATH
     function_name = "ExampleFunctionOne"
@@ -156,7 +156,7 @@ resource "aws_lambda_function" "exampleFunctionOne" {
 }
 
 resource "aws_lambda_function" "exampleFunctionTwo" {
-    s3_bucket     = var.STAGE == "local" ? "__local__" : null
+    s3_bucket     = var.STAGE == "local" ? "hot-reload" : null
     s3_key        = var.STAGE == "local" ? var.LAMBDA_MOUNT_CWD : null
     filename      = var.STAGE == "local" ? null : var.JAR_PATH
     function_name = "ExampleFunctionTwo"

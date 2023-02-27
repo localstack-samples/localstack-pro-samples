@@ -50,7 +50,7 @@ The screenshot below shows with the breakpoint selected, including the Lambda ev
 
 ### Quick Dev Loop with Lambda Code Mounting
 
-Note that, since the Lambda code is mounted from your local filesystem into the Lambda container (by means of `__local__` as special bucket name in `run.sh`), all changes are immediately reflected. For example, you could change the implementation of the handler as follows:
+Note that, since the Lambda code is mounted from your local filesystem into the Lambda container (by means of `hot-reload` as special bucket name in `run.sh`), all changes are immediately reflected. For example, you could change the implementation of the handler as follows:
 ```
 def handler(event, context):
     """Lambda handler that will get invoked by the LocalStack runtime"""

@@ -35,14 +35,14 @@ awslocal iam create-role --role-name lambda-example --assume-role-policy-documen
 
 To create the Lambda function, you now need to take care of only two things:
 
-- Deploy via an S3 Bucket. You need to use the magic variable `__local__` as the bucket.
+- Deploy via an S3 Bucket. You need to use the magic variable `hot-reload` as the bucket.
 - Set the S3 key to the path of the directory your lambda function resides in. The handler is then referenced by the filename of your lambda code and the function in that code that needs to be invoked.
 
 Push the following command to create the Lambda function:
 
 ```bash
 awslocal lambda create-function --function-name myfirstlambda \
-    --code S3Bucket="__local__",S3Key="/path/to/local/lambda/code" \
+    --code S3Bucket="hot-reload",S3Key="/path/to/local/lambda/code" \
     --handler index.handler \
     --runtime nodejs14.x  \
     --role arn:aws:iam::000000000000:role/lambda-example

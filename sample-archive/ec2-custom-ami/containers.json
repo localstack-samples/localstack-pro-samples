@@ -3,7 +3,7 @@
     "Description": "Test disk",
     "Format": "vmdk",
     "UserBucket": {
-      "S3Bucket": "__local__",
+      "S3Bucket": "hot-reload",
       "S3Key": "/home/bernhard/LocalStack/localstack-pro-samples/ec2-custom-ami/amzn2.vdi"
     }
   }
