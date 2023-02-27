@@ -131,4 +131,4 @@ def run_serverless():
 
 if __name__ == '__main__':
     run_regular()
-    run_serverless()
+    # run_serverless()
