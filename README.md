@@ -81,6 +81,7 @@ It needs to fulfill two criteria:
 - The sample should be executable independently, since it can be checked out on its own (see [Checking out a single sample](#checking-out-a-single-sample))
 - It should contain a `test-ci` target to be executed automatically within the CI pipeline
 This step needs to take care of all infrastructure tasks (starting/stopping/logs/etc) in addition to any sample commands executed.
+
 A typical Makefile looks like this
 ```bash
 export AWS_ACCESS_KEY_ID ?= test
@@ -96,6 +97,7 @@ install:     ## Install dependencies
         @which awslocal || pip install awscli-local
         ## install whatever else you need, like node modules, python packages, etc.
         @test -e node_modules || npm install
+        @test -e .venv || (python3 -m venv .venv; source .venv/bin/activate; pip install -r requirements.txt)
 
 run:         ## Run the actual sample steps/commands. This assumes LocalStack is up and running.
         ./run.sh
