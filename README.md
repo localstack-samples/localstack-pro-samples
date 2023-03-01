@@ -80,7 +80,7 @@ All samples should have a Makefile to unify the execution of the otherwise heter
 It needs to fulfill two criteria:
 - The sample should be executable independently, since it can be checked out on its own (see [Checking out a single sample](#checking-out-a-single-sample))
 - It should contain a `test-ci` target to be executed automatically within the CI pipeline
-This step needs to take care of starting/stopping LocalStack in addition to any commands executed.
+This step needs to take care of all infrastructure tasks (starting/stopping/logs/etc) in addition to any sample commands executed.
 A typical Makefile looks like this
 ```bash
 export AWS_ACCESS_KEY_ID ?= test
