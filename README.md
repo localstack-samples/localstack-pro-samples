@@ -57,7 +57,6 @@ Some of the samples require LocalStack Pro features. Please make sure to properl
 | [Reproducible ML](reproducible-ml)                             | Train, save and evaluate a scikit-learn machine learning model using AWS Lambda and S3             |
 | [Lambda PHP/Bref CDK App](lambda-php-bref-cdk-app)             | Running PHP/Bref Lambda handler locally, deployed via AWS CDK                                      |
 
-
 ## Checking out a single sample
 
 To check out a single sample, you can use the following commands:
