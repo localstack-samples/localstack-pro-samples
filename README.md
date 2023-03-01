@@ -77,11 +77,10 @@ The above commands use `sparse-checkout` to only pull the sample you are interes
 ## Makefiles for samples
 All samples should have a Makefile to unify the execution of the otherwise heterogeneous samples.
 It needs to fulfill two criteria:
-- The sample should be executable independently, since it can be checked out on its own (see [Checking out a single sample](#checking-out-a-single-sample))
-- It should contain a `test-ci` target to be executed automatically within the CI pipeline
-This step needs to take care of all infrastructure tasks (starting/stopping/logs/etc) in addition to any sample commands executed.
+- The sample should be executable independently, since it can be checked out on its own (see [Checking out a single sample](#checking-out-a-single-sample)).
+- It should contain a `test-ci` target to be executed automatically within the CI pipeline. This step needs to take care of all infrastructure tasks (starting/stopping/logs/etc) in addition to any sample commands executed.
 
-A typical Makefile looks like this
+A typical Makefile looks like this:
 ```bash
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
@@ -120,6 +119,4 @@ test-ci:     ## Execute the necessary targets in the correct order for an automa
         make logs; make stop; exit $$return_code;
 
 .PHONY: usage install run start stop ready logs test-ci
-
-
 ```
