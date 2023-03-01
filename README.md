@@ -57,6 +57,7 @@ Some of the samples require LocalStack Pro features. Please make sure to properl
 | [Reproducible ML](reproducible-ml)                             | Train, save and evaluate a scikit-learn machine learning model using AWS Lambda and S3             |
 | [Lambda PHP/Bref CDK App](lambda-php-bref-cdk-app)             | Running PHP/Bref Lambda handler locally, deployed via AWS CDK                                      |
 
+
 ## Checking out a single sample
 
 To check out a single sample, you can use the following commands:
@@ -71,3 +72,53 @@ git pull origin master
 ```
 
 The above commands use `sparse-checkout` to only pull the sample you are interested in. You can find the name of the sample directory in the table above.
+
+# Developer Notes
+
+## Makefiles for samples
+All samples should have a Makefile to unify the execution of the otherwise heterogeneous samples.
+It needs to fulfill two criteria:
+- The sample should be executable independently, since it can be checked out on its own (see [Checking out a single sample](##Checking out a single sample))
+- It should contain a `test-ci` target to be executed automatically within the CI pipeline
+This step needs to take care of starting/stopping LocalStack in addition to any commands executed.
+A typical Makefile looks like this
+```bash
+export AWS_ACCESS_KEY_ID ?= test
+export AWS_SECRET_ACCESS_KEY ?= test
+export AWS_DEFAULT_REGION=us-east-1
+SHELL := /bin/bash
+
+usage:       ## Show this help
+        @fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+
+install:     ## Install dependencies
+        @which localstack || pip install localstack
+        @which awslocal || pip install awscli-local
+        ## install whatever else you need, like node modules, python packages, etc.
+        @test -e node_modules || npm install
+
+run:         ## Run the actual sample steps/commands. This assumes LocalStack is up and running.
+        ./run.sh
+
+start:       ## Start LocalStack in detached mode
+        localstack start -d
+
+stop:        ## Stop the Running LocalStack container
+        @echo
+        localstack stop
+
+ready:       ## Make sure the LocalStack container is up
+        @echo Waiting on the LocalStack container...
+        @localstack wait -t 30 && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:        ## Save the logs in a separate file, since the LS container will only contain the logs of the last sample run.
+        @localstack logs > logs.txt
+
+test-ci:     ## Execute the necessary targets in the correct order for an automatic execution. 
+        make start install ready run; return_code=`echo $$?`;\
+        make logs; make stop; exit $$return_code;
+
+.PHONY: usage install run start stop ready logs test-ci
+
+
+```
