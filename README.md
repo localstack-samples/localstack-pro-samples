@@ -78,7 +78,7 @@ The above commands use `sparse-checkout` to only pull the sample you are interes
 ## Makefiles for samples
 All samples should have a Makefile to unify the execution of the otherwise heterogeneous samples.
 It needs to fulfill two criteria:
-- The sample should be executable independently, since it can be checked out on its own (see [Checking out a single sample](##Checking out a single sample))
+- The sample should be executable independently, since it can be checked out on its own (see [Checking out a single sample](##checking-out-a-single-sample))
 - It should contain a `test-ci` target to be executed automatically within the CI pipeline
 This step needs to take care of starting/stopping LocalStack in addition to any commands executed.
 A typical Makefile looks like this
