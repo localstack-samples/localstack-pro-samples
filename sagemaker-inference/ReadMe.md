@@ -47,7 +47,7 @@ And execute the example with:
 python main.py
 ```
 
-You should see an output like this:
+You should see an output like this for each of the runs:
 ```
 Creating bucket...
 Uploading model data to bucket...
@@ -63,3 +63,5 @@ Predicted digits: [7, 3]
 Invoking endpoint directly...
 Predicted digits: [2, 6]
 ```
+
+To try out the serverless run you can remove the comment in the `main.py` file and run the example again.
