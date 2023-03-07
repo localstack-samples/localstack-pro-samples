@@ -82,7 +82,7 @@ The invocation itself returns:
 
 ## Changing things up
 
-Now, that we got everything up and running, the fun begins. Because the function code directory, in our case `./lambda_src` is mounted as a file in the executing container, any change that we save on the file will be there almost instantly.
+Now, that we got everything up and running, the fun begins. Because the function code directory, in our case `./lambda_src` is mounted into the executing container, any change that we save in this folder will affect the execution almost instantly.
 
 For example, we can now make a minor change to the API and replace the `number1` and `number2` with new values, let's say 10 and 20. Without redeploying or updating the function, the result of the previous request will look like this:
 
