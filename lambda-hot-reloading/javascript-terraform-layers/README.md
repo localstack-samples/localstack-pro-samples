@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-* LocalStack
+* LocalStack Pro
 * Docker
 * [awslocal](https://github.com/localstack/awscli-local) CLI
 * Terraform
