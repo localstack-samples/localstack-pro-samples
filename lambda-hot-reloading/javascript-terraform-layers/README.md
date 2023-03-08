@@ -9,14 +9,14 @@
 * [tflocal](https://github.com/localstack/terraform-local) CLI
 
 ## Introduction to the sample
-In this sample, we demonstrate a hot reloading setup where both the function code, and the layer code, is hot reloaded.
-Any changes to either of those two directories will reload the function, and the changed code will be available almost immediately.
+In this sample, we demonstrate a hot reloading setup where both the function code and the layer code are hot reloaded.
+Any changes to either of those two directories will reload the function. The changed code will be available almost immediately for the next invocation.
 
-We will again use the sample from our [javascript](../javascript/), but one of the values we want to change is supplied by a function defined in our layer.
+We will again re-use the sample from our [javascript](../javascript/) sample, but one of the values we want to change is supplied by a function defined in our layer.
 
-We will use terraform to deploy a hot reloaded lambda function, and then interact with it by invoking it and changing its source.
+We will use terraform to deploy a hot reloaded lambda function and invoke it once. Afterwards we will change its source and invoke it again to demonstrate the hot-reload feature.
 
-The source code of the created lambda function `hotreloadlambda` will is located in the subfolder [lambda_src](./lambda_src/) and of the created layer `hot_reload_layer` it is located in the subfolder [layer_src](./layer_src/).
+The source code of the created lambda function `hotreloadlambda` is located in the subfolder [lambda_src](./lambda_src/) and the source code of the created layer `hot_reload_layer` is located in the subfolder [layer_src](./layer_src/).
 
 
 ## Starting up
@@ -57,17 +57,17 @@ tflocal apply
 ```
 
 The terraform configuration will automatically deploy the lambda with hot reloading for the function code.
-The function code will be the contents of the `lambda_src` subdirectory and the layer code in the `layer_src` subdirectory.
+The function code consists of the contents of the `lambda_src` subdirectory and the layer code in the `layer_src` subdirectory.
 
 ## Invoking the Lambda function
 
-We can quickly make sure that it works by invoking it with a simple payload:
+We can quickly make sure that our deployed function works by invoking it with a simple payload:
 
 ```bash
 awslocal lambda invoke --function-name hotreloadlambda output.txt
 ```
 
-The invocation itself returns:
+The invocation response:
 
 ```json
 {
@@ -82,9 +82,9 @@ The invocation itself returns:
 
 ## Changing things up
 
-Now, that we got everything up and running, the fun begins. Because the function code directory, in our case `./lambda_src` is mounted into the executing container, any change that we save in this folder will reflect in the execution almost instantly.
+Now, that we got everything up and running, the real fun begins. Because the function code directory, in our case `./lambda_src`, is mounted directly into the executing container, any changes that we make in this folder will be reflected in the execution almost instantly.
 
-For example, we can now make a minor change to the API and replace the `number2` with new values, let's say 20. Without redeploying or updating the function, the result of the previous request will look like this:
+To demonstrate this behavior, we can now make a minor change to the API and replace `number2` with a new value, let's say 20. Without redeploying or updating the function, the result of the previous request will look like this:
 
 ```json
 {
@@ -97,7 +97,7 @@ For example, we can now make a minor change to the API and replace the `number2`
 }
 ```
 
-We can now also change the value provided by our layer. Let's replace it with 10, by changing the index.js in our `./layer_src/nodejs/node_modules/test-dep` folder.
+We can now also change the value provided by our layer. Let's replace it with 10, by editing the index.js in our `./layer_src/nodejs/node_modules/test-dep` folder.
 
 Our output after another invoke will be:
 

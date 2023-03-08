@@ -13,7 +13,7 @@ Other than the deployment of the sample, it is practically identical to [our jav
 
 We will use terraform to deploy a hot reloaded lambda function, and then interact with it by invoking it and changing its source.
 
-The source code of the created lambda function `hotreloadlambda` will is located in the subfolder [lambda_src](./lambda_src/).
+The source code of the created lambda function `hotreloadlambda` is located in the subfolder [lambda_src](./lambda_src/).
 
 
 ## Starting up
