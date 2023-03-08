@@ -50,6 +50,12 @@ First, we initialize the terraform working directory using:
 tflocal init
 ```
 
+We can now check the plan of terraform for our deployment:
+
+```bash
+tflocal plan
+```
+
 Afterwards, we can deploy our stack on LocalStack:
 
 ```bash
