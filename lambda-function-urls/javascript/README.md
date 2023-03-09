@@ -25,7 +25,7 @@ awslocal lambda create-function \
     --runtime nodejs14.x \
     --zip-file fileb://function.zip \
     --handler index.handler \
-    --role cool-stacklifter
+    --role arn:aws:iam::000000000000:role/cool-stacklifter
 ```
 
 ## Creating a Lambda function URL

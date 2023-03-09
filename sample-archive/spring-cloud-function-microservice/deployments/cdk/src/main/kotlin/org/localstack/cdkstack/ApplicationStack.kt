@@ -93,7 +93,7 @@ class ApplicationStack(parent: Construct, name: String) : Stack(parent, name) {
      */
     private fun buildCodeSource(): Code  {
         if (STAGE == "local") {
-            val bucket = Bucket.fromBucketName(this, "HotReloadingBucket", "__local__")
+            val bucket = Bucket.fromBucketName(this, "HotReloadingBucket", "hot-reload")
             return Code.fromBucket(bucket, LAMBDA_MOUNT_CWD)
         }
 

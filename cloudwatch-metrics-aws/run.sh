@@ -14,7 +14,7 @@ awslocal lambda create-function \
     --zip-file fileb://failing-lambda.zip \
     --handler failing-lambda.lambda_handler \
     --runtime python3.8 \
-    --role my-role
+    --role arn:aws:iam::000000000000:role/my-role
 
 echo 'creating sns topic'
 topic_arn=$(awslocal sns create-topic --name my-topic-alarm | jq -r .TopicArn)

@@ -16,7 +16,7 @@ run:         ## Build, deploy, and invoke the Lambda function URL
 		--runtime nodejs14.x \
 		--zip-file fileb://function.zip \
 		--handler index.handler \
-		--role cool-stacklifter
+		--role arn:aws:iam::000000000000:role/cool-stacklifter
 
 	awslocal lambda create-function-url-config \
 		--function-name localstack-lamba-url-example \
