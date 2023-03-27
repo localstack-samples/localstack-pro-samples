@@ -5,7 +5,7 @@
   "devDependencies": {
     "serverless": "^2.50.0",
     "serverless-deployment-bucket": "^1.5.1",
-    "serverless-localstack": "^0.4.34"
+    "serverless-localstack": "^1.0.5"
   },
   "scripts": {
     "deploy": "sls deploy --stage local"

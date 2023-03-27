@@ -5,7 +5,7 @@
   "devDependencies": {
     "serverless": "^3.0.0",
     "serverless-deployment-bucket": "^1.1.0",
-    "serverless-localstack": "^0.4.24"
+    "serverless-localstack": "^1.0.5"
   },
   "dependencies": {
     "aws-xray-sdk-core": "^2.4.0"

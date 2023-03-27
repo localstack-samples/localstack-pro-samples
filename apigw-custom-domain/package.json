@@ -6,7 +6,7 @@
     "serverless": "^1.54.0",
     "serverless-deployment-bucket": "^1.1.0",
     "serverless-domain-manager": "^5.0.0",
-    "serverless-localstack": "^0.4.28",
+    "serverless-localstack": "^1.0.5",
     "serverless-pseudo-parameters": "^2.5.0"
   },
   "scripts": {
