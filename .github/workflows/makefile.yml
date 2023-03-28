@@ -20,8 +20,8 @@ jobs:
       with:
         node-version: 14
 
-# see https://github.com/localstack/localstack/pull/6831
-# remove once no longer needed
+    # see https://github.com/localstack/localstack/pull/6831
+    # remove once no longer needed
     - name: Fix pyOpenSSL version
       run:  pip install --upgrade pyOpenSSL
 
@@ -40,7 +40,7 @@ jobs:
         git config --global user.name "Localstack Pro-Samples"
 
     - name: Pull the latest docker image
-      run: docker pull localstack/localstack
+      run: docker pull localstack/localstack-pro
 
     - name: Execute tests
       env:
