@@ -35,8 +35,15 @@ awslocal cloudwatch put-metric-alarm \
   --treat-missing notBreaching \
   --alarm-actions $topic_arn
 
+echo 'checking lambda state...'
 
-echo 'invoking lambda...'
+state=$(awslocal lambda get-function --function-name my-failing-lambda | jq -r .Configuration.State)
+while [ "$state" != Active ]; do
+  sleep 1
+  state=$(awslocal lambda get-function --function-name my-failing-lambda | jq -r .Configuration.State)
+done
+
+echo 'lambda active, invoking lambda...'
 awslocal lambda invoke --function-name my-failing-lambda out.txt
 
 state=$(awslocal cloudwatch describe-alarms --alarm-names my-lambda-alarm | jq -r '.MetricAlarms[0].StateValue')
