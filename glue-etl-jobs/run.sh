@@ -27,7 +27,7 @@ awslocal glue create-table --database legislators \
 awslocal glue create-connection \
   --connection-input '{"Name": "'$CONNECTION_NAME'", "ConnectionType": "JDBC", "ConnectionProperties": {"USERNAME": "test", "PASSWORD": "test", "JDBC_CONNECTION_URL": "jdbc:postgresql://localhost.localstack.cloud:'$db_port'"}}'
 
-secret=$(awslocal secretsmanager create-secret --name mysecret --secret-string "12345678" | jq -r ".ARN")
+secret=$(awslocal secretsmanager create-secret --name pass --secret-string "test" | jq -r ".ARN")
 
 echo Creating Postgres database tables with data ...
 awslocal rds-data execute-statement --resource-arn arn:aws:rds:us-east-1:000000000000:cluster:$CLUSTER_IDENTIFIER --secret-arn $secret --sql 'CREATE TABLE IF NOT EXISTS persons(id varchar, name varchar)'
