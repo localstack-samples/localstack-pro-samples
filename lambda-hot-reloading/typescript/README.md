@@ -40,7 +40,7 @@ Add a build script to your `package.json` file:
 }
 ```
 
-The build script will use `esbuild` to bundle and minify the TypeScript code into a single JavaScript file, which will be placed in the `dist` folder.
+The build script will use `esbuild` to bundle and minify the TypeScript code into a single JavaScript file, which will be placed in the `dist` folder. The `--watch` flag will make sure that the build script will watch for any changes in the source code and re-build the code.
 
 You can now run the build script to create the `dist/index.js` file:
 
@@ -62,7 +62,7 @@ awslocal lambda create-function \
     --function-name hello-world \
     --runtime "nodejs16.x" \
     --role arn:aws:iam::123456789012:role/lambda-ex \
-    --code S3Bucket="hot-reload",S3Key="$(PWD)/dist" \
+    --code S3Bucket="hot-reload",S3Key="${PWD}/dist" \
     --handler index.handler
 ```
 
@@ -93,7 +93,7 @@ The `output.txt` file contains the following:
 
 The Lambda function is now mounted as a file in the executing container, hence any change that we save on the file will be there in an instant.
 
-Change the `Hello World!` message to `Hello LocalStack!` and run `npm run build`. Trigger the Lambda once again. You will see the following in the `output.txt` file:
+Change the `Hello World!` message to `Hello LocalStack!`, and trigger the Lambda once again. You will see the following in the `output.txt` file:
 
 ```sh
 {"statusCode":200,"body":"{\"message\":\"Hello LocalStack!\"}"}
