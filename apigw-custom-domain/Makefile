@@ -11,7 +11,7 @@ install:     ## Install dependencies
 	@which serverless || npm install -g serverless
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
-	
+
 cert:        ## Create test SSL certificate
 	mkdir -p sslcert
 	cd sslcert; \
@@ -25,7 +25,7 @@ run:         ## Deploy the app locally and run an API GW test invocation
 		echo "Generating and importing test SSL certificate to ACM for Route53 domain test.example.com"; \
 		make cert; \
 		echo "Importing local test certificate into ACM API ..."; \
-		awslocal acm import-certificate --certificate file://sslcert/server.crt --private-key file://sslcert/ssl.key && \
+		awslocal acm import-certificate --certificate fileb://sslcert/server.crt --private-key fileb://sslcert/ssl.key && \
 		echo "Creating Route53 hosted zone for test domain 'test.example.com' ..."; \
 		awslocal route53 create-hosted-zone --name test.example.com --caller-reference r1 && \
 		echo "Deploying Serverless app to local environment"; \
