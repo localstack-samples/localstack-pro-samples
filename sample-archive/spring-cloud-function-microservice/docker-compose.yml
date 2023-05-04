@@ -19,7 +19,7 @@ version: "3.8"
 services:
   localstack:
     container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
-    image: localstack/localstack
+    image: localstack/localstack-pro
     network_mode: bridge
     ports:
       - "127.0.0.1:53:53"
@@ -41,5 +41,5 @@ services:
       - LAMBDA_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5050
       - LAMBDA_DOCKER_FLAGS=-p 127.0.0.1:5050:5050
     volumes:
-      - "${TMPDIR:-/tmp/}localstack:/tmp/localstack"
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"

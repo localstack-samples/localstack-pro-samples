@@ -3,7 +3,7 @@ version: "3.8"
 services:
   localstack:
     container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
-    image: localstack/localstack
+    image: localstack/localstack-pro
     ports:
       - "127.0.0.1:4510-4559:4510-4559"  # external service port range
       - "127.0.0.1:4566:4566"            # LocalStack Edge Proxy
@@ -15,7 +15,7 @@ services:
       - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY-}
       - SMTP_HOST=smtp:1025
     volumes:
-      - "${TMPDIR:-/tmp}/localstack:/tmp/localstack"
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
 
   smtp:

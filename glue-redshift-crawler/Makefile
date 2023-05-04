@@ -8,7 +8,6 @@ usage:     ## Show this help
 install:   ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
-	docker pull localstack/bigdata
 
 run:    ## Prepare environment and run sample
 	./run.sh

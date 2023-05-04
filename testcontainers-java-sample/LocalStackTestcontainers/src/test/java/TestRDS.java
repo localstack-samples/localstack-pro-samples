@@ -21,7 +21,7 @@ import static org.junit.Assert.fail;
 
 public class TestRDS {
 
-    private DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:1.4.0");
+    private DockerImageName localstackImage = DockerImageName.parse("localstack/localstack-pro:latest");
     private String api_key = System.getenv("LOCALSTACK_API_KEY");
 
     /**
