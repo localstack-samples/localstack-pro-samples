@@ -6,10 +6,13 @@ endpoint_url = "http://localhost.localstack.cloud:4566"
 stream_name = "demo_stream"
 
 
-kinesis_client = boto3.client("kinesis", endpoint_url=endpoint_url, 
-                              region_name='us-east-1', 
-                              aws_access_key_id="test", 
-                              aws_secret_access_key="test")
+kinesis_client = boto3.client(
+    "kinesis",
+    endpoint_url=endpoint_url,
+    region_name="us-east-1",
+    aws_access_key_id="test",
+    aws_secret_access_key="test",
+)
 
 response = kinesis_client.describe_stream(
     StreamName=stream_name,
@@ -19,8 +22,7 @@ shard_id = response["StreamDescription"]["Shards"][0]["ShardId"]
 
 consumer_name = "ls_consumer"
 response = kinesis_client.register_stream_consumer(
-    StreamARN=stream_arn,
-    ConsumerName=consumer_name
+    StreamARN=stream_arn, ConsumerName=consumer_name
 )
 
 consumer_arn = response["Consumer"]["ConsumerARN"]
