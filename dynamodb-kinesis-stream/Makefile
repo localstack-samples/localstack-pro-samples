@@ -9,11 +9,11 @@ install:     ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
 	@which tflocal || pip install terraform-local
+	@test -e .venv || (virtualenv .venv; . .venv/bin/activate; pip install -r requirements.txt)
 
 run:         ## Deploy and run the sample locally
 	@(test -d .terraform || tflocal init) && tflocal apply --auto-approve
-	pip install boto3
-	python test_stream_consumer.py &
+	@source .venv/bin/activate && python test_stream_consumer.py &
 	./ddb-data.sh
 
 start:
