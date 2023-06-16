@@ -2,6 +2,7 @@ export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export AWS_DEFAULT_REGION=us-east-1
 
+
 usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
@@ -13,7 +14,7 @@ install:     ## Install dependencies
 
 run:         ## Deploy and run the sample locally
 	@(test -d .terraform || tflocal init) && tflocal apply --auto-approve
-	@ .venv/bin/activate; python test_stream_consumer.py &
+	@. .venv/bin/activate; python test_stream_consumer.py &
 	./ddb-data.sh
 
 start:
