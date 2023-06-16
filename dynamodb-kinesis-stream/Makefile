@@ -13,7 +13,7 @@ install:     ## Install dependencies
 
 run:         ## Deploy and run the sample locally
 	@(test -d .terraform || tflocal init) && tflocal apply --auto-approve
-	@source .venv/bin/activate && python test_stream_consumer.py &
+	@ .venv/bin/activate; python test_stream_consumer.py &
 	./ddb-data.sh
 
 start:
