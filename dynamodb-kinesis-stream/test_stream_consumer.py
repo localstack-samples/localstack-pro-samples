@@ -33,9 +33,9 @@ response = kinesis_client.subscribe_to_shard(
     StartingPosition={"Type": "TRIM_HORIZON"},
 )
 
-for record in response["EventStream"]:
-    try:
+try:
+    for record in response["EventStream"]:
         print("****************")
         print(record)
-    except Exception as e:
-        print(f"Error reading stream: {str(e)}")
+except Exception as e:
+    print(f"Error reading stream: {str(e)}")
