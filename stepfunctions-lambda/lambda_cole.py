@@ -1,3 +1,3 @@
 def lambda_handler(event, context):
     print(event)
-    return event["input"]["lewis"]
+    return event["input"]["cole"]

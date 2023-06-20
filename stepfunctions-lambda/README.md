@@ -16,7 +16,7 @@ Start LocalStack via:
 localstack start -d
 ```
 
-Push the following command to create the Lambda functions:
+Run the following command to create the Lambda functions:
 
 ```sh
 make create-lambdas

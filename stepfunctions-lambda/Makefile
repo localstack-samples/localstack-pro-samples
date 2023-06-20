@@ -1,6 +1,6 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export AWS_DEFAULT_REGION = us-east-1
+export AWS_DEFAULT_REGION=us-east-1
 
 usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -18,7 +18,7 @@ create-lambdas:         ## Create the Lambdas
 	awslocal lambda create-function \
   		--function-name adam \
   		--role arn:aws:iam::000000000000:role/lambda-demo \
-  		--runtime python3.8 --timeout 10 --memory-size 128 \
+  		--runtime python3.9 --timeout 10 --memory-size 128 \
   		--handler lambda_function.lambda_handler \
   		--zip-file fileb://package.zip
 	
@@ -30,7 +30,7 @@ create-lambdas:         ## Create the Lambdas
 	awslocal lambda create-function \
   		--function-name cole \
   		--role arn:aws:iam::000000000000:role/lambda-demo \
-  		--runtime python3.8 --timeout 10 --memory-size 128 \
+  		--runtime python3.9 --timeout 10 --memory-size 128 \
   		--handler lambda_function.lambda_handler \
   		--zip-file fileb://package.zip
 
@@ -42,7 +42,7 @@ create-lambdas:         ## Create the Lambdas
 	awslocal lambda create-function \
   		--function-name combine \
   		--role arn:aws:iam::000000000000:role/lambda-demo \
-  		--runtime python3.8 --timeout 10 --memory-size 128 \
+  		--runtime python3.9 --timeout 10 --memory-size 128 \
   		--handler lambda_function.lambda_handler \
   		--zip-file fileb://package.zip
 
