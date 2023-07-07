@@ -9,5 +9,5 @@ $ LOCALSTACK_API_KEY=<your-api-key> docker-compose up -d
 ```
 
 ```
-$ bash run_demo.sh
+$ make run
 ```
