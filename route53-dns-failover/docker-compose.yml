@@ -9,7 +9,7 @@ services:
       - "127.0.0.1:4566:443"
       - "127.0.0.1:4510:4510"
     environment:
-      - LOCALSTACK_API_KEY=test  # <<< Set your API key here
+      - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY}
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
 

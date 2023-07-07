@@ -75,7 +75,7 @@ awslocal route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID#/
 ]}'
 
 # Get the IP address of the LocalStack container on the Docker bridge
-LOCALSTACK_DNS_SERVER=$(docker inspect localstack_main | jq -r .[0].NetworkSettings.Networks.failover_sample_sweet_mahavira.IPAddress)
+LOCALSTACK_DNS_SERVER=$(docker inspect localstack_main | jq -r '.[0].NetworkSettings.Networks."route53-dns-failover_sweet_mahavira".IPAddress')
 
 # This IP address is used to query the LocalStack DNS server
 # This should return `target1.example.com` as the healthcheck is currently passing
@@ -85,7 +85,7 @@ dig @$LOCALSTACK_DNS_SERVER +noall +answer test.hello-localstack.com CNAME
 awslocal route53 update-health-check --health-check-id ${HEALTH_CHECK_ID} --fully-qualified-domain-name bad-host-p45e8eG94rK.com
 
 # Wait for the healthcheck to refresh
-sleep 10
+sleep 12
 
 # This should return the failover `target2.example.com`
 dig @$LOCALSTACK_DNS_SERVER +noall +answer test.hello-localstack.com CNAME
