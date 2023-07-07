@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    image: localstack/localstack-pro:2.1.0
+    networks:
+      sweet_mahavira:
+    ports:
+      - "127.0.0.1:4566:443"
+      - "127.0.0.1:4510:4510"
+    environment:
+      - LOCALSTACK_API_KEY=test  # <<< Set your API key here
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  http_echo:
+    container_name: http_echo
+    image: hashicorp/http-echo:latest
+    command: ["-text", "healthy"]
+    networks:
+      sweet_mahavira:
+    ports:
+      - "127.0.0.1:5678:5678"
+
+networks:
+  sweet_mahavira:
