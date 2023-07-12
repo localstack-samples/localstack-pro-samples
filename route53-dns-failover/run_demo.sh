@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This is a demo script that showcases Route53 DNS failover in LocalStack 
+# This is a demo script that showcases Route53 DNS failover in LocalStack
 # Make sure the Docker Compose setup is running before executing this script
 
 set -eux
@@ -13,7 +13,7 @@ HOSTED_ZONE_ID=$(awslocal route53 create-hosted-zone --name $HOSTED_ZONE_NAME --
 # Create a health check that runs against the `http_echo` container
 HEALTH_CHECK_ID=$(awslocal route53 create-health-check --caller-reference foobar --health-check-config '{
     "FullyQualifiedDomainName": "http_echo",
-    "Port": 5678,
+    "Port": 80,
     "ResourcePath": "/",
     "Type": "HTTP",
     "RequestInterval": 10
@@ -76,6 +76,7 @@ awslocal route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID#/
 
 # Get the IP address of the LocalStack container on the Docker bridge
 LOCALSTACK_DNS_SERVER=$(docker inspect localstack_main | jq -r '.[0].NetworkSettings.Networks."route53-dns-failover_sweet_mahavira".IPAddress')
+LOCALSTACK_DNS_SERVER=localhost
 
 # This IP address is used to query the LocalStack DNS server
 # This should return `target1.example.com` as the healthcheck is currently passing
