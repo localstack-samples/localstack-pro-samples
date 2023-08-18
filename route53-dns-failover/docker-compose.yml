@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    image: localstack/localstack-pro:2.1.0
+    networks:
+      sweet_mahavira:
+    ports:
+      - "127.0.0.1:53:53"
+      - "127.0.0.1:53:53/udp"
+      - "127.0.0.1:4566:443"
+      - "127.0.0.1:4510:4510"
+    environment:
+      - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY}
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  # alternative 1:
+  http_echo:
+    container_name: http_echo
+    image: ealen/echo-server
+    networks:
+      sweet_mahavira:
+    ports:
+     - 5678:80
+
+  # alternative 2:
+  # http_echo:
+  #   container_name: http_echo
+  #   image: mendhak/http-https-echo
+  #   networks:
+  #     sweet_mahavira:
+  #   ports:
+  #     - "127.0.0.1:8080:8080"
+
+networks:
+  sweet_mahavira:
