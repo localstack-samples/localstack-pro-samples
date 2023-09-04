@@ -1,6 +1,6 @@
-# LocalStack Demo: Lambda XRay Tracing
+# LocalStack Demo: Lambda XRay Tracing via Serverless Framework
 
-Simple demo application illustrating Lambda XRay tracing using LocalStack, deployed via the Serverless framework.
+Simple demo application illustrating Lambda XRay tracing using LocalStack, deployed via the Serverless Framework.
 
 ## Prerequisites
 
