@@ -1,4 +1,0 @@
-custom:
-  localstack:
-    stages:
-      - local
