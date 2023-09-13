@@ -1,0 +1,11 @@
+# LocalStack
+logs.txt
+
+# Build and deployment outputs
+package
+out.json
+out.yml
+bucket-name.txt
+
+__pycache__
+.venv

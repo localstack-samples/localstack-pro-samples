@@ -9,16 +9,20 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 patch_all()
 
-client = boto3.client(
-    "lambda",
-    endpoint_url=f"http://{os.environ['LOCALSTACK_HOSTNAME']}:{os.environ['EDGE_PORT']}",
-)
+client = boto3.client("lambda")
 client.get_account_settings()
-
 
 def lambda_handler(event, context):
     logger.info("## ENVIRONMENT VARIABLES\r" + jsonpickle.encode(dict(**os.environ)))
     logger.info("## EVENT\r" + jsonpickle.encode(event))
     logger.info("## CONTEXT\r" + jsonpickle.encode(context))
+
+    # Automatic tracing of patched boto clients
     response = client.get_account_settings()
+
+    # Custom tracing using the AWS X-Ray SDK
+    subsegment = xray_recorder.begin_subsegment("annotations")
+    subsegment.put_annotation("custom_annotation", 12345)
+    xray_recorder.end_subsegment()
+
     return response["AccountUsage"]
