@@ -5,31 +5,9 @@ export AWS_DEFAULT_REGION ?= us-east-1
 usage:                  ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-VENV_BIN ?= python3 -m venv
-VENV_DIR ?= .venv
-PIP_CMD ?= pip3
-
-ifeq ($(OS), Windows_NT)
-	VENV_ACTIVATE = $(VENV_DIR)/Scripts/activate
-else
-	VENV_ACTIVATE = $(VENV_DIR)/bin/activate
-endif
-
-VENV_RUN = . $(VENV_ACTIVATE)
-
-$(VENV_ACTIVATE):
-	test -d $(VENV_DIR) || $(VENV_BIN) $(VENV_DIR)
-	$(VENV_RUN); $(PIP_CMD) install --upgrade pip setuptools
-	touch $(VENV_ACTIVATE)
-
-venv: $(VENV_ACTIVATE)  ## Create a new (empty) virtual environment
-
 install:                ## Install dependencies
 	@which awslocal || pip install awscli-local
 	@which samlocal || pip install aws-sam-cli-local
-
-install-dev: venv       ## Install developer requirements into venv
-	$(VENV_RUN); $(PIP_CMD) install "aws-lambda-powertools[aws-sdk]"
 
 run: deploy invoke get-trace-summaries get-traces
 
@@ -68,4 +46,4 @@ test-ci:
 	make start install ready run; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
 	
-.PHONY: usage install install-dev run deploy invoke get-trace-summaries watch-trace-summaries get-traces stop ready logs test-ci
+.PHONY: usage install run deploy invoke get-trace-summaries watch-trace-summaries get-traces stop ready logs test-ci
