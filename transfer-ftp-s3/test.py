@@ -1,8 +1,8 @@
 import io
 import time
-import uuid
 import boto3
-from ftplib import FTP, FTP_TLS
+from ftplib import FTP
+import re
 
 EDGE_URL = 'http://localhost:4566'
 
@@ -29,7 +29,8 @@ def create_transfer_api():
     time.sleep(1)
 
     server_id = rs['ServerId']
-    port = int(server_id.split(':')[1])
+    match = re.match(r"^s-[a-z]*([0-9]{4,5})$", server_id)
+    port = int(match.group(1))
 
     s3_client.create_bucket(Bucket=BUCKET)
 
