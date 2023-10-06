@@ -3,7 +3,7 @@ service: test-elb-load-balancing
 provider:
   name: aws
   region: us-east-1
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   deploymentBucket:
     name: testbucket
 
@@ -62,7 +62,6 @@ resources:
 plugins:
   - serverless-deployment-bucket
   - serverless-localstack
-  - serverless-pseudo-parameters
 
 custom:
   localstack:
