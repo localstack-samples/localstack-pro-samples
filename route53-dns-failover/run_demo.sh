@@ -75,7 +75,7 @@ awslocal route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID#/
 ]}'
 
 # Get the IP address of the LocalStack container on the Docker bridge
-LOCALSTACK_DNS_SERVER=$(docker inspect localstack_main | jq -r '.[0].NetworkSettings.Networks."route53-dns-failover_sweet_mahavira".IPAddress')
+LOCALSTACK_DNS_SERVER=$(docker inspect localstack-main | jq -r '.[0].NetworkSettings.Networks."route53-dns-failover_sweet_mahavira".IPAddress')
 LOCALSTACK_DNS_SERVER=localhost
 
 # This IP address is used to query the LocalStack DNS server
