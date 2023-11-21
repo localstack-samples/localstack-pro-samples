@@ -43,11 +43,6 @@ To deploy the `php-fpm` Laravel [base](https://github.com/brefphp/examples/tree/
     serverless deploy --stage local
     ```
 
-Start localstack with:
-
-* `LAMBDA_DOCKER_FLAGS=--user nobody` until [this user permission issue](https://github.com/localstack/localstack/issues/7722) is resolved for running `fpm`.
-* `PROVIDER_OVERRIDE_LAMBDA=v2` until the [new Lambda provider implementation](https://github.com/localstack/localstack/pull/6724) becomes the default in LocalStack Version 2.
-
 ## Prerequisites
 
 * LocalStack
@@ -69,7 +64,7 @@ make install
 
 Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... PROVIDER_OVERRIDE_LAMBDA=v2 LAMBDA_DOCKER_FLAGS="--user nobody" DEBUG=1 localstack start
+LOCALSTACK_API_KEY=$LOCALSTACK_API_KEY DEBUG=1 localstack start
 ```
 
 ## Running
