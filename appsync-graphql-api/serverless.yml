@@ -84,7 +84,7 @@ custom:
     stages:
       - local
     endpoints:
-      AppSync: http://localhost:4605
+      AppSync: http://localhost:4566
 
 plugins:
   - serverless-localstack
