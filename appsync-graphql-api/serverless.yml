@@ -18,6 +18,7 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
     RDSCluster:
       Type: AWS::RDS::DBCluster
       Properties:
@@ -83,7 +84,7 @@ custom:
     stages:
       - local
     endpoints:
-      AppSync: http://localhost:4605
+      AppSync: http://localhost:4566
 
 plugins:
   - serverless-localstack
