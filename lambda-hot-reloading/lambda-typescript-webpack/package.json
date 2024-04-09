@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn run clean && yarn run webpack --watch",
+    "build-aws": "yarn run clean && yarn run webpack",
     "clean": "rimraf dist/*",
     "lint": "eslint \"src/**/*.ts*\"",
     "lint:fix": "eslint --fix \"src/**/*.ts*\"",
