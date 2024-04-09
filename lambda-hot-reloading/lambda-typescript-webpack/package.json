@@ -1,0 +1,48 @@
+{
+  "name": "lambda-typescript-webpack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn run clean && yarn run webpack --watch",
+    "build-aws": "yarn run clean && yarn run webpack",
+    "clean": "rimraf dist/*",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "lint:fix": "eslint --fix \"src/**/*.ts*\"",
+    "format": "prettier *.ts \"src/**/*.ts*\" --write",
+    "webpack": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack --mode production",
+    "package": "zip -q -j -r ./lambda_function.zip dist"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8",
+    "@types/node": "^18",
+    "@types/webpack": "^5",
+    "@typescript-eslint/eslint-plugin": "^5",
+    "@typescript-eslint/parser": "^5",
+    "builtin-modules": "^3",
+    "cross-env": "^7",
+    "eslint": "^8",
+    "eslint-config-prettier": "^8",
+    "eslint-config-standard": "^17",
+    "eslint-plugin-functional": "^4",
+    "eslint-plugin-import": "^2",
+    "eslint-plugin-n": "^15",
+    "eslint-plugin-node": "^11",
+    "eslint-plugin-prettier": "^4",
+    "eslint-plugin-promise": "^6",
+    "json-loader": "^0",
+    "prettier": "^2",
+    "rimraf": "^3",
+    "ts-loader": "^9",
+    "ts-node": "^10",
+    "typescript": "^4",
+    "webpack": "^5",
+    "webpack-cli": "^5",
+    "nodemon-webpack-plugin": "^4.8.2"
+  },
+  "dependencies": {
+    "aws-sdk": "^2",
+    "bufferutil": "^4",
+    "utf-8-validate": "^6"
+  }
+}
