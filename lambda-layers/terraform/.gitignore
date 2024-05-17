@@ -1,0 +1,6 @@
+.terraform
+.venv
+build
+.terraform.lock.hcl
+output.json
+terraform.*
