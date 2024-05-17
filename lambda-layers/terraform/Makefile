@@ -42,7 +42,7 @@ invoke:
     output.json
 	cat output.json
 
-run: start install init deploy invoke
+run: start install package init deploy invoke
 
 clean:
 	rm -rf build
