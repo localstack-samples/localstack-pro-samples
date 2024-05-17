@@ -1,4 +1,4 @@
-# LocalStack Demo: Lambda Layers
+# Lambda Layers with Serverless Framework
 
 Simple demo application illustrating Lambda layers using LocalStack, deployed via the Serverless framework.
 
