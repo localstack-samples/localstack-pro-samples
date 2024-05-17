@@ -15,10 +15,10 @@ and shows how to use the X-Ray API to fetch distributed trace data.
 
 ## Start LocalStack
 
-Start your LocalStack with your API key configured along with the `DEBUG=1` configuration:
+Start your LocalStack with your Auth Token configured along with the `DEBUG=1` configuration:
 
 ```bash
-LOCALSTACK_API_KEY=$LOCALSTACK_API_KEY DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=$LOCALSTACK_AUTH_TOKEN DEBUG=1 localstack start
 ```
 
 ## Create a new bucket

@@ -20,7 +20,7 @@ make install
 
 Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
 ```
 
 The following command runs the example, which creates a MediaStore container, uploads and downloads files to/from the container, and finally cleans up the created resources:

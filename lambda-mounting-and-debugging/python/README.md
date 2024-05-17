@@ -20,7 +20,7 @@ make install
 
 Make sure that LocalStack is started with the following configuration:
 ```
-LOCALSTACK_API_KEY=... \
+LOCALSTACK_AUTH_TOKEN=... \
     LAMBDA_REMOTE_DOCKER=0 \
     LAMBDA_DOCKER_FLAGS='-p 19891:19891' \
     DEBUG=1 localstack start

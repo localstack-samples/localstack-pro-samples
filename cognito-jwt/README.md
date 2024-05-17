@@ -26,7 +26,7 @@ This scenario requires access to an SMTP server to send Cognito emails (e.g., to
 
 Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
 ```
 
 ## Running

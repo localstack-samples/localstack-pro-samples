@@ -23,7 +23,7 @@ Please note that LocalStack by default does not enforce IAM policies. IAM needs 
 
 Make sure that the `ENFORCE_IAM=1` environment variable is enabled, and that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... ENFORCE_IAM=1 DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=... ENFORCE_IAM=1 DEBUG=1 localstack start
 ```
 
 Run the script that is running the :

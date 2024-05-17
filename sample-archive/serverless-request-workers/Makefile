@@ -23,7 +23,7 @@ lint:            ## Run code linter
 	@flake8 demo
 
 check:
-	@test $${LOCALSTACK_API_KEY+x} || (echo 'Please configure $$LOCALSTACK_API_KEY with your API key'; exit 1)
+	@test $${LOCALSTACK_AUTH_TOKEN+x} || (echo 'Please configure $$LOCALSTACK_AUTH_TOKEN with your Auth Token'; exit 1)
 
 test-ci:
 	# skip this test in CI for now

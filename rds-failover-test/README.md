@@ -23,7 +23,7 @@ make install
 Make sure that LocalStack is started:
 
 ```bash
-LOCALSTACK_API_KEY=... DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
 ```
 
 ## Running

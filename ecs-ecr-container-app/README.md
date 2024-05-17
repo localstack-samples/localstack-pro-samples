@@ -24,7 +24,7 @@ Please refer to the `templates/` folder for details about the CloudFormation tem
 
 Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
 ```
 
 The following command builds and deploys the app locally via CloudFormation:

@@ -5,7 +5,7 @@ We suggest taking a look at [run_demo.sh](run_demo.sh) script to understand the 
 To run the demo:
 
 ```
-$ LOCALSTACK_API_KEY=<your-api-key> docker-compose up -d
+$ LOCALSTACK_AUTH_TOKEN=<your-api-key> docker-compose up -d
 ```
 
 ```

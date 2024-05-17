@@ -26,7 +26,7 @@ This sample project creates a local EMR cluster and runs two simple jobs upon in
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 SERVICES=cloudformation,emr localstack start
+LOCALSTACK_AUTH_TOKEN=... DEBUG=1 SERVICES=cloudformation,emr localstack start
 ```
 
 Run the startup script:
