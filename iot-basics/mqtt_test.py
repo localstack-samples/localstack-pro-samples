@@ -59,7 +59,7 @@ def create_publisher():
     )
     mqtt_publisher.enable_logger(_logger)
     mqtt_publisher.loop_start()
-    mqtt_publisher._thread.name = f"mqtt_thread_publisher"  # noqa
+    mqtt_publisher._thread.name = "mqtt_thread_publisher"
     return mqtt_publisher
 
 
