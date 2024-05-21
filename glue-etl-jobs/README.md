@@ -24,7 +24,7 @@ Please refer to the `job.py` PySpark job file and the `run.sh` script that runs 
 
 Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
 ```
 
 The following command prepares, creates, and runs the Glue job:

@@ -43,7 +43,7 @@ Deployment setup:
 ## Quickstart
 
 * If you are going to use pro-features, rename `.env.example`
-  to `.env` and set your LocalStack pro API Key
+  to `.env` and set your LocalStack pro Auth Token
 * Start the LocalStack service `docker compose up [-d]`
 * Deploy the local stack using one of available frameworks
   `make deploy-<framework>-local`, for example `make deploy-cdk-local`

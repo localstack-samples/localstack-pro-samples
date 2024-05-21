@@ -29,7 +29,7 @@ Resources are deployed via a CloudFormation template in `src/main/resources/emai
 
 First, start LocalStack and the SMTP server with:
 
-    LOCALSTACK_API_KEY=<your-api-key> docker-compose up -d
+    LOCALSTACK_AUTH_TOKEN=<your-api-key> docker-compose up -d
 
 Then deploy the cloudformation stack (can take a few seconds)
 

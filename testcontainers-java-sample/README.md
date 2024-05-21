@@ -5,7 +5,7 @@ The sample explains how the mapping works, and how you need to configure Testcon
 
 ## Run Example
 * Import the project (e.g. in IntelliJ), 
-* configure your LOCALSTACK_API_KEY as environment variable, 
+* configure your LOCALSTACK_AUTH_TOKEN as environment variable, 
 * and then run  the test `TestRDS`.
 
 It will create a LocalStack Testcontainer and a postgres database instance using RDSClient.

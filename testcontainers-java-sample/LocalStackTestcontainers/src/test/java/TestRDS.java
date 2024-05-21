@@ -22,7 +22,7 @@ import static org.junit.Assert.fail;
 public class TestRDS {
 
     private DockerImageName localstackImage = DockerImageName.parse("localstack/localstack-pro:latest");
-    private String api_key = System.getenv("LOCALSTACK_API_KEY");
+    private String api_key = System.getenv("LOCALSTACK_AUTH_TOKEN");
 
     /**
      * Start LocalStackContainer with exposed Ports. Those ports are used by services like RDS, where several databases can be started, running on different ports.
@@ -31,7 +31,7 @@ public class TestRDS {
     @Rule
     public LocalStackContainer localstack = new LocalStackContainer(localstackImage)
                                                         .withExposedPorts(4510, 4511, 4512, 4513, 4514) // TODO the port can have any value between 4510-4559, but LS starts from 4510
-                                                        .withEnv("LOCALSTACK_API_KEY", api_key) // TODO add your API key here
+                                                        .withEnv("LOCALSTACK_AUTH_TOKEN", api_key) // TODO add your Auth Token here
                                                         .withServices(LocalStackContainer.EnabledService.named("rds"));
 
 

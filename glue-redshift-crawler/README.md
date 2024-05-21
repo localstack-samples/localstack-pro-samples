@@ -30,7 +30,7 @@ The following steps are executed when running the sample:
 ## Running
 Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
 ```
 
 The following command executes the sample:

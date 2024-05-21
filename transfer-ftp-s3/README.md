@@ -19,7 +19,7 @@ make install
 
 Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
 ```
 
 The following command runs the test application locally, creates an FTP server via AWS Transfer API locally, uploads two files via FTP, and downloads the files from the target S3 bucket:

@@ -14,7 +14,7 @@ Each example in the repository is prefixed with the name of the AWS service bein
 
 ## Configuration
 
-Some of the samples require LocalStack Pro features. Please make sure to properly configure the `LOCALSTACK_API_KEY` environment variable. You can find your API key in the [LocalStack Pro dashboard](https://app.localstack.cloud/account/apikeys) and you can refer to our [API key documentation](https://docs.localstack.cloud/getting-started/api-key/) for more details.
+Some of the samples require LocalStack Pro features. Please make sure to properly configure the `LOCALSTACK_AUTH_TOKEN` environment variable. You can find your Auth Token on the [LocalStack Web Application](https://app.localstack.cloud/workspace/auth-token) and you can refer to our [Auth Token documentation](https://docs.localstack.cloud/getting-started/auth-token/) for more details.
 
 ## Outline
 

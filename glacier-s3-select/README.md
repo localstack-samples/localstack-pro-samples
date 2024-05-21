@@ -24,7 +24,7 @@ Please refer to the `test.csv` file and feel free to modify in order to see chan
 
 Make sure that LocalStack is started:
 ```
-LOCALSTACK_API_KEY=... DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
 ```
 
 The following command creates local S3 buckets and Glacier vaults, and runs simple demo queries over the `data.csv` CSV file:
