@@ -10,7 +10,10 @@ REDSHIFT_PASSWORD="crawlertestredshiftpassword"
 GLUE_DATABASE_NAME="gluedb"
 GLUE_CONNECTION_NAME="glueconnection"
 GLUE_CRAWLER_NAME="gluecrawler"
-TIMEOUT_SECONDS=120
+
+# Read timeout from environment variable, default to no timeout if not set
+TIMEOUT_MINUTES=${TIMEOUT_MINUTES:-}
+TIMEOUT_SECONDS=$((TIMEOUT_MINUTES * 60))
 
 # Tear-down function to cleanup on exit
 function cleanup() {
@@ -33,13 +36,16 @@ wait () {
   expected=$3
   start_time=$(date +%s)
   current=$($command | jq -r $field)
+  
   while [ "$current" != "$expected" ]; do
     sleep 5
     elapsed_time=$(( $(date +%s) - start_time ))
-    if [ $elapsed_time -ge $TIMEOUT_SECONDS ]; then
+    
+    if [ -n "$TIMEOUT_MINUTES" ] && [ $elapsed_time -ge $TIMEOUT_SECONDS ]; then
       echo "Timeout after $TIMEOUT_SECONDS seconds. Current: $current / Expected: $expected"
       exit 1
     fi
+    
     echo "Waiting for state change. Current: $current / Expected: $expected. Elapsed time: $elapsed_time seconds"
     current=$($command | jq -r $field)
   done
