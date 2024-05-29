@@ -1,69 +1,68 @@
-# LocalStack Demo: API Gateway with Custom Domains
+# API Gateway with Custom Domains
 
-Simple demo application illustrating API Gateway (v2) endpoints using custom domain names (via Route53, ACM), deployed locally in LocalStack using the Serverless framework.
+[![Makefile CI](https://github.com/localstack-samples/localstack-pro-samples/actions/workflows/makefile.yml/badge.svg)](https://github.com/localstack-samples/localstack-pro-samples/actions/workflows/makefile.yml)
+
+| Key          | Value                             |
+| ------------ | --------------------------------- |
+| Environment  | LocalStack                        |
+| Services     | API Gateway, Lambda, Route53, ACM |
+| Integrations | Serverless Framework              |
+| Categories   | Serverless; REST API              |
+| Level        | Beginner                          |
+
+## Introduction
+
+A demo application showcasing API Gateway (v2) endpoints with custom domain names configured through Route53 and ACM, deployed locally using LocalStack and the Serverless framework. For more details, refer to the [documentation](https://docs.localstack.cloud/user-guide/aws/apigateway/#custom-domain-names-with-api-gateway).
 
 ## Prerequisites
 
-* LocalStack
+* [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli) with [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/)
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) with [`awslocal` wrapper script](https://docs.localstack.cloud/user-guide/integrations/aws-cli/#localstack-aws-cli-awslocal)
+* [Node.js 18.x](https://nodejs.org/en/download/package-manager) with `npm`
+* [Serverless Framework](https://www.serverless.com/framework/docs/getting-started) 3.x
 * Docker
-* Node.js / `npm`
-* `make`
+* `openssl` & `make`
 
-## Installing
+You can run `make check` to verify that all dependencies are installed.
 
-To install the dependencies:
-```
+## Installation
+
+Run the following command to install the necessary dependencies:
+
+```bash
 make install
 ```
 
-## Running
+## Start LocalStack
 
-Make sure that LocalStack is started:
-```
+To start LocalStack, run the following command:
+
+```bash
 LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
 ```
 
-Deploy the app locally and run a test invocation via:
+## Deploy the Application
+
+Deploy the application locally using the Serverless framework:
+
 ```
-make run
+./run.sh
 ```
 
-The script first generates an SSL certificate for local testing (in case the `openssl` command is not available, it will use an existing, predefined certificate), and then adds it to Amazon Certificate Manager (ACM), and finally creates a Route53 hosted zone for the domain name `test.example.com`:
-```
-Generating a 2048 bit RSA private key
-...
-subject=/CN=test.example.com
-...
-Importing local test certificate into ACM API ...
-{
-    "CertificateArn": "arn:aws:acm:us-east-1:000000000000:certificate/9cbc69d6-abf9-412e-9e2b-36f99fcbf251"
-}
-Creating Route53 hosted zone for test domain 'test.example.com' ...
-{
-    "HostedZone": {
-        "Id": "/hostedzone/SU1TPRNX6CL3OE0",
-        "Name": "test.example.com.",
-        ...
+The script initially generates an SSL certificate for local testing. If the `openssl` command is unavailable, it uses an existing predefined certificate. The script then adds the certificate to Amazon Certificate Manager (ACM) and creates a Route53 hosted zone for the domain name `test.example.com`.
+
+Next, you will see the deployment logs of the Serverless application, with details displayed in the output section towards the bottom. The script then showcases the API Gateway endpoints and the custom domain name configuration, along with sample commands to invoke the deployed endpoints.
+
+```bash
+Serverless app successfully deployed.
+Now trying to invoke the API Gateway endpoints with custom domains.
+Sample command to invoke endpoint 1:
+curl -H 'Host: test.example.com' http://localhost:4566/hello
+Sample command to invoke endpoint 2:
+curl -H 'Host: test.example.com' http://localhost:4566/goodbye
 ```
 
-Next, you should see some output with the deployment logs of the Serverless application, and some details in the output section towards the bottom:
-```
-...
-Serverless Domain Manager: Info: Created API mapping '(none)' for test.example.com
-Serverless Domain Manager: Summary: Distribution Domain Name
-Serverless Domain Manager:    Domain Name: test.example.com
-Serverless Domain Manager:    Target Domain: test.example.com
-Serverless Domain Manager:    Hosted Zone Id: Z2FDTNDATAQYW2
-```
-
-Finally, the script runs two invocations of the new API GW API deployed under the custom domain name `test.example.com`:
-```
-Invoking endpoint 1: http://test.example.com:4566/hello
-...
-
-Invoking endpoint 2: http://test.example.com:4566/goodbye
-...
-```
+Under the hood, the Serverless framework uses the [`serverless-localstack`](https://github.com/localstack/serverless-localstack) plugin to deploy the application to LocalStack. The plugin is configured in the `serverless.yml` file to use the LocalStack endpoint and the custom domain name.
 
 ## License
 

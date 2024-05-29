@@ -2,9 +2,9 @@ service: sls-apigw-domain
 
 provider:
   name: aws
-  runtime: nodejs16.x
+  runtime: nodejs18.x
   stage: local
-  region: ${env:AWS_DEFAULT_REGION, 'us-east-1'}
+  region: us-east-1
 
 custom:
   customDomain:
