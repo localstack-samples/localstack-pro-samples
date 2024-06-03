@@ -30,12 +30,25 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      - name: Change to Directory
-        run: cd ${{ matrix.directory }}
-      - name: Execute a simple test
+      - name: Setup Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install LocalStack
+        run:  pip install localstack awscli-local[ver1] virtualenv
+      - name: Setup config
         run: |
-          ls -a
-          pwd
+          echo "Configuring git for codecommit sample"
+          git config --global user.email "localstack.sample@localstack.cloud"
+          git config --global user.name "Localstack Pro-Samples"
+      - name: Pull the latest docker image
+        run: docker pull localstack/localstack-pro
+      - name: Execute a simple test
+        timeout-minutes: 10
+        run: |
+          cd ${{ matrix.directory }}
+          make test-ci
         env:
-          AWS_ACCESS_KEY_ID: key
-          AWS_SECRET_ACCESS_KEY: secret
+          LOCALSTACK_API_KEY: ${{ secrets.TEST_LOCALSTACK_API_KEY }}
+          DEBUG: 1
+          DNS_ADDRESS: 127.0.0.1
