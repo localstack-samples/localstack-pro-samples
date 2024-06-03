@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 function deploy_app() {
   echo "Generating and importing test SSL certificate to ACM for Route53 domain test.example.com"

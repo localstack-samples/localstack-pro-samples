@@ -11,11 +11,11 @@ precheck:    ## Check if all required prerequisites are installed
 	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed. Please install AWS CLI and try again."; exit 1; }
 	@command -v python > /dev/null 2>&1 || { echo "Python is not installed. Please install Python and try again."; exit 1; }
 	@command -v openssl > /dev/null 2>&1 || { echo "OpenSSL is not installed. Please install OpenSSL and try again."; exit 1; }
+	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack is not installed. Please install LocalStack and try again."; exit 1; }
 	@echo "All required prerequisites are available."
 
 install:     ## Install dependencies
 	@which serverless || npm install -g serverless
-	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
 	@if [ ! -d "node_modules" ]; then \
 		echo "node_modules not found. Running npm install..."; \
