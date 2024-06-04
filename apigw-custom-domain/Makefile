@@ -12,6 +12,7 @@ precheck:    ## Check if all required prerequisites are installed
 	@command -v python > /dev/null 2>&1 || { echo "Python is not installed. Please install Python and try again."; exit 1; }
 	@command -v openssl > /dev/null 2>&1 || { echo "OpenSSL is not installed. Please install OpenSSL and try again."; exit 1; }
 	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack is not installed. Please install LocalStack and try again."; exit 1; }
+	@test -n "$$LOCALSTACK_AUTH_TOKEN" || { echo "LOCALSTACK_AUTH_TOKEN is not set. Please set it and try again."; exit 1; }
 	@echo "All required prerequisites are available."
 
 install:     ## Install dependencies
@@ -26,16 +27,33 @@ install:     ## Install dependencies
 	@echo "All required dependencies are available."
 
 cert:        ## Create test SSL certificate
-	mkdir -p sslcert
-	cd sslcert; \
-		which openssl || exit; \
-		openssl req -new -newkey RSA:2048 -nodes -keyout ssl.key -out ssl.csr -subj '/CN=test.example.com'; \
-		openssl genrsa -out rootCA.key 2048; \
-		openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 -out rootCA.pem -subj /CN=TestCA; \
+	@echo "Creating SSL certificates directory..."
+	@mkdir -p sslcert
+	@echo "Generating SSL certificate..."
+	@cd sslcert; \
+		which openssl || { echo "OpenSSL is not installed. Please install OpenSSL and try again."; exit 1; }; \
+		openssl req -new -newkey RSA:2048 -nodes -keyout ssl.key -out ssl.csr -subj '/CN=test.example.com' && \
+		openssl genrsa -out rootCA.key 2048 && \
+		openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 -out rootCA.pem -subj /CN=TestCA && \
 		openssl x509 -req -in ssl.csr -CAcreateserial -out server.crt -sha256 -CAkey rootCA.key -CA rootCA.pem
+	@echo "SSL certificate generated successfully."
 
-run:         ## Deploy the app locally and run an API GW test invocation
-	./run.sh --ci
+deploy:      ## Deploy Serverless app to local environment with SSL setup for Route53
+	@echo "Generating and importing test SSL certificate to ACM for Route53 domain test.example.com"
+	@make cert
+	@echo "Importing local test certificate into ACM API ..."
+	@awslocal acm import-certificate --certificate fileb://sslcert/server.crt --private-key fileb://sslcert/ssl.key
+	@echo "Creating Route53 hosted zone for test domain 'test.example.com' ..."
+	@awslocal route53 create-hosted-zone --name test.example.com --caller-reference r1
+	@echo "Deploying Serverless app to local environment"
+	@SLS_DEBUG=1 npm run deploy
+	@echo "Serverless app successfully deployed."
+
+run:         ## Run the app locally and show test invocations
+	./run.sh
+
+test:        ## Run tests
+	make deploy run target=ci
 
 start:       ## Start LocalStack
 	localstack start -d
@@ -52,7 +70,7 @@ logs:        ## Retrieve LocalStack logs
 	@localstack logs > logs.txt
 
 test-ci:     ## Run CI tests
-	make precheck start install ready run; return_code=`echo $$?`;\
+	make precheck start install ready test; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
 
 .PHONY: usage precheck install run cert start stop ready logs test-ci
