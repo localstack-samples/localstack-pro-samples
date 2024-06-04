@@ -12,7 +12,6 @@ precheck:    ## Check if all required prerequisites are installed
 	@command -v python > /dev/null 2>&1 || { echo "Python is not installed. Please install Python and try again."; exit 1; }
 	@command -v openssl > /dev/null 2>&1 || { echo "OpenSSL is not installed. Please install OpenSSL and try again."; exit 1; }
 	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack is not installed. Please install LocalStack and try again."; exit 1; }
-	@test -n "$$LOCALSTACK_AUTH_TOKEN" || { echo "LOCALSTACK_AUTH_TOKEN is not set. Please set it and try again."; exit 1; }
 	@echo "All required prerequisites are available."
 
 install:     ## Install dependencies
