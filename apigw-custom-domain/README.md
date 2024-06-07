@@ -22,7 +22,7 @@ Under the hood, the Serverless framework uses the [`serverless-localstack`](http
 ## Check prerequisites
 
 ```bash
-make precheck
+make check
 ```
 
 ## Installation
@@ -39,7 +39,7 @@ make start
 
 ## Deploy the Application
 
-```
+```bash
 make deploy
 ```
 

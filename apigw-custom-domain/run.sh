@@ -4,12 +4,20 @@ set -euo pipefail
 invoke_endpoints() {
   echo "Invoking endpoint 1: http://test.example.com:4566/hello"
   response1=$(curl -H 'Host: test.example.com' http://localhost:4566/hello)
-  ../assert "$response1" = "hello world"
+  if [ "$response1" != "hello world" ]; then
+    echo "Error: Response from endpoint 1 does not match expected output."
+    exit 1
+  fi
 
   echo "Invoking endpoint 2: http://test.example.com:4566/goodbye"
   response2=$(curl -H 'Host: test.example.com' http://localhost:4566/goodbye)
-  ../assert "$response2" = "goodbye"
+  if [ "$response2" != "goodbye" ]; then
+    echo "Error: Response from endpoint 2 does not match expected output."
+    exit 1
+  fi
 }
+
+target="${target:-default}"
 
 if [[ "$target" == "ci" ]]; then
   invoke_endpoints

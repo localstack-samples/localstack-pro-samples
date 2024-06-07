@@ -5,7 +5,7 @@ export AWS_DEFAULT_REGION ?= us-east-1
 usage:       ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-precheck:    ## Check if all required prerequisites are installed
+check:    ## Check if all required prerequisites are installed
 	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
 	@command -v node > /dev/null 2>&1 || { echo "Node.js is not installed. Please install Node.js and try again."; exit 1; }
 	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed. Please install AWS CLI and try again."; exit 1; }
@@ -55,7 +55,7 @@ test:        ## Run tests
 	make deploy run target=ci
 
 start:       ## Start LocalStack
-	localstack start -d
+	ACTIVATE_PRO=1 localstack start -d
 
 stop:        ## Stop LocalStack
 	@echo
@@ -69,7 +69,7 @@ logs:        ## Retrieve LocalStack logs
 	@localstack logs > logs.txt
 
 test-ci:     ## Run CI tests
-	make precheck start install ready test; return_code=`echo $$?`;\
+	make check start install ready test; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
 
-.PHONY: usage precheck install run cert start stop ready logs test-ci
+.PHONY: usage check install run cert start stop ready logs test-ci
