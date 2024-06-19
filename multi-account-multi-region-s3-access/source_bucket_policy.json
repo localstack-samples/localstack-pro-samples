@@ -1,0 +1,21 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:Get*"
+            ],
+            "Principal": { "AWS": "arn:aws:iam::000000000002:user/ls-b" },
+            "Resource": "arn:aws:s3:::source/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:List*"
+            ],
+            "Principal": { "AWS": "arn:aws:iam::000000000002:user/ls-b" },
+            "Resource": "arn:aws:s3:::source"
+        }
+    ]
+}
