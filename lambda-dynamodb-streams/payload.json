@@ -1,0 +1,37 @@
+{
+    "Records": [
+        {
+            "eventID": "7de3041dd709b024af6f29e4fa13d34c",
+            "eventName": "INSERT",
+            "eventVersion": "1.1",
+            "eventSource": "aws:dynamodb",
+            "awsRegion": "us-east-1",
+            "dynamodb": {
+                "ApproximateCreationDateTime": 1479499740,
+                "Keys": {
+                    "Timestamp": {
+                        "S": "2016-11-18:12:09:36"
+                    },
+                    "Username": {
+                        "S": "John Doe"
+                    }
+                },
+                "NewImage": {
+                    "Timestamp": {
+                        "S": "2016-11-18:12:09:36"
+                    },
+                    "Message": {
+                        "S": "This is a bark from the Woofer social network"
+                    },
+                    "Username": {
+                        "S": "John Doe"
+                    }
+                },
+                "SequenceNumber": "13021600000000001596893679",
+                "SizeBytes": 112,
+                "StreamViewType": "NEW_IMAGE"
+            },
+            "eventSourceARN": "arn:aws:dynamodb:us-east-1:000000000000:table/BarkTable/stream/2023-07-09T12:00:13.312"
+        }
+    ]
+}
