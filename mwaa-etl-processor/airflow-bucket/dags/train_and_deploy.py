@@ -8,14 +8,6 @@ from typing import List, Dict, Optional
 import hashlib
 import pandas as pd
 
-from sklearn.preprocessing import LabelEncoder
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn import svm
-from sklearn import metrics
-from sklearn.tree import DecisionTreeClassifier
-
 class DatasetSpec(BaseModel):
     url: str
     name: str
@@ -55,31 +47,40 @@ def train_and_deploy_classifier_model():
 
         # Return the dataset and its ID.
         return {
-            "dataset": df.to_json(),
+            "dataset": df.to_dict(), 
             "dataset_id": dataset_id,
         }
     
     @task
     def train_model(dataset_spec: dict, dataset: dict, algorithm: str):
+        from sklearn import svm
+        from sklearn import metrics
+        from sklearn.preprocessing import LabelEncoder
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+        from sklearn.neighbors import KNeighborsClassifier
+        from sklearn.tree import DecisionTreeClassifier
+
         df_json: Dict = dataset["dataset"]
         dataset_id: str = dataset["dataset_id"]
-
         dataset_spec: DatasetSpec = DatasetSpec(**dataset_spec)
-        data: pd.DataFrame = pd.DataFrame.from_dict(df_json)
+        data: pd.DataFrame = pd.DataFrame().from_dict(df_json)
+
+        print(data.head())
+
+        # Split the dataset into feature columns and target column.
+        X_data = data[dataset_spec.feature_columns]
+        Y_data = data[dataset_spec.target_column]
 
         # Split the dataset into training and testing sets.
-        X_train, Y_train, X_test, Y_test = train_test_split(data, test_size=0.2)
-        X_train = X_train[dataset_spec.feature_columns]
-        X_test = X_test[dataset_spec.feature_columns]
-        Y_train = Y_train[dataset_spec.target_column]
-        Y_test = Y_test[dataset_spec.target_column]
+        X_train, X_test, y_train, y_test = train_test_split(X_data, Y_data, test_size=0.2)
 
         # Encode the target column.
         label_encoder = LabelEncoder()
-        Y_train_encoded = label_encoder.fit_transform(Y_train)
-        Y_test_encoded = label_encoder.transform(Y_test)
-        Y_train = Y_train_encoded
-        Y_test = Y_test_encoded
+        y_train_encoded = label_encoder.fit_transform(y_train)
+        y_test_encoded = label_encoder.transform(y_test)
+        y_train = y_train_encoded
+        y_test = y_test_encoded
 
         # Print the dataset information.
         print(f"Feature columns: {dataset_spec.feature_columns}")
@@ -99,17 +100,17 @@ def train_and_deploy_classifier_model():
             raise ValueError(f"Unsupported algorithm: {algorithm}")
         
         # Train the model.
-        model.fit(X_train, Y_train)
+        model.fit(X_train, y_train)
 
         # Predict the target values.
-        Y_pred = model.predict(X_test)
+        y_pred = model.predict(X_test)
 
         # Compute the accuracy of the model.
-        accuracy = metrics.accuracy_score(Y_test, Y_pred)
-        precision = metrics.precision_score(Y_test, Y_pred)
-        recall = metrics.recall_score(Y_test, Y_pred)
-        f1 = metrics.f1_score(Y_test, Y_pred)
-        conf_matrix = metrics.confusion_matrix(Y_test, Y_pred)
+        accuracy = metrics.accuracy_score(y_test, y_pred)
+        precision = metrics.precision_score(y_test, y_pred, average=None)
+        recall = metrics.recall_score(y_test, y_pred, average=None)
+        f1 = metrics.f1_score(y_test, y_pred, average=None)
+        conf_matrix = metrics.confusion_matrix(y_test, y_pred)
 
         # Print or log the evaluation metrics
         print(f"Accuracy: {accuracy}")
