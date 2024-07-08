@@ -17,7 +17,7 @@ start:       ## Start LocalStack
 		echo "Creating localstack network"; \
 		docker network create --attachable localstack; \
 	fi
-	DOCKER_FLAGS='--network localstack --name=localhost.localstack.cloud -e GATEWAY_SERVER=hypercorn' localstack start -d
+	DOCKER_FLAGS='-e LS_LOG=trace --network localstack --name=localhost.localstack.cloud -e GATEWAY_SERVER=hypercorn' localstack start -d
 
 stop:        ## Stop LocalStack
 	@echo
