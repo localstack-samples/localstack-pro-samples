@@ -107,10 +107,13 @@ def train_and_deploy_classifier_model():
 
         # Compute the accuracy of the model.
         accuracy = metrics.accuracy_score(y_test, y_pred)
-        precision = metrics.precision_score(y_test, y_pred, average=None)
-        recall = metrics.recall_score(y_test, y_pred, average=None)
-        f1 = metrics.f1_score(y_test, y_pred, average=None)
+        precision = metrics.precision_score(y_test, y_pred, average="weighted")
+        recall = metrics.recall_score(y_test, y_pred, average="weighted")
+        f1 = metrics.f1_score(y_test, y_pred, average="weighted")
         conf_matrix = metrics.confusion_matrix(y_test, y_pred)
+
+        # Save the model and label encoder classes.
+        model.classes_names = label_encoder.classes_
 
         # Print or log the evaluation metrics
         print(f"Accuracy: {accuracy}")
@@ -118,13 +121,22 @@ def train_and_deploy_classifier_model():
         print(f"Recall: {recall}")
         print(f"F1 Score: {f1}")
         print(f"Confusion Matrix:\n{conf_matrix}")
+
+        return accuracy
+    
+    @task
+    def deploy_model(accuracies: List[float]):
+        print(f"Model accuracies: {accuracies}")
     
     dataset_spec: Dict = retrieve_dataset()
     dataset = read_dataset(dataset_spec)
 
     ml_algorithms = ["SVM", "LogisticRegression", "DecisionTreeClassifier"]
+    accuracies = []
     for algorithm in ml_algorithms:
-        train_model(dataset_spec, dataset, algorithm)
+        accuracies += [train_model(dataset_spec, dataset, algorithm)]
+
+    deploy_model(accuracies)
 
 
 dag = train_and_deploy_classifier_model()
