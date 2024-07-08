@@ -29,3 +29,5 @@ glacier-s3-select/*result.csv
 azure-functions/.python_packages/
 
 */logs.txt
+mwaa-etl-processor/.lambda-env
+mwaa-etl-processor/.pkgs

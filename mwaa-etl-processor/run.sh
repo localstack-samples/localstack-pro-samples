@@ -32,6 +32,21 @@ awslocal secretsmanager create-secret \
     --name airflow/variables/dataset_spec \
     --secret-string "$DATASET_CONFIG"
 
+# Create the Lambda zip files
+rm -rf .pkgs lambda/deploy_lambda.zip
+docker rm -f mwaa-etl-processor-build-pip-pkgs || true
+docker run -it --name mwaa-etl-processor-build-pip-pkgs \
+    --entrypoint bash \
+    localstack/lambda-python:3.9 \
+    -c "mkdir -p /var/tmp/.pkgs && pip install scikit-learn==1.3.2 --target /var/tmp/.pkgs"
+docker cp mwaa-etl-processor-build-pip-pkgs:/var/tmp/.pkgs/ .
+cd .pkgs && zip -r9 ../lambda/deploy_lambda.zip . && cd ..
+cd lambda && zip -g deploy_lambda.zip * && cd ..
+
+# And upload it to S3
+awslocal s3 mb s3://lambda
+awslocal s3 cp lambda/deploy_lambda.zip s3://lambda
+
 # Create MWAA environment with default AWS connection
 awslocal s3 mb s3://airflow
 awslocal mwaa create-environment \

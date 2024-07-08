@@ -1,6 +1,12 @@
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from airflow.models import Variable
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.providers.amazon.aws.hooks.lambda_function import LambdaHook
+from airflow.providers.amazon.aws.hooks.base_aws import AwsBaseHook
+
+import pickle
+import io
 
 from pydantic import BaseModel
 from typing import List, Dict, Optional
@@ -114,6 +120,18 @@ def train_and_deploy_classifier_model():
 
         # Save the model and label encoder classes.
         model.classes_names = label_encoder.classes_
+        
+        # Dump the model and label encoder to S3.
+        s3_hook = S3Hook(aws_conn_id="aws_default")
+        s3_hook.create_bucket(bucket_name="models")
+        model_bytes = pickle.dumps(model)
+        model_buffer = io.BytesIO(model_bytes)
+        s3_hook.load_bytes(
+            bytes_data=model_buffer.getvalue(),
+            key=f"models/{dataset_id}/{algorithm}.pkl",
+            bucket_name="models",
+            replace=True,
+        )
 
         # Print or log the evaluation metrics
         print(f"Accuracy: {accuracy}")
@@ -125,8 +143,46 @@ def train_and_deploy_classifier_model():
         return accuracy
     
     @task
-    def deploy_model(accuracies: List[float]):
+    def deploy_model(ml_algorithms: List[str], accuracies: List[float], dataset: dict):
         print(f"Model accuracies: {accuracies}")
+        print(f"ML algorithms: {ml_algorithms}")
+
+        dataset_id = dataset["dataset_id"]
+        best_model_index = accuracies.index(max(accuracies))
+        best_ml_algorithm = ml_algorithms[best_model_index]
+
+        print(f"Location of best model: s3://models/models/{dataset_id}/{best_ml_algorithm}.pkl")
+        lambda_hook = LambdaHook(aws_conn_id="aws_default")
+        lambda_client = lambda_hook.get_client_type()
+
+        try:
+            lambda_hook.create_lambda(
+                function_name=f"ml-model-{best_ml_algorithm}-{dataset_id}"[:64],
+                runtime="python3.9",
+                role="arn:aws:iam::000000000000:role/lambda-role",
+                handler="main.lambda_handler",
+                code={
+                    "S3Bucket": "lambda",
+                    "S3Key": "deploy_lambda.zip",
+                },
+                environment={
+                    "Variables": {
+                        "MODEL_BUCKET_NAME": "models",
+                        "MODEL_OBJECT_KEY": f"models/{dataset_id}/{best_ml_algorithm}.pkl",
+                    },
+                },
+            )
+        except Exception as e:
+            print(f"Error creating the function: {e}")
+
+        try:
+            lambda_client.create_function_url_config(
+                FunctionName=f"ml-model-{best_ml_algorithm}-{dataset_id}"[:64],
+                AuthType="NONE",
+                InvokeMode="BUFFERED",
+            )
+        except Exception as e:
+            print(f"Error creating the function URL config: {e}")
     
     dataset_spec: Dict = retrieve_dataset()
     dataset = read_dataset(dataset_spec)
@@ -136,7 +192,7 @@ def train_and_deploy_classifier_model():
     for algorithm in ml_algorithms:
         accuracies += [train_model(dataset_spec, dataset, algorithm)]
 
-    deploy_model(accuracies)
+    deploy_model(ml_algorithms, accuracies, dataset)
 
 
 dag = train_and_deploy_classifier_model()
