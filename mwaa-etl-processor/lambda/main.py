@@ -4,8 +4,11 @@ import pickle
 import json
 
 def lambda_handler(event, context):
-    # Access the JSON payload
-    sample = event.get("sample")
+    print(f"Received event: {json.dumps(event)}")
+
+    # Retrieve JSON from body
+    payload = json.loads(event["body"])
+    sample = payload.get("sample")
 
     # Specify the S3 bucket and object key
     bucket_name = os.environ["MODEL_BUCKET_NAME"]
@@ -22,7 +25,7 @@ def lambda_handler(event, context):
     model = pickle.loads(model_data)
 
     # Run inference.
-    print(f"Running inference on input data: {sample}")
+    print(f"Running inference on sample: {sample}")
     index_prediction = int(model.predict(sample)[0])
     print(f"Prediction index: {index_prediction}")
     prediction = model.classes_names[index_prediction]

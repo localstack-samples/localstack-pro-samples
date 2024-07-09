@@ -1,15 +1,14 @@
+import pickle
+import io
+from datetime import datetime, timedelta
+
 from airflow.decorators import dag, task
-from airflow.utils.dates import days_ago
 from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.providers.amazon.aws.hooks.lambda_function import LambdaHook
-from airflow.providers.amazon.aws.hooks.base_aws import AwsBaseHook
-
-import pickle
-import io
 
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Dict
 
 import hashlib
 import pandas as pd
@@ -20,7 +19,22 @@ class DatasetSpec(BaseModel):
     feature_columns: List[str]
     target_column: str
 
-@dag(schedule_interval=None, start_date=days_ago(1), tags=['example'])
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+@dag(
+    default_args=default_args,
+    schedule_interval="@once",
+    start_date=datetime(2021, 1, 1),
+    catchup=False,
+    tags=["ml-classifier"]
+)
 def train_and_deploy_classifier_model():
     @task
     def retrieve_dataset():
