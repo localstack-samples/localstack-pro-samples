@@ -4,7 +4,7 @@ App that creates a DAG inside MWAA that takes a dataset, and builds a classifier
 
 To keep it simple, no external dependencies (custom Docker images) were added, and the training happens locally in Airflow. Following that, the model gets deployed as a Lambda function. While not ideal, as usually all workloads are supposed to be off-loaded (i.e. with SageMaker, or EC2 / AWS Batch jobs), but easily trained models can still technically be run with the local executor.
 
-The only input the dag has is a `airflow/variables/dataset_spec` secret in `SecretsManager` service, like the following one:
+The only input the DAG has is a `airflow/variables/dataset_spec` secret in `SecretsManager` service, like the following one:
 
 ```json
 {
