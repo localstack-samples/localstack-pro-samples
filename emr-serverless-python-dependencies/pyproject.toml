@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "mysparkjobs"
+version = "0.0.1"
+description = "EMR Serverless Spark jobs"
+authors = ["Amazon EMR"]
+readme = "README.md"
+packages = [{include = "jobs"}]
+
+[tool.poetry.dependencies]
+python = "^3.7.10"
+typer = "^0.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
