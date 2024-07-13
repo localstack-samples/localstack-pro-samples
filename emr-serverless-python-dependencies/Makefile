@@ -35,3 +35,6 @@ destroy-aws:
 	terraform workspace select aws
 	./stop-application.sh aws
 	terraform destroy --auto-approve
+
+test-ci:
+	# Skipping test as resource heavy
