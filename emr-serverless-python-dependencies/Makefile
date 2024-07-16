@@ -43,9 +43,6 @@ destroy-aws:
 	./stop-application.sh aws
 	terraform destroy --auto-approve
 
-logs:
-	@localstack logs > logs.txt
-
 test-ci:
 	make init build deploy run; return_code=`echo $$?`;\
-	make logs; make stop; exit $$return_code;
+	make stop; exit $$return_code;
