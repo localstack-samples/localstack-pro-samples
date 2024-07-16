@@ -1,3 +1,7 @@
+export AWS_ACCESS_KEY_ID ?= test
+export AWS_SECRET_ACCESS_KEY ?= test
+export AWS_DEFAULT_REGION = us-east-1
+
 init:
 	terraform workspace new local &
 	terraform workspace new aws &
@@ -10,7 +14,7 @@ build-aws:
 	docker build . --file Dockerfile-aws --output .
 
 deploy:
-	# docker-compose up --detach
+	docker-compose up --detach
 	terraform workspace select local
 	tflocal apply --auto-approve
 
@@ -26,6 +30,9 @@ run-aws:
 	terraform workspace select aws
 	./start_job.sh aws
 
+stop:
+	docker-compose down
+
 destroy:
 	terraform workspace select local
 	./stop-application.sh
@@ -36,5 +43,9 @@ destroy-aws:
 	./stop-application.sh aws
 	terraform destroy --auto-approve
 
+logs:
+	@localstack logs > logs.txt
+
 test-ci:
-	# Skipping test as resource heavy
+	make init build deploy run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;

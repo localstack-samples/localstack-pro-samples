@@ -46,9 +46,12 @@ job_id=$(echo $job_run_result | jq .jobRunId | tr -d '"' )
 while true; do
     job_run=$($AWS emr-serverless get-job-run --job-run-id $job_id --application-id $application_id)
     state=$(echo $job_run | jq .jobRun.state | tr -d '"' )
-    echo "Job '${job_id}', State '${state}'"
+    echo "Job '${job_id}', State '${state}'. First run might take a few minutes."
     if [ "$state" = "SUCCESS" ]; then
-        break
+        exit
+    fi
+    if [ "$state" = "FAILED" ]; then
+        exit 1
     fi
     if [ "$local" = "aws" ]; then
         sleep 10
