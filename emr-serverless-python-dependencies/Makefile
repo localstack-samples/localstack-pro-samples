@@ -16,7 +16,7 @@ build-aws:
 deploy:
 	docker-compose up --detach
 	terraform workspace select local
-	tflocal apply --auto-approve
+	AWS_ENDPOINT_URL=https://localhost.localstack.cloud:4566 terraform apply --auto-approve
 
 deploy-aws:
 	terraform workspace select aws
