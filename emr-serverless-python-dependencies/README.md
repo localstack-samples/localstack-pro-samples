@@ -3,10 +3,8 @@
 [AWS has this example](https://github.com/aws-samples/emr-serverless-samples/tree/main/examples/pyspark/dependencies) of how to add python dependencies to an emr job. Unfortunately, the same pattern isn't currently possible on LocalStack. This here will serve as a example of how to implement a workaround to still be able to add your own dependencies and module to your emr Spark jobs
 
 ## Requirements
-- poetry
-- Terraform ~>1.7.5
 - Make
-- [Terraform-local](https://github.com/localstack/terraform-local)
+- Terraform ~>1.9.1
 - [LocalStack](https://github.com/localstack/localstack)
 - [awslocal](https://github.com/localstack/awscli-local)
 
