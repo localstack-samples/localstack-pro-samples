@@ -1,0 +1,30 @@
+## ----------------------------------------------------------------------------
+##  Base stage for python development
+## ----------------------------------------------------------------------------
+FROM --platform=linux/amd64 localstack/localstack:latest AS base
+
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# EMR 6.x uses Python 3.7 - limit Poetry version to 1.5.1
+ENV POETRY_VERSION=1.5.1
+RUN python3 -m pip install --upgrade pip
+RUN curl -sSL https://install.python-poetry.org | python3 -
+
+ENV PATH="$PATH:/root/.local/bin"
+
+WORKDIR /app
+
+COPY . .
+
+## ----------------------------------------------------------------------------
+##  Build and export stages for standard Python projects
+## ----------------------------------------------------------------------------
+# Build stage - installs required dependencies and creates a venv package
+FROM base as build-poetry
+RUN poetry self add poetry-plugin-bundle && \
+    poetry bundle venv dist/bundle
+
+FROM scratch as export-poetry
+COPY --from=build-poetry /app/dist/bundle /pyspark_env/
