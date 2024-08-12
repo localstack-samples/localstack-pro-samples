@@ -13,10 +13,14 @@ run:         ## Run MWAA ETL Processor
 	./run.sh
 
 start:       ## Start LocalStack
-	@if [ -z `docker network ls --filter name=localstack -q` ]; then \
-		echo "Creating localstack network"; \
-		docker network create --attachable localstack; \
-	fi
+	@echo "Checking existing networks:"
+    @docker network ls --filter name=localstack -q | xargs
+    @if [ -z "$$(docker network ls --filter name=localstack -q | xargs)" ]; then \
+        echo "Creating localstack network"; \
+        docker network create --attachable localstack; \
+    else \
+        echo "LocalStack network already exists"; \
+    fi
 	EXTRA_CORS_ALLOWED_ORIGINS='*' DOCKER_FLAGS='-e LS_LOG=trace --network localstack --name=localhost.localstack.cloud -e GATEWAY_SERVER=hypercorn' localstack start -d
 
 stop:        ## Stop LocalStack
