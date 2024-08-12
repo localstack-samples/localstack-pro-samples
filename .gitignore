@@ -5,6 +5,7 @@ node_modules/
 .project
 .settings/
 target/
+volume/
 
 .idea/
 
@@ -13,7 +14,7 @@ __pycache__/
 *.log
 
 .terraform/
-terraform.tfstate
+terraform.tfstate*
 .terraform.lock*
 
 .venv/
