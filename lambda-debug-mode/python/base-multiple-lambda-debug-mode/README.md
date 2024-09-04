@@ -40,7 +40,7 @@ The two lambda functions configure `debugpy` to listen for debug connections on 
 
 The project ships with a Visual Studio Code debug launch config (see `.vscode/launch.json`). This configuration can be used to attach to the code in the Lambda function while it is executing.
 
-The following command used to first install the dependencies (e.g., `debugpy`), then deploy, and finally invoke the Lambda locally:
+The following command used to deploy and invoke the Lambda locally:
 
 ```
 make run
