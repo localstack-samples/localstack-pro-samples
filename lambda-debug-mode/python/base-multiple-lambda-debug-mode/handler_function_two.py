@@ -10,7 +10,7 @@ def handler(event, context):
     # Print the incoming invocation event.
     print(event)
 
-    # Return the incomeing invocation evant.
+    # Return the incoming invocation event.
     return event
 
 
