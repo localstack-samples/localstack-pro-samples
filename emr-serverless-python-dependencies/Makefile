@@ -47,5 +47,5 @@ destroy-aws:
 	terraform destroy --auto-approve
 
 test-ci:
-	make init build deploy run; return_code=`echo $$?`;\
+	make init build deploy logs run; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
