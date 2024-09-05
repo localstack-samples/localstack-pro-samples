@@ -23,8 +23,11 @@ COPY . .
 ## ----------------------------------------------------------------------------
 # Build stage - installs required dependencies and creates a venv package
 FROM base as build-poetry
-RUN poetry self add poetry-plugin-bundle && \
-    poetry bundle venv dist/bundle
+RUN mkdir -p /app/dist && \
+    poetry install --no-root && \
+    poetry run python -m venv /app/dist/bundle && \
+    poetry export -f requirements.txt --output requirements.txt && \
+    /app/dist/bundle/bin/pip install -r requirements.txt
 
 FROM scratch as export-poetry
 COPY --from=build-poetry /app/dist/bundle /pyspark_env/
