@@ -13,7 +13,7 @@ services:
       - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN:-}  # required for Pro
       - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY:-}  # required for CI
       # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
-      - DEBUG=${DEBUG:-0}
+      - DEBUG=1
       - PERSISTENCE=${PERSISTENCE:-0}
       - HIVE_DEFAULT_VERSION=3.1.3
     volumes:
