@@ -35,6 +35,7 @@ stop:
 
 logs:
 	@localstack logs > logs.txt
+	cat logs.txt
 
 destroy:
 	terraform workspace select local
