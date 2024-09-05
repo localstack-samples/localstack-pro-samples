@@ -33,6 +33,9 @@ run-aws:
 stop:
 	docker compose down
 
+logs:
+	@localstack logs > logs.txt
+
 destroy:
 	terraform workspace select local
 	./stop-application.sh
@@ -45,4 +48,4 @@ destroy-aws:
 
 test-ci:
 	make init build deploy run; return_code=`echo $$?`;\
-	make stop; exit $$return_code;
+	make logs; make stop; exit $$return_code;
