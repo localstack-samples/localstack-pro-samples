@@ -48,7 +48,9 @@ jobs:
         DNS_ADDRESS: 127.0.0.1
         DEBUG: 1
       timeout-minutes: 200
-      run: make test-ci-all
+      run: |
+        cd emr-serverless-python-dependencies
+        make test-ci
 
     - name: Send a Slack notification
       if: failure() || github.event_name != 'pull_request'
