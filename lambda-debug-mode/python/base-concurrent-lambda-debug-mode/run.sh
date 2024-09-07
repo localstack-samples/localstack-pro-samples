@@ -38,9 +38,13 @@ done
 # Invoke the Lambda function 3 times every 5 seconds.
 for i in {1..3}; do
     echo "Invoking the Lambda function, attempt $i."
+    AWS_MAX_ATTEMPTS=1 \
     awslocal lambda invoke \
-        --function-name function-one \
-        test.lambda.$i.log \
-        --payload "{\"message\": \"Testing Lambda Debug Mode lifting the 1-second timeout for function-one. Attempt $i.\"}" &
+        --cli-connect-timeout 3600 \
+        --cli-read-timeout 3600 \
+        --function-name "function_one" \
+        --payload "{\"message\": \"Testing Lambda Debug Mode lifting the 1-second timeout for function-one. Attempt $i.\"}" \
+        /dev/stdout 2>/dev/stderr &
     sleep 5
 done
+

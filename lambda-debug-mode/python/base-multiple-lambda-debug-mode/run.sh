@@ -54,10 +54,13 @@ done
 # Invoke the Lambda functions in parallel
 for function_name in "${FUNCTION_NAMES[@]}"; do
     echo "Invoking the Lambda function $function_name."
+    AWS_MAX_ATTEMPTS=1 \
     awslocal lambda invoke \
+        --cli-connect-timeout 3600 \
+        --cli-read-timeout 3600 \
         --function-name "$function_name" \
-        test.${function_name}.lambda.log \
-        --payload '{"message": "Testing Lambda Debug Mode lifting the 1-second timeout for '"$function_name"'. "}' &
+        --payload '{"message": "Testing Lambda Debug Mode lifting the 1-second timeout for '"$function_name"'. "}' \
+        /dev/stdout 2>/dev/stderr &
 done
 
 # Wait for all invocations to complete
