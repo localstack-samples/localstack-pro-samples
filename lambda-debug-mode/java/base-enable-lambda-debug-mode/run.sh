@@ -39,8 +39,11 @@ done
 
 # Invoke the Lambda function.
 echo "Invoking the Lambda function."
+AWS_MAX_ATTEMPTS=1 \
 awslocal lambda invoke \
-    --function-name function-one \
-    test.lambda.log \
-    --payload '{"message": "Testing Lambda Debug Mode lifting the 1-second timeout for function-one."}'
+    --cli-connect-timeout 3600 \
+    --cli-read-timeout 3600 \
+    --function-name "function_one" \
+    --payload '{"message": "Testing Lambda Debug Mode lifting the 1-second timeout for function-one."}' \
+    /dev/stdout 2>/dev/stderr
 

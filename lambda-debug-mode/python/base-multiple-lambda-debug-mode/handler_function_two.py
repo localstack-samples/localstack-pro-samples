@@ -14,7 +14,7 @@ def handler(event, context):
     return event
 
 
-def wait_for_debug_client(timeout=15):
+def wait_for_debug_client(timeout=3600):
     """Utility function to enable debugging with Visual Studio Code"""
     import time, threading
     import sys, glob
