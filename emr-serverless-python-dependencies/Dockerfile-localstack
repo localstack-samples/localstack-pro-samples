@@ -22,12 +22,11 @@ COPY . .
 ##  Build and export stages for standard Python projects
 ## ----------------------------------------------------------------------------
 # Build stage - installs required dependencies and creates a venv package
-FROM base as build-poetry
-RUN mkdir -p /app/dist && \
-    poetry install --no-root && \
-    poetry run python -m venv /app/dist/bundle && \
-    poetry export -f requirements.txt --output requirements.txt && \
-    /app/dist/bundle/bin/pip install -r requirements.txt
+FROM base AS build-poetry
+WORKDIR /app
 
-FROM scratch as export-poetry
+RUN poetry self add poetry-plugin-bundle 
+RUN poetry bundle venv /app/dist/bundle --clear
+
+FROM scratch AS export-poetry
 COPY --from=build-poetry /app/dist/bundle /pyspark_env/
