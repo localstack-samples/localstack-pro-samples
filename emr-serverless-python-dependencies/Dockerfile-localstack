@@ -25,7 +25,7 @@ COPY . .
 FROM base AS build-poetry
 WORKDIR /app
 
-RUN poetry self add poetry-plugin-bundle 
+RUN poetry self add poetry-plugin-bundle@1.4.1
 RUN poetry bundle venv /app/dist/bundle --clear
 
 FROM scratch AS export-poetry
