@@ -14,7 +14,7 @@ build-aws:
 	docker build . --file Dockerfile-aws --output .
 
 deploy:
-	docker-compose up --detach
+	docker compose up --detach
 	terraform workspace select local
 	AWS_ENDPOINT_URL=https://localhost.localstack.cloud:4566 terraform apply --auto-approve
 
@@ -31,7 +31,11 @@ run-aws:
 	./start_job.sh aws
 
 stop:
-	docker-compose down
+	docker compose down
+
+logs:
+	@localstack logs > logs.txt
+	cat logs.txt
 
 destroy:
 	terraform workspace select local
@@ -44,5 +48,5 @@ destroy-aws:
 	terraform destroy --auto-approve
 
 test-ci:
-	make init build deploy run; return_code=`echo $$?`;\
-	make stop; exit $$return_code;
+	make init build deploy logs run; return_code=`echo $$?`;\
+	make logs; make stop; exit $$return_code;
