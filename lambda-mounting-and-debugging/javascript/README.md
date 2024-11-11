@@ -29,7 +29,6 @@ Alternatively, you can use the following `localstack` CLI configuration:
 
 ```sh
 LAMBDA_DOCKER_FLAGS='-e NODE_OPTIONS=--inspect-brk=0.0.0.0:9229 -p 9229:9229' \
-    LAMBDA_REMOTE_DOCKER=0 \
     localstack start -d
 ```
 

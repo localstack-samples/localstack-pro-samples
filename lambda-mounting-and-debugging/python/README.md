@@ -21,12 +21,9 @@ make install
 Make sure that LocalStack is started with the following configuration:
 ```
 LOCALSTACK_AUTH_TOKEN=... \
-    LAMBDA_REMOTE_DOCKER=0 \
     LAMBDA_DOCKER_FLAGS='-p 19891:19891' \
     DEBUG=1 localstack start
 ```
-
-Please note that `LAMBDA_REMOTE_DOCKER=0` needs to be configured in order to properly run the sample app (required for local Docker volume mounts).
 
 The config option `LAMBDA_DOCKER_FLAGS='-p 19891:19891'` defines a Docker flag that exposes port `19891` for debugging the Lambda handler code that will run inside the container.
 
