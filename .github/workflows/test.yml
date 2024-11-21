@@ -1,0 +1,54 @@
+name: "Run Tests for all samples"
+
+on:
+   push:
+    branches: [ "master" ]
+   pull_request:
+    branches: [ "master" ]
+
+jobs:
+  prepare_list:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: set-matrix
+        run: |
+          echo "matrix=[$(find . -mindepth 2 -type f -name 'Makefile' ! -path './sample-archive/*' | sed 's|/Makefile||' | awk '{printf "\"%s\",", $1}' | sed 's/,$//')]" >> $GITHUB_OUTPUT
+      - run: echo "matrix=[$(find . -mindepth 2 -type f -name 'Makefile' ! -path './sample-archive/*' | sed 's|/Makefile||' | awk '{printf "\"%s\",", $1}' | sed 's/,$//')]"
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+  runtest:
+    name: Run Dependency Test
+    runs-on: ubuntu-latest
+    needs: prepare_list
+    strategy:
+      fail-fast: false
+      matrix:
+        directory: ${{ fromJson(needs.prepare_list.outputs.matrix) }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install LocalStack
+        run:  pip install localstack awscli-local[ver1] virtualenv
+      - name: Setup config
+        run: |
+          echo "Configuring git for codecommit sample"
+          git config --global user.email "localstack.sample@localstack.cloud"
+          git config --global user.name "Localstack Pro-Samples"
+      - name: Pull the latest docker image
+        run: docker pull localstack/localstack-pro
+      - name: Execute a simple test
+        timeout-minutes: 10
+        run: |
+          cd ${{ matrix.directory }}
+          make test-ci
+        env:
+          LOCALSTACK_API_KEY: ${{ secrets.TEST_LOCALSTACK_API_KEY }}
+          DEBUG: 1
+          DNS_ADDRESS: 127.0.0.1
