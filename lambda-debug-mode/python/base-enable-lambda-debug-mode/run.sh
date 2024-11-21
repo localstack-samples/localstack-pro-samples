@@ -15,6 +15,8 @@ awslocal lambda create-function \
 
 awslocal lambda wait function-active-v2 --function-name "$FUNCTION_NAME"
 
+echo "Set a breakpoint and attach the Python remote debugger from your IDE"
+
 # Invoke the Lambda function.
 echo "Invoking the Lambda function."
 AWS_MAX_ATTEMPTS=1 \
@@ -24,5 +26,3 @@ awslocal lambda invoke \
     --function-name "$FUNCTION_NAME" \
     --payload '{"message": "Testing Lambda Debug Mode lifting the 1-second timeout for function-one."}' \
     /dev/stdout 2>/dev/stderr
-
-echo "Set a breakpoint and attach the Python remote debugger from your IDE"

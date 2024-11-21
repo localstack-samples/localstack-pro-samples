@@ -8,31 +8,30 @@ The demo deploys a Lambda function with a one-second timeout, which is automatic
 * LocalStack
 * Docker
 * `make`
-* `gradle`
-* `java17`
 * [`awslocal`](https://github.com/localstack/awscli-local)
+* `java17` and `gradle` (optional for local build)
 
 ## Installing
 
-To build the Lambda funcion archive:
-```
-make build-zip
+To build the Lambda function archive:
+
+```sh
+make install
 ```
 
 ## Starting Up
 
 Make sure that LocalStack is started with the following configuration:
+
+```sh
+LOCALSTACK_LAMBDA_DEBUG_MODE=1 \
+LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml \
+localstack start --volume $PWD/lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml
 ```
-LAMBDA_DEBUG_MODE=1 \
-LAMBDA_DEBUG_MODE_CONFIG_PATH=path/to/lambda_debug_mode_config.yaml \
-localstack start
-```
 
-Lambda Debug Mode is enabled through the config option `LAMBDA_DEBUG_MODE=1`.
-
-The config option `LAMBDA_DEBUG_MODE_CONFIG_PATH` should point to the provided `yaml` config file for Lambda Debug Mode `lambda_debug_mode_config.yaml`.
-The config file contains instructions for Lambda Debug Mode to debug the Lambda function `arn:aws:lambda:us-east-1:000000000000:function:function-one` on port `5050`.
-
+* `LOCALSTACK_LAMBDA_DEBUG_MODE=1` enables the Lambda debug mode
+* `LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml` points to the config file for Lambda debug mode allowing for advanced configuration. It maps the Lambda function `arn:aws:lambda:us-east-1:000000000000:function:function-one` to port `5050`.
+* `--volume $PWD/lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml` maps the Lambda debug configuration from the host into the LocalStack Docker container for hot-reloading.
 
 ## Running the Sample
 
@@ -41,7 +40,7 @@ The project requires you to configure your IDE or editor of choice to debug remo
 
 The following command used to deploy and invoke the Lambda locally:
 
-```
+```sh
 make run
 ```
 
@@ -53,4 +52,3 @@ LocalStack will automatically waive the set one second timeout for the Lambda fu
 ## License
 
 The code in this sample is available under the Apache 2.0 license.
-

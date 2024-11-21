@@ -30,6 +30,8 @@ for function_name in "${FUNCTION_NAMES[@]}"; do
     awslocal lambda wait function-active-v2 --function-name "$function_name"
 done
 
+echo "Set a breakpoint and attach the Python remote debugger from your IDE"
+
 # Invoke the Lambda functions in parallel
 for function_name in "${FUNCTION_NAMES[@]}"; do
     echo "Invoking the Lambda function $function_name."
@@ -46,5 +48,3 @@ done
 wait
 
 echo "All Lambda functions have been invoked."
-
-echo "Set a breakpoint and attach the Python remote debugger from your IDE"

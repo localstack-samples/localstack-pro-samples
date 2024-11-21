@@ -15,6 +15,8 @@ awslocal lambda create-function \
 
 awslocal lambda wait function-active-v2 --function-name "$FUNCTION_NAME"
 
+echo "Set a breakpoint and attach the Python remote debugger from your IDE"
+
 # Invoke the Lambda function 3 times every 5 seconds.
 for i in {1..3}; do
     echo "Invoking the Lambda function, attempt $i."
@@ -27,5 +29,3 @@ for i in {1..3}; do
         /dev/stdout 2>/dev/stderr &
     sleep 5
 done
-
-echo "Set a breakpoint and attach the Python remote debugger from your IDE"
