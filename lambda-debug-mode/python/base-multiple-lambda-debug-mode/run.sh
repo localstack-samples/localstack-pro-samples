@@ -14,19 +14,7 @@ create_lambda_function() {
         --code "S3Bucket=hot-reload,S3Key=$(pwd)/" \
         --handler "$handler" \
         --role arn:aws:iam::000000000000:role/test-role \
-        --runtime python3.9
-}
-
-# Function to check the status of a Lambda function
-check_lambda_status() {
-    local function_name=$1
-    local status
-    status=$(awslocal lambda get-function --function-name "$function_name" 2>&1)
-    # Check if "Active" is in the response
-    if echo "$status" | grep -q "Active"; then
-        return 0
-    fi
-    return 1
+        --runtime python3.12
 }
 
 # Create and invoke Lambda functions in parallel
@@ -38,17 +26,8 @@ done
 wait
 
 echo "Waiting for Lambda functions to become active..."
-
 for function_name in "${FUNCTION_NAMES[@]}"; do
-    while true; do
-        if check_lambda_status "$function_name"; then
-            echo "Lambda function $function_name is active."
-            break
-        else
-            echo "Lambda function $function_name is still pending. Waiting..."
-            sleep 1
-        fi
-    done
+    awslocal lambda wait function-active-v2 --function-name "$function_name"
 done
 
 # Invoke the Lambda functions in parallel
@@ -68,3 +47,4 @@ wait
 
 echo "All Lambda functions have been invoked."
 
+echo "Set a breakpoint and attach the Python remote debugger from your IDE"

@@ -16,5 +16,24 @@ run:         ## Deploy and invoke the Lambda container locally
 	./run.sh; \
 	echo "Done - test successfully finished."
 
-.PHONY: usage install run
+start:
+	LOCALSTACK_LAMBDA_DEBUG_MODE=1 \
+	LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml \
+	localstack start --volume ${PWD}/lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml -d
 
+stop:
+	@echo
+	localstack stop
+
+ready:
+	@echo Waiting on the LocalStack container...
+	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+
+logs:
+	@localstack logs > logs.txt
+
+test-ci:
+	make install; return_code=`echo $$?`;\
+	echo "Interactive debugging not tested in CI"; exit $$return_code;
+
+.PHONY: usage install run start stop ready logs test-ci

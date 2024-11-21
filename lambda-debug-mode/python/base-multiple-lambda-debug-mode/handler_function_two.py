@@ -35,4 +35,3 @@ def wait_for_debug_client(timeout=3600):
 
 if __name__ == "__main__":
     handler({}, {})
-
