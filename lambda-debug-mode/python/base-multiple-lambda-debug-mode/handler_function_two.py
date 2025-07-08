@@ -1,9 +1,6 @@
 def handler(event, context):
     """Lambda handler that will get invoked by the LocalStack runtime"""
 
-    # Wait for the debugger to get attached.
-    wait_for_debug_client()
-
     # Print a message to log that this the handler of handler_function_two.py file.
     print("The handler of handler_function_two.py is evaluating.")
 
@@ -14,24 +11,35 @@ def handler(event, context):
     return event
 
 
-def wait_for_debug_client(timeout=3600):
-    """Utility function to enable debugging with Visual Studio Code"""
+def wait_for_debug_client(port: int=19892, timeout: int=3600):
     import time, threading
     import sys, glob
     sys.path.append(glob.glob(".venv/lib/python*/site-packages")[0])
     import debugpy
 
-    debugpy.listen(("0.0.0.0", 19892))
-    class T(threading.Thread):
-        daemon = True
-        def run(self):
+    if not hasattr(wait_for_debug_client, "_debugpy_listening"):
+        wait_for_debug_client._debugpy_listening = False
+
+    if not wait_for_debug_client._debugpy_listening:
+        try:
+            debugpy.listen(("0.0.0.0", port))
+            wait_for_debug_client._debugpy_listening = True
+            print(f"debugpy is now listening on port {port}")
+        except RuntimeError as e:
+            print(f"debugpy.listen() failed or already active: {e}")
+
+    if not debugpy.is_client_connected():
+        print("Waiting for client to attach debugger...")
+
+        def cancel_wait():
             time.sleep(timeout)
-            print("Canceling debug wait task ...")
+            print("Canceling debug wait task after timeout...")
             debugpy.wait_for_client.cancel()
-    T().start()
-    print("Waiting for client to attach debugger ...")
-    debugpy.wait_for_client()
+
+        threading.Thread(target=cancel_wait, daemon=True).start()
+        debugpy.wait_for_client()
+    else:
+        print("Debugger already attached.")
 
 
-if __name__ == "__main__":
-    handler({}, {})
+wait_for_debug_client()
