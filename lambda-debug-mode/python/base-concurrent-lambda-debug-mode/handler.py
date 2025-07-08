@@ -8,6 +8,8 @@ def handler(event, context):
 
 
 def wait_for_debug_client(port: int=19891, timeout: int=3600):
+    """Utility function to enable debugging with Visual Studio Code"""
+
     import time, threading
     import sys, glob
     sys.path.append(glob.glob(".venv/lib/python*/site-packages")[0])
