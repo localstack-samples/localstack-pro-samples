@@ -38,7 +38,6 @@ for function_name in "${FUNCTION_NAMES[@]}"; do
     AWS_MAX_ATTEMPTS=1 \
     awslocal lambda invoke \
         --cli-connect-timeout 3600 \
-        --cli-binary-format raw-in-base64-out \
         --cli-read-timeout 3600 \
         --function-name "$function_name" \
         --payload '{"message": "Testing Lambda Debug Mode lifting the 1-second timeout for '"$function_name"'. "}' \

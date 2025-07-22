@@ -21,7 +21,6 @@ echo "Set a breakpoint and attach the Python remote debugger from your IDE"
 echo "Invoking the Lambda function."
 AWS_MAX_ATTEMPTS=1 \
 awslocal lambda invoke \
-    --cli-binary-format raw-in-base64-out \
     --cli-connect-timeout 3600 \
     --cli-read-timeout 3600 \
     --function-name "$FUNCTION_NAME" \
