@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Node: Remote Attach",
+      "type": "node",
+      "request": "attach",
+      "address": "127.0.0.1",
+      "port": 7050,
+      "localRoot": "${workspaceFolder}/hello-world",
+      "remoteRoot": "/var/task/",
+      "outFiles":[
+        "TODO(fix-these)",
+        ".aws-sam/build/HelloWorldFunction/**",
+        "${workspaceFolder}/**/*.(m|c|)js",
+        "!**/node_modules/**"
+      ]
+    }
+  ]
+}
