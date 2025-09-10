@@ -12,11 +12,12 @@ SAM ?= AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) \
 	AWS_DEFAULT_REGION=us-east-1 \
 	sam
 FUNCTION_NAME ?= HelloWorldFunctionJava
+LAMBDA_RUNTIME ?= java21
 
 # Changing architecture (arm64 or x86_64) requires rebuilding the Java package in Docker
 ARCH ?= x86_64
 DOCKER_PLATFORM ?= linux/$(ARCH)
-IMAGE ?= public.ecr.aws/sam/build-java21:latest-$(ARCH)
+IMAGE ?= public.ecr.aws/sam/build-$(LAMBDA_RUNTIME):latest-$(ARCH)
 
 all: usage
 
@@ -46,7 +47,7 @@ deploy: deploy-aws    ## Deploy the Lambda function (default AWS CLI)
 deploy-aws:           ## Deploy the Lambda function via AWS CLI
 	$(AWS) lambda create-function \
 	--function-name $(FUNCTION_NAME) \
-	--runtime java21 \
+	--runtime $(LAMBDA_RUNTIME) \
 	--role arn:aws:iam::000000000000:role/lambda-role \
 	--handler helloworld.App::handleRequest \
 	--zip-file fileb://HelloWorldFunction/build/distributions/HelloWorldFunction.zip \

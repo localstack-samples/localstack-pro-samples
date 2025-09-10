@@ -1,6 +1,9 @@
 # Lambda function response
 response.json
 
+# Lambda function package
+hello_world/hello_world_python.zip
+
 # Created by https://www.toptal.com/developers/gitignore/api/python,sam
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,sam
 

@@ -64,7 +64,7 @@ We recommend the one-click setup using the AWS Toolkit for VS Code unless your a
 ### Debugging
 
 1. Open the sample folder in VS Code to auto-detect `.vscode/launch.json`
-2. Set a breakpoint in the handler file `HelloWorldFunction/app.py` by clicking in the gutter-margin
+2. Set a breakpoint in the handler file `hello_world/app.py` by clicking in the gutter-margin
 3. Open the **Run and Debug** view in VS Code
 4. Run the **Python: Remote Attach** task
 5. Run `make invoke` to invoke the Lambda function

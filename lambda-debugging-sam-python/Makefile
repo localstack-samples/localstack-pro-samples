@@ -12,11 +12,12 @@ SAM ?= AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) \
 	AWS_DEFAULT_REGION=us-east-1 \
 	sam
 FUNCTION_NAME ?= HelloWorldFunctionPython
+LAMBDA_RUNTIME ?= python3.13
 
 # Changing architecture (arm64 or x86_64) requires rebuilding the Java package in Docker
 ARCH ?= x86_64
 DOCKER_PLATFORM ?= linux/$(ARCH)
-IMAGE ?= public.ecr.aws/sam/build-python3.13:latest-$(ARCH)
+IMAGE ?= public.ecr.aws/sam/build-$(LAMBDA_RUNTIME):latest-$(ARCH)
 
 all: usage
 
@@ -36,7 +37,7 @@ build-docker:         ## Build the Lambda function zip in Docker
 
 # TODO: package dependencies in requirements.txt
 # TODO: run tests before build
-build-local:          ## Build the Lambda function zip locally (JDK required)
+build-local:          ## Build the Lambda function zip locally (Python required)
 	cd hello_world && zip -r hello_world_python.zip .
 
 build-sam:            ## Build the Lambda function via AWS SAM
@@ -50,7 +51,7 @@ deploy: deploy-aws    ## Deploy the Lambda function (default AWS CLI)
 deploy-aws:           ## Deploy the Lambda function via AWS CLI
 	$(AWS) lambda create-function \
 	--function-name $(FUNCTION_NAME) \
-	--runtime python3.13 \
+	--runtime $(LAMBDA_RUNTIME) \
 	--role arn:aws:iam::000000000000:role/lambda-role \
 	--handler app.lambda_handler \
 	--zip-file fileb://hello_world/hello_world_python.zip \
