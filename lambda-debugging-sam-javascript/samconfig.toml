@@ -1,0 +1,13 @@
+version = 0.1
+
+[default.global.parameters]
+stack_name = "sam-app-javascript-debugging"
+region = "us-east-1"
+
+[default.deploy.parameters]
+resolve_s3 = true
+capabilities = [ "CAPABILITY_IAM", "CAPABILITY_NAMED_IAM" ]
+confirm_changeset = false
+
+[default.sync.parameters]
+watch = true

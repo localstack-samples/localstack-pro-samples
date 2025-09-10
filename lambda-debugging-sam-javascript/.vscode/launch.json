@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Node: Remote Attach",
+      "type": "node",
+      "request": "attach",
+      "address": "127.0.0.1",
+      "port": 6050,
+      "localRoot": "${workspaceFolder}/hello-world",
+      "remoteRoot": "/var/task/",
+    }
+  ]
+}
