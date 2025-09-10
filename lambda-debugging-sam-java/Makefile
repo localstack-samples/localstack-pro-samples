@@ -11,7 +11,7 @@ SAM ?= AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) \
 	AWS_SECRET_ACCESS_KEY=test \
 	AWS_DEFAULT_REGION=us-east-1 \
 	sam
-FUNCTION_NAME ?= HelloWorldFunction
+FUNCTION_NAME ?= HelloWorldFunctionJava
 
 # Changing architecture (arm64 or x86_64) requires rebuilding the Java package in Docker
 ARCH ?= x86_64
