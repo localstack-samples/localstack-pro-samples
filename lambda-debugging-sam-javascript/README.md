@@ -53,7 +53,7 @@ We recommend the one-click setup using the AWS Toolkit for VS Code unless your a
 
     * `IMAGE_NAME=localstack/localstack-pro` ensures the Pro image is started
     * `LOCALSTACK_LAMBDA_DEBUG_MODE=1` adjusts timeouts
-    * `LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml` points to the config file for Lambda debug mode allowing for advanced configuration. It maps the Lambda function `arn:aws:lambda:us-east-1:000000000000:function:function-one` to port `6050`.
+    * `LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml` points to the config file for Lambda debug mode allowing for advanced configuration. It maps the Lambda function `arn:aws:lambda:us-east-1:000000000000:function:HelloWorldFunctionJavaScript` to port `6050`.
     * `--volume $PWD/lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml` maps the Lambda debug configuration from the host into the LocalStack Docker container for hot-reloading configuration updates.
 
 ### Deploying

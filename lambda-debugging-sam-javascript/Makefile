@@ -14,7 +14,6 @@ SAM ?= AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) \
 FUNCTION_NAME ?= HelloWorldFunctionJavaScript
 LAMBDA_RUNTIME ?= nodejs22.x
 
-# Changing architecture (arm64 or x86_64) requires rebuilding the Java package in Docker
 ARCH ?= x86_64
 DOCKER_PLATFORM ?= linux/$(ARCH)
 IMAGE ?= public.ecr.aws/sam/build-$(LAMBDA_RUNTIME):latest-$(ARCH)
