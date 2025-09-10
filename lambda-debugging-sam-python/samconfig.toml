@@ -14,18 +14,13 @@ parallel = true
 lint = true
 
 [default.deploy.parameters]
-capabilities = "CAPABILITY_IAM"
+capabilities = [ "CAPABILITY_IAM", "CAPABILITY_NAMED_IAM" ]
 confirm_changeset = false
 resolve_s3 = true
+stack_name = "sam-app-python-debugging"
 
 [default.package.parameters]
 resolve_s3 = true
 
 [default.sync.parameters]
 watch = true
-
-[default.local_start_api.parameters]
-warm_containers = "EAGER"
-
-[default.local_start_lambda.parameters]
-warm_containers = "EAGER"
