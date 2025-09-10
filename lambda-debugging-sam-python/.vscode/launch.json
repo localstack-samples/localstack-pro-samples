@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Remote Attach",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 8050
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/hello_world",
+                    "remoteRoot": "."
+                }
+            ]
+        }
+    ]
+}
