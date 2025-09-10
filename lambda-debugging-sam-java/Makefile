@@ -1,4 +1,4 @@
-.PHONY: usage build build-docker build-local wait deploy invoke clean
+.PHONY: usage install build build-docker build-local build-sam wait deploy deploy-aws deploy-sam invoke clean start stop ready test-ci
 
 AWS_ENDPOINT_URL ?= http://localhost.localstack.cloud:4566
 AWS ?= AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) \
@@ -82,5 +82,5 @@ ready:                ## Wait until LocalStack is running
 	@localstack wait -t 30 && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 test-ci:
-	make start install ready deploy; return_code=`echo $$?`;\
+	make start install ready deploy wait invoke; return_code=`echo $$?`;\
 	echo "Interactive debugging not tested in CI"; exit $$return_code;
