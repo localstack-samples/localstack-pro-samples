@@ -27,10 +27,10 @@ usage:                ## Show this help
 install:              ## Install CLI dependencies
 	@which aws || pip install awscli
 
-build: build-docker.  ## Build the Lambda function (default Docker)
+build: build-docker   ## Build the Lambda function (default Docker)
 
 build-docker:         ## Build the Lambda function zip in Docker
-	docker run --platform $(DOCKER_PLATFORM) --rm -v "$$(pwd)/HelloWorldFunction:/app" $(IMAGE) bash -c "cd /app && ./gradlew test buildZip"
+	docker run --platform $(DOCKER_PLATFORM) --rm -v "$$(pwd)/HelloWorldFunction:/app" $(IMAGE) bash -c "cd /app && ./gradlew test buildZip && mv build/distributions/app.zip build/distributions/HelloWorldFunction.zip"
 
 build-local:          ## Build the Lambda function zip locally (JDK required)
 	cd HelloWorldFunction && ./gradlew test buildZip
@@ -41,7 +41,7 @@ build-sam:            ## Build the Lambda function via AWS SAM
 wait:                 ## Wait until the Lambda function becomes ready to invoke
 	$(AWS) lambda wait function-active-v2 --function-name $(FUNCTION_NAME)
 
-deploy: deploy-aws.   ## Deploy the Lambda function (default AWS CLI)
+deploy: deploy-aws    ## Deploy the Lambda function (default AWS CLI)
 
 deploy-aws:           ## Deploy the Lambda function via AWS CLI
 	$(AWS) lambda create-function \
