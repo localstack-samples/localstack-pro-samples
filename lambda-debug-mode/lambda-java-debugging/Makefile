@@ -57,8 +57,10 @@ deploy-sam:           ## Deploy the Lambda function via AWS SAM CLI
 	$(SAM) deploy
 
 invoke:               ## Invoke the Lambda function and show logs
-	$(AWS) lambda invoke --function-name $(FUNCTION_NAME) \
+	AWS_MAX_ATTEMPTS=1 $(AWS) lambda invoke --function-name $(FUNCTION_NAME) \
 	--payload file://events/event.json \
+	--cli-connect-timeout 3600 \
+	--cli-read-timeout 3600 \
 	--log-type Tail \
 	response.json | jq .LogResult -r | base64 -d && cat response.json | jq -r .result
 
