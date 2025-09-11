@@ -74,9 +74,11 @@ We recommend the one-click setup using the AWS Toolkit for VS Code unless your a
 ### Debugging
 
 1. Open the sample folder in VS Code to auto-detect `.vscode/launch.json`
+    a. If using SAM, ensure `localRoot` is set to `${workspaceFolder}/hello-world`
+    b. If using a local build, ensure `localRoot` is set to `${workspaceFolder}/hello-world/dist`
 2. Set a breakpoint in the handler file `hello-world/app.ts` by clicking in the gutter-margin
 3. Open the **Run and Debug** view in VS Code
-4. Run the **TypeScript: Remote Attach** task
+4. Run the **Node: Remote Attach** task
 5. Run `make invoke` to invoke the Lambda function
 
 ## Troubleshooting
