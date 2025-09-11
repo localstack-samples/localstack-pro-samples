@@ -7,14 +7,16 @@
       "request": "attach",
       "address": "127.0.0.1",
       "port": 7050,
-      "localRoot": "${workspaceFolder}/hello-world",
+      // Change localRoot to ${workspaceFolder}/hello-world for AWS SAM
+      "localRoot": "${workspaceFolder}/hello-world/dist", 
       "remoteRoot": "/var/task/",
-      "outFiles":[
-        "TODO(fix-these)",
-        ".aws-sam/build/HelloWorldFunction/**",
-        "${workspaceFolder}/**/*.(m|c|)js",
-        "!**/node_modules/**"
-      ]
+      "outFiles": [
+        "${workspaceFolder}/.aws-sam/build/HelloWorldFunction/**",
+        "${workspaceFolder}/hello-world/dist/app.js",
+        "${workspaceFolder}/hello-world/dist/app.js.map"
+      ],
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

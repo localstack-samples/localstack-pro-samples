@@ -29,17 +29,16 @@ install:              ## Install CLI dependencies
 
 build: build-local   ## Build the Lambda function (default local)
 
-# TODO: FIX TypeScript deployment
-# TODO: package runtime dependencies from package.json/node_modules
-# TODO: run tests before build
-build-docker:         ## Build the Lambda function zip in Docker
-	docker run --platform $(DOCKER_PLATFORM) --rm -v "$$(pwd)/hello-world:/app" $(IMAGE) bash -c "cd /app && zip -r hello-world-javascript.zip ."
+build-docker:          ## Build the Lambda function zip in Docker
+	docker run --rm --platform $(DOCKER_PLATFORM) \
+		-v "$$(pwd)/hello-world:/app" $(IMAGE) \
+		bash -c "cd /app && npm ci && npm test && npm run build"
 
-# TODO: FIX TypeScript deployment
-# TODO: package runtime dependencies from package.json/node_modules
-# TODO: run tests before build
 build-local:          ## Build the Lambda function zip locally (Node.js requires)
-	cd hello-world && zip -r hello-world-javascript.zip .
+	cd hello-world && \
+	npm ci && \
+	npm test && \
+	npm run build
 
 build-sam:            ## Build the Lambda function via AWS SAM
 	$(SAM) build --use-container
@@ -49,14 +48,13 @@ wait:                 ## Wait until the Lambda function becomes ready to invoke
 
 deploy: deploy-aws    ## Deploy the Lambda function (default AWS CLI)
 
-# TODO: FIX TypeScript deployment
 deploy-aws:           ## Deploy the Lambda function via AWS CLI
 	$(AWS) lambda create-function \
 	--function-name $(FUNCTION_NAME) \
 	--runtime $(LAMBDA_RUNTIME) \
 	--role arn:aws:iam::000000000000:role/lambda-role \
 	--handler app.lambdaHandler \
-	--zip-file fileb://hello-world/hello-world-javascript.zip \
+	--zip-file fileb://hello-world/dist/hello-world-javascript.zip \
 	--timeout 2
 
 deploy-sam:           ## Deploy the Lambda function via AWS SAM CLI
@@ -72,7 +70,7 @@ invoke:               ## Invoke the Lambda function and show logs
 
 # TODO: avoid having the built zip file in the source directory
 clean:                ## Clean the build directory
-	rm -rf hello-world/hello-world-javascript.zip
+	cd hello-world && rm -rf ./dist ./node_modules ./coverage
 
 start:                ## Start LocalStack
 	IMAGE_NAME=localstack/localstack-pro \

@@ -8,7 +8,10 @@
     "unit": "jest",
     "lint": "eslint '*.ts' --quiet --fix",
     "compile": "tsc",
-    "test": "npm run compile && npm run unit"
+    "test": "npm run compile && npm run unit",
+    "prebuild": "rm -rf dist",
+    "build": "esbuild app.ts --bundle --sourcemap --sources-content=true --platform=node --target=es2020 --outfile=./dist/app.js",
+    "postbuild": "cd dist && zip -r hello-world-javascript.zip ./app.js*"
   },
   "dependencies": {
     "esbuild": "^0.14.14"
