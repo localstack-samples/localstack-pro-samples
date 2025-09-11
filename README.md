@@ -32,6 +32,10 @@ Some of the samples require LocalStack Pro features. Please make sure to properl
 | [Transfer API with S3](transfer-ftp-s3)                        | Using the Transfer API to upload files to S3                                                       |
 | [Codecommit with Git repository](codecommit-git-repo)          | Using the Codecommit API to create and push to a Git repository                                    |
 | [Lambda Mounting and Debugging](lambda-mounting-and-debugging) | Debugging Lambda functions locally                                                                 |
+| [Lambda Debugging SAM Java](lambda-debugging-sam-java)         | Debugging Java Lambda functions using AWS SAM                                                      |
+| [Lambda Debugging SAM JavaScript](lambda-debugging-sam-javascript) | Debugging JavaScript Lambda functions using AWS SAM                                           |
+| [Lambda Debugging SAM Python](lambda-debugging-sam-python)     | Debugging Python Lambda functions using AWS SAM                                                   |
+| [Lambda Debugging SAM TypeScript](lambda-debugging-sam-typescript) | Debugging TypeScript Lambda functions using AWS SAM                                           |
 | [IAM Policy Enforcement](iam-policy-enforcement)               | Enforcement of IAM policies when working with local cloud APIs                                     |
 | [Lambda Hot Reloading](lambda-hot-reloading)                   | Hot reloading Lambda functions locally                                                             |
 | [IoT Basics](iot-basics)                                       | Usage of IoT APIs locally                                                                          |
