@@ -30,7 +30,7 @@ LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
 The following command builds and deploys the app locally via CloudFormation:
 
 ```
-make deploy
+make run
 ```
 
 Specifically, the script above runs the following steps:
