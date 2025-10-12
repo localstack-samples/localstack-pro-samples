@@ -1,14 +1,22 @@
 # Example using RDS with Localstack Testcontainers
 
-Testcontainers need a special setup to use services like RDS, which may use any port to expose the database.
-The sample explains how the mapping works, and how you need to configure Testcontainers in order to connect to the RDS instance from your test.
+Testcontainers need a special setup to use services like RDS, which may use any port to expose the database. The sample explains how the mapping works, and how you need to configure Testcontainers in order to connect to the RDS instance from your test.
+
+## Prerequisites
+- Docker running
+- JDK 11+
+- Maven 3.8+
+- LocalStack Pro Auth Token in `LOCALSTACK_AUTH_TOKEN`
 
 ## Run Example
-* Import the project (e.g. in IntelliJ), 
-* configure your LOCALSTACK_AUTH_TOKEN as environment variable, 
-* and then run  the test `TestRDS`.
+You can run the JUnit test either in your IDE or from the command line:
 
-It will create a LocalStack Testcontainer and a postgres database instance using RDSClient.
-The database will then be filled with some data, and queried afterwards. 
+```
+cd testcontainers-java-sample/LocalStackTestcontainers
+export LOCALSTACK_AUTH_TOKEN=...  # required for RDS (Pro feature)
+mvn -q -Dtest=TestRDS test
+```
+
+This will start a LocalStack Testcontainers instance, create a Postgres database via the RDS client, insert a row, and query it.
 
 
