@@ -34,25 +34,20 @@ def handler(event, context):
     s3_client = boto3.client("s3")
     buffer = io.BytesIO()
     dump(clf, buffer)
-    s3_client.put_object(Body=buffer.getvalue(), Bucket="pods-test", Key="model.joblib")
-    
+    s3_client.put_object(Body=buffer.getvalue(), Bucket="reproducible-ml", Key="model.joblib")
+
     # Save the test-set to the S3 bucket
-    numpy.save('test-set.npy', X_test)
-    with open('test-set.npy', 'rb') as f:
-        s3_client.put_object(Body=f, Bucket="pods-test", Key="test-set.npy")
+    numpy.save('/tmp/test-set.npy', X_test)
+    with open('/tmp/test-set.npy', 'rb') as f:
+        s3_client.put_object(Body=f, Bucket="reproducible-ml", Key="test-set.npy")
 
 
 def load_digits(*, n_class=10, return_X_y=False, as_frame=False):
     # download files from S3
     s3_client = boto3.client("s3")
-    s3_client.download_file(Bucket="pods-test", Key="digits.csv.gz", Filename="digits.csv.gz")
-    s3_client.download_file(Bucket="pods-test", Key="digits.rst", Filename="digits.rst")
+    s3_client.download_file(Bucket="reproducible-ml", Key="digits.csv.gz", Filename="/tmp/digits.csv.gz")
 
-    # code below based on sklearn/datasets/_base.py
-
-    data = numpy.loadtxt('digits.csv.gz', delimiter=',')
-    with open('digits.rst') as f:
-        descr = f.read()
+    data = numpy.loadtxt('/tmp/digits.csv.gz', delimiter=',')
     target = data[:, -1].astype(numpy.int, copy=False)
     flat_data = data[:, :-1]
     images = flat_data.view()
@@ -81,5 +76,4 @@ def load_digits(*, n_class=10, return_X_y=False, as_frame=False):
                  frame=frame,
                  feature_names=feature_names,
                  target_names=numpy.arange(10),
-                 images=images,
-                 DESCR=descr)
+                 images=images)
