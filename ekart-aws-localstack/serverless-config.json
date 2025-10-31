@@ -1,0 +1,10 @@
+{
+  "api_url": "http://localhost:4566/restapis/ctlwb5pax7/dev/_user_request_",
+  "api_id": "ctlwb5pax7",
+  "user_pool_id": "us-east-1_8e07ff7de6fd415c8c803e5e9134503f",
+  "client_id": "5c7oz1b5giu66ftannaz2v9vjj",
+  "region": "us-east-1",
+  "endpoint": "http://localhost:4566",
+  "env": "dev",
+  "lambda_endpoint": "http://localhost.localstack.cloud:4566"
+}

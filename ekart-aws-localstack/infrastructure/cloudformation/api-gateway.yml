@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'API Gateway for EKart Store'
+
+Parameters:
+  Environment:
+    Type: String
+  UserPoolId:
+    Type: String
+  OrderProcessorLambdaArn:
+    Type: String
+
+Resources:
+  EkartApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub 'ekart-api-${Environment}'
+      Description: 'API Gateway for EKart Store'
+
+  RootResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt EkartApi.RootResourceId
+      PathPart: "api"
+      RestApiId: !Ref EkartApi
+
+  OrdersResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref RootResource
+      PathPart: "orders"
+      RestApiId: !Ref EkartApi
+
+  OrdersPostMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref OrdersResource
+      RestApiId: !Ref EkartApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OrderProcessorLambdaArn}/invocations'
+
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - OrdersPostMethod
+    Properties:
+      RestApiId: !Ref EkartApi
+      StageName: !Ref Environment
+
+Outputs:
+  APIEndpoint:
+    Value: !Sub 'https://${EkartApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/api'
