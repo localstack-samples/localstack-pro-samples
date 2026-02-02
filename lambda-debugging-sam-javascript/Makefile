@@ -1,4 +1,4 @@
-.PHONY: usage install build build-docker build-local build-sam wait deploy deploy-aws deploy-aws-hot-reload deploy-sam invoke clean start stop ready test-ci enable-hot-reload
+.PHONY: usage install build build-docker build-local build-sam wait deploy deploy-aws deploy-aws-hot-reload enable-hot-reload deploy-sam invoke clean start stop ready test-ci
 
 AWS_ENDPOINT_URL ?= http://localhost.localstack.cloud:4566
 AWS ?= AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) \
@@ -65,6 +65,12 @@ deploy-aws-hot-reload:           ## Deploy the Lambda function with hot reload v
 	--code S3Bucket="hot-reload",S3Key="/$$PWD/hello-world" \
 	--timeout 2
 
+enable-hot-reload:           ## Enable hot reload via AWS CLI
+	$(AWS) lambda update-function-code \
+	--function-name $(FUNCTION_NAME) \
+	--s3-bucket "hot-reload" \
+	--s3-key "$$PWD/hello-world"
+
 deploy-sam:           ## Deploy the Lambda function via AWS SAM CLI
 	$(SAM) deploy
 
@@ -98,9 +104,3 @@ ready:                ## Wait until LocalStack is running
 test-ci:
 	make start install ready deploy wait invoke; return_code=`echo $$?`;\
 	echo "Interactive debugging not tested in CI"; exit $$return_code;
-
-enable-hot-reload:           ## Enable hot reload via AWS CLI
-	$(AWS) lambda update-function-code \
-	--function-name $(FUNCTION_NAME) \
-	--s3-bucket "hot-reload" \
-	--s3-key "$$PWD/hello-world"
