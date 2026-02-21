@@ -5,7 +5,7 @@ We suggest taking a look at [run.sh](run.sh) script to understand the setup.
 To run the demo:
 
 ```
-$ LOCALSTACK_AUTH_TOKEN=<your-api-key> docker-compose up -d
+$ LOCALSTACK_AUTH_TOKEN=<your-auth-token> docker-compose up -d
 ```
 
 ```
