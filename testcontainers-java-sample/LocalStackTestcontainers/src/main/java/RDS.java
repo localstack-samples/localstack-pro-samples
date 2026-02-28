@@ -24,28 +24,27 @@ public class RDS {
             String url = String.format("jdbc:postgresql://%s:%d/%s", hostname, port, dbname);
             c = DriverManager.getConnection(url, DEFAULT_USER, DEFAULT_PW);
             c.setAutoCommit(true);
-            Statement stmt = c.createStatement();
-            String sql = "CREATE TABLE HELLO " +
-                    "(ID INT PRIMARY KEY     NOT NULL," +
-                    " NAME           TEXT    NOT NULL) ";
-            stmt.executeUpdate(sql);
+            try (Statement stmt = c.createStatement()) {
+                String sql = "CREATE TABLE HELLO " +
+                        "(ID INT PRIMARY KEY     NOT NULL," +
+                        " NAME           TEXT    NOT NULL) ";
+                stmt.executeUpdate(sql);
 
-            sql = "INSERT INTO HELLO (ID,NAME) "
-                    + "VALUES (1, 'world');";
-            stmt.executeUpdate(sql);
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM HELLO;" );
-            String response = "";
-            while( rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                response += String.format("ID = %d\nNAME = %s", id, name);
+                sql = "INSERT INTO HELLO (ID,NAME) VALUES (1, 'world');";
+                stmt.executeUpdate(sql);
+                String response = "";
+                try (ResultSet rs = stmt.executeQuery("SELECT * FROM HELLO;")) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        String name = rs.getString("name");
+                        response += String.format("ID = %d\nNAME = %s", id, name);
+                    }
+                }
+                return response;
             }
-            rs.close();
-            stmt.close();
-            return response;
         } finally {
             try {
-                c.close();
+                if (c != null) c.close();
             } catch (SQLException e) {
                 // we can ignore error here
             }

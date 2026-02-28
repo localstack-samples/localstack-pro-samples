@@ -30,9 +30,9 @@ public class TestRDS {
      */
     @Rule
     public LocalStackContainer localstack = new LocalStackContainer(localstackImage)
-                                                        .withExposedPorts(4510, 4511, 4512, 4513, 4514) // TODO the port can have any value between 4510-4559, but LS starts from 4510
-                                                        .withEnv("LOCALSTACK_AUTH_TOKEN", api_key) // TODO add your Auth Token here
-                                                        .withServices(LocalStackContainer.EnabledService.named("rds"));
+            .withExposedPorts(4510, 4511, 4512, 4513, 4514) // TODO the port can have any value between 4510-4559, but LS starts from 4510
+            .withEnv("LOCALSTACK_AUTH_TOKEN", api_key) // TODO add your Auth Token here
+            .withServices(LocalStackContainer.EnabledService.named("rds"));
 
 
     @Test
@@ -51,8 +51,19 @@ public class TestRDS {
         DescribeDbInstancesRequest request = DescribeDbInstancesRequest.builder().dbInstanceIdentifier(identifier).build();
         DescribeDbInstancesResponse describedb = rds.describeDBInstances(request);
 
-        // wait for db to be ready
-        while(! describedb.dbInstances().get(0).dbInstanceStatus().equalsIgnoreCase("available")) {
+        // wait for db to be ready with a small backoff and a timeout to avoid busy-waiting
+        long start = System.currentTimeMillis();
+        long timeoutMs = 30_000; // 30s
+        while (!describedb.dbInstances().get(0).dbInstanceStatus().equalsIgnoreCase("available")) {
+            if (System.currentTimeMillis() - start > timeoutMs) {
+                fail("Timed out waiting for RDS instance to become available");
+            }
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                fail("Interrupted while waiting for RDS instance to become available");
+            }
             describedb = rds.describeDBInstances(request);
         }
 
@@ -65,7 +76,8 @@ public class TestRDS {
             // try to connect to database in our example we simply insert some dummy data
             String actual = RDS.test_connection(localstack.getHost(), mapped_port, "hello");
             String expected = "ID = 1\nNAME = world";
-            assertEquals(actual, expected);
+            // JUnit expects (expected, actual)
+            assertEquals(expected, actual);
         } catch (Exception e) {
             fail("testing connection with database failed");
         }
