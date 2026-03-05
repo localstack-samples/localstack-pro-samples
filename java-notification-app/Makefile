@@ -16,7 +16,7 @@ install:     ## Build the Java application
 	@mvn clean install -q
 
 start:       ## Start LocalStack and supporting services via Docker Compose
-	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Get your auth token at https://localstack.cloud/pricing."; exit 1)
+	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
 	LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN} docker-compose up -d
 
 stop:        ## Stop all services

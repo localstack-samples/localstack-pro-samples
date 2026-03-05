@@ -46,7 +46,7 @@ invoke:
 	curl $${endpoint}?name=LocalStack!
 
 start:
-	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Get your auth token at https://localstack.cloud/pricing."; exit 1)
+	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
 	PROVIDER_OVERRIDE_lambda=v2 localstack start -d
 
 stop:

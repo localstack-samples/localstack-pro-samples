@@ -16,7 +16,7 @@ install:     ## Compile the Java application
 	@cd LocalStackTestcontainers && mvn compile -q
 
 start:       ## Check LocalStack auth token (Testcontainers manages the container lifecycle)
-	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Get your auth token at https://localstack.cloud/pricing."; exit 1)
+	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
 	@echo "LocalStack auth token is set. Testcontainers will manage the LocalStack container lifecycle."
 
 stop:        ## No-op: Testcontainers manages container lifecycle

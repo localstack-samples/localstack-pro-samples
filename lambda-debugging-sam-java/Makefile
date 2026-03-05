@@ -77,7 +77,7 @@ clean:                ## Clean the build directory
 	rm -rf HelloWorldFunction/build
 
 start:                ## Start LocalStack
-	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Get your auth token at https://localstack.cloud/pricing."; exit 1)
+	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
 	IMAGE_NAME=localstack/localstack-pro \
 	LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN} \
 	LOCALSTACK_LAMBDA_DEBUG_MODE=1 \

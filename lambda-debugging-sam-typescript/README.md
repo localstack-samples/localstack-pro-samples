@@ -12,7 +12,11 @@ A Hello World TypeScript Lambda function demonstrating interactive breakpoint de
 
 ## Prerequisites
 
-- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack. Set it with:
+  ```bash
+  export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
+  ```
+  You can find your token on the [LocalStack Web Application](https://app.localstack.cloud/workspace/auth-token).
 - [Docker](https://docs.docker.com/get-docker/)
 - [VS Code](https://code.visualstudio.com/) with the [LocalStack Toolkit](https://marketplace.visualstudio.com/items?itemName=localstack.localstack) ≥ 1.2 and [AWS Toolkit](https://marketplace.visualstudio.com/items?itemName=AmazonWebServices.aws-toolkit-vscode) ≥ 3.74
 - [Node.js](https://nodejs.org/en/download/) with `npm`
