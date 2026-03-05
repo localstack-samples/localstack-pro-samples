@@ -50,7 +50,7 @@ jobs:
       - name: Pull the latest docker image
         run: docker pull localstack/localstack-pro
 
-      - name: Execute a simple test
+      - name: Execute tests
         timeout-minutes: 10
         run: |
           cd ${{ matrix.directory }}
