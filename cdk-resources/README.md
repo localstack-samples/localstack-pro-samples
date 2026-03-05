@@ -12,11 +12,7 @@ A demo application illustrating deployment of AWS resources locally using [AWS C
 
 ## Prerequisites
 
-- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack. Set it with:
-  ```bash
-  export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
-  ```
-  You can find your token on the [LocalStack Web Application](https://app.localstack.cloud/workspace/auth-token).
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
 - [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
 - [`cdklocal`](https://github.com/localstack/aws-cdk-local) — install with `npm install -g aws-cdk-local`
@@ -38,6 +34,7 @@ make install
 ## Start LocalStack
 
 ```bash
+export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
 make start
 ```
 

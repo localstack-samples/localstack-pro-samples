@@ -17,6 +17,7 @@ This is a simple example of how to hot reload your Typescript Lambda with Webpac
 Start your LocalStack Docker container with the following command:
 
 ```bash
+export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
 localstack start
 ```
 
