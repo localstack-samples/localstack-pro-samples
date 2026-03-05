@@ -55,7 +55,8 @@ test:        ## Run tests
 	make deploy run target=ci
 
 start:       ## Start LocalStack
-	ACTIVATE_PRO=1 localstack start -d
+	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Get your auth token at https://localstack.cloud/pricing."; exit 1)
+	localstack start -d
 
 stop:        ## Stop LocalStack
 	@echo

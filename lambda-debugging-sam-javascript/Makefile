@@ -23,6 +23,14 @@ all: usage
 usage:                ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
+check:    ## Check if all required prerequisites are installed
+	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
+	@command -v node > /dev/null 2>&1 || { echo "Node.js is not installed. Please install Node.js and try again."; exit 1; }
+	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack CLI is not installed. Please install it and try again."; exit 1; }
+	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
+	@echo "All required prerequisites are available."
+
+
 # TODO: figure out how to install the AWS CLI v2 in CI
 install:              ## Install CLI dependencies
 	@which aws || pip install awscli
@@ -88,6 +96,7 @@ clean:                ## Clean the build directory
 	rm -rf hello-world/hello-world-javascript.zip
 
 start:                ## Start LocalStack
+	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Get your auth token at https://localstack.cloud/pricing."; exit 1)
 	IMAGE_NAME=localstack/localstack-pro \
 	LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN} \
 	LOCALSTACK_LAMBDA_DEBUG_MODE=1 \

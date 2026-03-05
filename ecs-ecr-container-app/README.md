@@ -1,52 +1,55 @@
-# LocalStack Demo: ECS Container App
+# ECS Container Application
 
-Simple demo application illustrating ECS applications running locally using LocalStack. The application image is built using Docker and pushed to a local ECR registry.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | ECS, ECR                            |
+| Integrations | AWS CLI, CloudFormation, Docker     |
+| Categories   | Containers; Serverless              |
+
+## Introduction
+
+A demo application illustrating ECS container applications running locally using LocalStack. The application image is built using Docker, pushed to a local ECR registry, and deployed via CloudFormation to an ECS cluster.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* `make`
-* [`awslocal`](https://github.com/localstack/awscli-local)
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
+```bash
+make check
 ```
+
+## Installation
+
+```bash
 make install
 ```
 
-## App Details
+## Start LocalStack
 
-Please refer to the `templates/` folder for details about the CloudFormation templates for the ECS service.
-
-## Running
-
-Make sure that LocalStack is started:
-```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
+```bash
+make start
 ```
 
-The following command builds and deploys the app locally via CloudFormation:
+## Deploy the Application
 
-```
+```bash
 make deploy
 ```
 
-Specifically, the script above runs the following steps:
-1. Create a new ECR registry locally
-2. Build the application Docker image (from the `nginx` base image)
-3. Push the image to the ECR registry
-4. Create the ECS cluster and infrastructure
-5. Create and deploy the ECS application, which starts the container in you local Docker environment
+The script:
 
-You should see some logs and a success output in the terminal:
-```
-...
-Sample app (nginx) successfully deployed.
-```
+- Creates a new ECR registry locally.
+- Builds the application Docker image from the `nginx` base image.
+- Pushes the image to the ECR registry.
+- Creates an ECS cluster and supporting infrastructure via CloudFormation.
+- Deploys and starts the ECS application container in your local Docker environment.
 
-Finally, the test app (nginx) should be accessible under the URL http://localhost:45139/ .
+The nginx test app is accessible at `http://localhost:45139/` after deployment.
 
 ## License
 

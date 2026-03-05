@@ -1,40 +1,54 @@
-# LocalStack Demo: Chalice REST API
+# Chalice REST API
 
-Simple demo application illustrating AWS Chalice integration in LocalStack. The AWS Chalice integration features a REST API which can be tested locally and put to production using the [LocalStack's AWS Chalice client](https://github.com/localstack/chalice-local).
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | Lambda, API Gateway                 |
+| Integrations | Chalice                             |
+| Categories   | REST API; Serverless                |
+
+## Introduction
+
+A demo application illustrating the [AWS Chalice](https://github.com/aws/chalice) framework integration with LocalStack. The [`chalice-local`](https://github.com/localstack/chalice-local) client deploys and serves the REST API locally, enabling full local development and testing without connecting to AWS.
 
 ## Prerequisites
 
-- LocalStack
-- Docker
-- `chalice-local`
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`chalice-local`](https://github.com/localstack/chalice-local) — install with `pip install chalice-local`
+- [Python 3](https://www.python.org/downloads/)
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
-
-```sh
-pip3 install -r requirements-dev.txt
+```bash
+make check
 ```
 
-## Running
+## Installation
 
-Make sure that LocalStack is started:
-
-```sh
-localstack start -d
+```bash
+make install
 ```
 
-Start the local-server via:
+## Start LocalStack
 
-```sh
-chalice-local local
+```bash
+make start
 ```
 
-You will see the following logs on the terminal:
+## Deploy the Application
 
-```sh
-Serving on http://127.0.0.1:8000
+```bash
+make deploy
 ```
+
+## Run the application
+
+```bash
+make run
+```
+
+The local development server starts and serves the API at `http://127.0.0.1:8000`.
 
 ## License
 

@@ -1,73 +1,56 @@
-# AWS Lambda event filtering with DynamoDB and SQS
+# Lambda Event Filtering with DynamoDB and SQS
 
-Simple demo application illustrating AWS Lambda event source filtering with DynamoDB and SQS. For this demo, we will use AWS Serverless Application Model (SAM), and a thin LocalStack wrapper `samlocal` to create our infrastructure through SAM on LocalStack.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | Lambda, DynamoDB, SQS               |
+| Integrations | AWS SAM                             |
+| Categories   | Serverless; Event-Driven            |
+
+## Introduction
+
+A demo application illustrating AWS Lambda event source filtering with DynamoDB and SQS using LocalStack. The sample uses AWS SAM and `samlocal` to deploy a Lambda function that is triggered only when SQS messages match specific filtering criteria defined on the DynamoDB stream.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* `make`
-* [`awslocal`](https://github.com/localstack/awscli-local)
-* [`samlocal`](https://github.com/localstack/aws-sam-cli-local)
-* NodeJS 14.x
-* [`ulid`](https://www.npmjs.com/package/ulid)
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [`samlocal`](https://github.com/localstack/aws-sam-cli-local) — install with `pip install aws-sam-cli-local`
+- [Node.js](https://nodejs.org/en/download/) with `npm`
 
-## Installing
+## Check prerequisites
 
-Setup [Serverless Application Model (SAM)](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) and [AWS SAM CLI Local](https://github.com/localstack/aws-sam-cli-local) on your local machine. We also recommend using NodeJS 14.x alongside a [Node Version Manager](https://github.com/nvm-sh/nvm) to manage your NodeJS versions.
-
-
-Start LocalStack via:
-
-```sh 
-localstack start -d
+```bash
+make check
 ```
 
-## Deploy the application
+## Installation
 
-Let us first install the local dependencies:
-
-```sh
-npm install --save ulid
+```bash
+make install
 ```
 
-To setup the infrastructure on LocalStack, run:
+## Start LocalStack
 
-```sh
-samlocal deploy -g
+```bash
+make start
 ```
 
-You will be prompted to enter a name for the stack. Use the default options for the prompts and fill `Y` (`Yes`) for the confirmation prompt. The stack will be created and the output will be printed to the console.
+## Deploy the Application
 
-If you have made any changes to the application, you can update the stack by running:
-
-```sh
-samlocal deploy 
+```bash
+make deploy
 ```
 
-After deploying you can send a SQS message to the queue and see the Lambda function being triggered:
+## Run the application
 
-```sh
-awslocal sqs send-message --queue-url http://localhost:4566/000000000000/MyQueue --message-body "{ "data" : "A" }" --delay-seconds 10
+```bash
+make run
 ```
 
-You will see a JSON output similar to the following:
+The script sends an SQS message matching the filter criteria to trigger the Lambda function. Check the LocalStack logs to verify the function was invoked.
 
-```json
-{
-    "MD5OfMessageBody": "64dfee8647a8264b25b01b7f22d72d3a",
-    "MessageId": "22fbddd2-5add-4a03-a850-152780d786c1"
-}
-```
+## License
 
-In the `template.yaml` we have defined the DynamoDB table and the Stream function with a filtering criteria. We instruct the Stream function to trigger the Lambda function only when the filtering criteria is satisfied.
-
-Using the SQS, we send a message body to the DynamoDB stream to match the specific filtering criteria. After the message is sent, we can see the Lambda function being triggered and you can check the logs to verify it.
-
-## Destroy the application
-
-To destroy the infrastructure on LocalStack, run:
-
-```sh
-samlocal delete
-```
+This code is available under the Apache 2.0 license.

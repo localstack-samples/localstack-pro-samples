@@ -1,41 +1,56 @@
-# LocalStack Demo: EC2 instances with Docker backend
+# EC2 Instances with Docker Backend
 
-This examples demos LocalStack EC2 and SSM functionalities when using the Docker backend.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | EC2, SSM                            |
+| Integrations | AWS CLI                             |
+| Categories   | Compute                             |
+
+## Introduction
+
+A demo application illustrating LocalStack EC2 and SSM functionality using the Docker backend. The sample creates Docker-backed EC2 instances, sends commands via SSM, captures output, takes snapshots as AMIs, and terminates instances.
+
+> Note: This demo downloads the Ubuntu Docker image (~100MB) on first run.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* `make`
-* [`jq`](https://stedolan.github.io/jq/)
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [`jq`](https://stedolan.github.io/jq/)
 
-Note: This demo involves the download of the Ubuntu Docker image weighing about 100MB
+## Check prerequisites
 
-## Installing
-
-To install the dependencies:
+```bash
+make check
 ```
+
+## Installation
+
+```bash
 make install
 ```
 
-## Running
+## Start LocalStack
 
-Run LocalStack with following enviroment flags:
-```
-LOCALSTACK_AUTH_TOKEN=... EC2_VM_MANAGER=docker DEBUG=1 localstack start
+```bash
+make start
 ```
 
-Run the demo:
-```
+## Run the application
+
+```bash
 make run
 ```
 
-You will see various operations being performed in the logs, starting with
-- the creation of a Docker-backed EC2 instance
-- command being sent to this instance through SSM
-- retrieval standard output of this command
-- snapshoting the running instance into a new AMI
-- termination of the instance
+The script:
+
+- Creates a Docker-backed EC2 instance.
+- Sends a command to the instance via SSM.
+- Retrieves the standard output of the command.
+- Snapshots the running instance into a new AMI.
+- Terminates the instance.
 
 ## License
 

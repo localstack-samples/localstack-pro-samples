@@ -1,6 +1,6 @@
 # LocalStack Pro Samples
 
-This repository contains sample projects that can be deployed on your local machine using [LocalStack Pro](https://localstack.cloud/).
+This repository contains sample projects that can be deployed on your local machine using [LocalStack](https://localstack.cloud/).
 
 Each example in the repository is prefixed with the name of the AWS service being used. For example, the `elb-load-balancing` directory contains examples that demonstrate how to use the Elastic Load Balancing service with LocalStack. Please refer to the sub directories for more details and instructions on how to start the samples.
 
@@ -14,7 +14,19 @@ Each example in the repository is prefixed with the name of the AWS service bein
 
 ## Configuration
 
-Some of the samples require LocalStack Pro features. Please make sure to properly configure the `LOCALSTACK_AUTH_TOKEN` environment variable. You can find your Auth Token on the [LocalStack Web Application](https://app.localstack.cloud/workspace/auth-token) and you can refer to our [Auth Token documentation](https://docs.localstack.cloud/getting-started/auth-token/) for more details.
+All samples require a valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack. Set it before running any sample:
+
+```bash
+export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
+```
+
+Alternatively, use the LocalStack CLI to persist the token:
+
+```bash
+localstack auth set-token <your-auth-token>
+```
+
+You can find your Auth Token on the [LocalStack Web Application](https://app.localstack.cloud/workspace/auth-token).
 
 ## Outline
 
@@ -22,6 +34,7 @@ Some of the samples require LocalStack Pro features. Please make sure to properl
 | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | [Serverless Websockets](serverless-websockets)                 | API Gateway V2 websocket APIs deployed via the Serverless framework                                |
 | [RDS Database Queries](rds-db-queries)                         | Running queries locally against an RDS database                                                    |
+| [RDS Failover Test](rds-failover-test)                         | Running a failover test against an RDS global cluster                                              |
 | [Neptune Graph Database](neptune-graph-db)                     | Running queries locally against a Neptune Graph database                                           |
 | [Lambda Event Filtering](lambda-event-filtering)               | Lambda event source filtering with DynamoDB and SQS                                                |
 | [Glacier & S3 select queries](glacier-s3-select)               | Using Glacier API and running S3 Select queries locally                                            |
@@ -42,7 +55,9 @@ Some of the samples require LocalStack Pro features. Please make sure to properl
 | [ECS ECR Container application](ecs-ecr-container-app)         | Pushing Docker images to ECR and running them locally on ECS                                       |
 | [Athena queries over S3](athena-s3-queries)                    | Running Athena queries over S3 files locally                                                       |
 | [Terraform resources](terraform-resources)                     | Deploying various AWS resources via Terraform                                                      |
-| [Lambda Function URLs](lambda-function-urls)                   | Invoking Lambda functions via HTTP(s) URLs                                                         |
+| [CDK for Terraform resources](cdk-for-terraform)               | Deploying AWS resources via CDK for Terraform                                                      |
+| [Lambda Function URLs (JavaScript)](lambda-function-urls-javascript) | Invoking Lambda functions via HTTP(S) URLs using JavaScript                               |
+| [Lambda Function URLs (Python)](lambda-function-urls-python)   | Invoking Lambda functions via HTTP(S) URLs using Python                                            |
 | [Sagemaker inference](sagemaker-inference)                     | Creating & invoking a Sagemaker endpoint locally with MNIST dataset                                |
 | [MSK with Glue Schema Registry](glue-msk-schema-registry)      | Use of MSK, Glue Schema Registry, Glue ETL, and RDS                                                |
 | [AppSync GraphQL](appsync-graphql-api)                         | Deploying a GraphQL API using AppSync                                                              |
@@ -59,6 +74,13 @@ Some of the samples require LocalStack Pro features. Please make sure to properl
 | [ELB Load Balancing](elb-load-balancing)                       | Using ELBv2 Application Load Balancers locally, deployed via the Serverless framework              |
 | [Reproducible ML](reproducible-ml)                             | Train, save and evaluate a scikit-learn machine learning model using AWS Lambda and S3             |
 | [Lambda PHP/Bref CDK App](lambda-php-bref-cdk-app)             | Running PHP/Bref Lambda handler locally, deployed via AWS CDK                                      |
+| [Step Functions with Lambda](stepfunctions-lambda)             | Orchestrating Lambda functions using AWS Step Functions                                            |
+| [Multi-Account S3 Access](multi-account-multi-region-s3-access) | Accessing S3 resources across different AWS accounts and regions                                  |
+| [Route53 DNS Failover](route53-dns-failover)                   | Route53 DNS failover based on health checks                                                        |
+| [EMR Serverless Sample](emr-serverless-sample)                 | Running EMR Serverless jobs locally                                                                |
+| [EMR Serverless Spark](emr-serverless-spark)                   | Running Java Spark jobs on EMR Serverless                                                          |
+| [EMR Serverless Python Dependencies](emr-serverless-python-dependencies) | Adding Python dependencies to EMR Serverless PySpark jobs                              |
+| [Testcontainers Java Sample](testcontainers-java-sample)       | Using LocalStack Testcontainers with RDS in Java                                                   |
 
 ## Checking out a single sample
 
@@ -104,6 +126,7 @@ run:         ## Run the actual sample steps/commands. This assumes LocalStack is
         ./run.sh
 
 start:       ## Start LocalStack in detached mode
+        @test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Get your auth token at https://localstack.cloud/pricing."; exit 1)
         localstack start -d
 
 stop:        ## Stop the Running LocalStack container
@@ -117,7 +140,7 @@ ready:       ## Make sure the LocalStack container is up
 logs:        ## Save the logs in a separate file, since the LS container will only contain the logs of the last sample run.
         @localstack logs > logs.txt
 
-test-ci:     ## Execute the necessary targets in the correct order for an automatic execution. 
+test-ci:     ## Execute the necessary targets in the correct order for an automatic execution.
         make start install ready run; return_code=`echo $$?`;\
         make logs; make stop; exit $$return_code;
 

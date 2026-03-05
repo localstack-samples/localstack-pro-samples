@@ -1,48 +1,49 @@
-# Localstack Demo: Access S3 resources from different account and different region
+# Multi-Account Multi-Region S3 Access
 
-Simple demo script to showcase the accessing of S3 resources from a different AWS account using bucket policies and IAM users with specific IAM policies attached to their identities.
-The script uses a couple of AWS profiles to achieve that:
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | S3, IAM                             |
+| Integrations | AWS CLI                             |
+| Categories   | Security; Multi-Account             |
 
-* Admin user of account A with account ID `000000000001`.
+## Introduction
 
-* Admin user of account B with account ID `000000000002`.
-
-* Account A user that creates the S3 bucket and subsequent resources inside the bucket.
-
-* Account B user that copies the resources from account A user's S3 bucket `source` into a bucket `target` it owns.
+A demo application illustrating how to access S3 resources across different AWS accounts using bucket policies and IAM users with LocalStack. The sample uses two simulated accounts — Account A creates an S3 bucket and sets policies, while Account B accesses and copies resources from Account A's bucket into its own.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* Python 3.6+ / Python Pip
-* `make`
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [Python 3](https://www.python.org/downloads/) with `pip`
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
+```bash
+make check
+```
 
-```shell
+## Installation
+
+```bash
 make install
 ```
 
-## Starting LocalStack
+## Start LocalStack
 
-Make sure that LocalStack is started:
-
-```shell
-LOCALSTACK_AUTH_TOKEN=... make start
+```bash
+make start
 ```
 
-## Running
+## Run the application
 
-Run the sample demo script:
-
-```shell
+```bash
 make run
 ```
+
+The script sets up two AWS accounts with IAM users and bucket policies, then demonstrates cross-account S3 resource access.
 
 ## License
 
 This code is available under the Apache 2.0 license.
-

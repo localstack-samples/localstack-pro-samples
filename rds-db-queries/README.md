@@ -1,43 +1,48 @@
-# LocalStack Demo: RDS Database Queries
+# RDS Database Queries
 
-Simple demo application illustrating running queries against an RDS database.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | RDS                                 |
+| Integrations | AWS CLI                             |
+| Categories   | Database                            |
+
+## Introduction
+
+A demo application illustrating running queries against an RDS database locally using LocalStack. The sample creates an RDS DB instance, executes SQL INSERT and SELECT queries, and cleans up the instance.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* Python
-* `make`
-* [`awslocal`](https://github.com/localstack/awscli-local)
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [Python 3](https://www.python.org/downloads/)
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
+```bash
+make check
 ```
+
+## Installation
+
+```bash
 make install
 ```
 
-## Starting LocalStack
+## Start LocalStack
 
-Make sure that LocalStack is started:
-```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
+```bash
+make start
 ```
 
-## Running
+## Run the application
 
-Run the scenario Python script `query.py` as follows:
-```
+```bash
 make run
 ```
 
-You should see some logs from the script, similar to the output below:
-```
-Creating RDS DB instance
-Run DB queries against RDS instance i1
-[(1, 'Jane'), (2, 'Alex'), (3, 'Maria')]
-Deleting RDS DB instance i1
-```
+The script creates an RDS DB instance, runs queries to insert and retrieve records, and deletes the instance.
 
 ## License
 

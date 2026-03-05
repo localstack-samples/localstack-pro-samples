@@ -5,6 +5,14 @@ export PATH := $(PATH):.
 usage:           ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
+check:    ## Check if all required prerequisites are installed
+	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
+	@command -v terraform > /dev/null 2>&1 || { echo "Terraform is not installed. Please install Terraform and try again."; exit 1; }
+	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack CLI is not installed. Please install it and try again."; exit 1; }
+	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
+	@echo "All required prerequisites are available."
+
+
 install:         ## Install dependencies
 	@which terraform || (\
 	echo 'Terraform was not found, installing locally' && \
@@ -26,6 +34,7 @@ uninstall:
 	@rm -f terraform
 
 start:
+	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Get your auth token at https://localstack.cloud/pricing."; exit 1)
 	localstack start -d
 
 stop:

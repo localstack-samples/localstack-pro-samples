@@ -7,6 +7,14 @@ PYTHON_BIN ?= $(shell which python3 || which python)
 usage:      ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
+check:    ## Check if all required prerequisites are installed
+	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
+	@command -v python3 > /dev/null 2>&1 || { echo "Python 3 is not installed. Please install Python 3 and try again."; exit 1; }
+	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack CLI is not installed. Please install it and try again."; exit 1; }
+	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
+	@echo "All required prerequisites are available."
+
+
 install:    ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
@@ -16,6 +24,7 @@ run:        ## Run the scenario with the DB queries against local RDS
 	source .venv/bin/activate; echo `which python3`; python3 query.py
 
 start:
+	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Get your auth token at https://localstack.cloud/pricing."; exit 1)
 	localstack start -d
 
 stop:

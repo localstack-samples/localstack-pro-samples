@@ -1,38 +1,49 @@
-# LocalStack Demo: Deploying Resources via CDK
+# CDK Resources
 
-Simple demo application illustrating deployment of AWS CDK resources locally using LocalStack.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | Lambda, SQS, SNS, AppSync           |
+| Integrations | AWS CDK                             |
+| Categories   | IaC; Serverless                     |
+
+## Introduction
+
+A demo application illustrating deployment of AWS resources locally using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.html) with LocalStack. The [`cdklocal`](https://github.com/localstack/aws-cdk-local) wrapper is used to redirect CDK deployments to the local LocalStack endpoint.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* `make`
-* [`cdklocal`](https://github.com/localstack/aws-cdk-local)
-* [`awslocal`](https://github.com/localstack/awscli-local)
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`cdklocal`](https://github.com/localstack/aws-cdk-local) — install with `npm install -g aws-cdk-local`
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [Node.js](https://nodejs.org/en/download/) with `npm`
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
+```bash
+make check
 ```
+
+## Installation
+
+```bash
 make install
 ```
 
-## Starting LocalStack
+## Start LocalStack
 
-Make sure that LocalStack is started:
-```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
-```
-
-## Running
-
-Bootstrap and deploy the CDK app locally:
-```
-cdklocal bootstrap
-cdklocal deploy
+```bash
+make start
 ```
 
-More details following soon.
+## Deploy the Application
+
+```bash
+make deploy
+```
+
+The script bootstraps and deploys the CDK app to LocalStack using `cdklocal`.
 
 ## License
 

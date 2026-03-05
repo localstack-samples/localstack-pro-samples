@@ -1,42 +1,47 @@
-# LocalStack Demo: FTP Upload to S3 Bucket via AWS Transfer API
+# FTP Upload to S3 via AWS Transfer API
 
-Simple demo application illustrating the use of AWS Transfer API in LocalStack.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | Transfer, S3                        |
+| Integrations | AWS CLI                             |
+| Categories   | File Transfer; Storage              |
+
+## Introduction
+
+A demo application illustrating the use of the AWS Transfer API with LocalStack. The sample creates a local FTP server via the Transfer API, uploads files via FTP, and downloads the uploaded files from the target S3 bucket.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* `make`
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
+```bash
+make check
 ```
+
+## Installation
+
+```bash
 make install
 ```
 
-## Running
+## Start LocalStack
 
-Make sure that LocalStack is started:
-```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
+```bash
+make start
 ```
 
-The following command runs the test application locally, creates an FTP server via AWS Transfer API locally, uploads two files via FTP, and downloads the files from the target S3 bucket:
-```
+## Run the application
+
+```bash
 make run
 ```
 
-You should then see a couple of log messages in the terminal:
-```
-Running Test: Creating FTP server and uploading files to S3 via Transfer API
-Creating FTP server in AWS Transfer API
-Connecting to AWS Transfer FTP server on local port 4510
-Uploading file to FTP root directory
-Uploading file to FTP sub-directory
-Downloading files from S3 root and sub-directory
-Test done.
-```
+The script creates an FTP server via the AWS Transfer API, uploads two files (to root and a sub-directory), then downloads and verifies them from the target S3 bucket.
 
 ## License
 

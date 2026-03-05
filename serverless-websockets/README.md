@@ -1,44 +1,48 @@
-# LocalStack Demo: Websockets via API Gateway V2
+# Serverless WebSockets
 
-Simple demo application illustrating API Gateway V2 websocket APIs using LocalStack, deployed via the Serverless framework.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | API Gateway, Lambda                 |
+| Integrations | Serverless Framework                |
+| Categories   | Serverless; WebSockets              |
+
+## Introduction
+
+A demo application illustrating API Gateway V2 WebSocket APIs using LocalStack, deployed via the Serverless framework. The sample deploys a Lambda function connected to a WebSocket API and demonstrates bidirectional message passing over the WebSocket connection.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* Node.js / `npm`
-* `make`
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [Node.js](https://nodejs.org/en/download/) with `npm`
+- [Serverless Framework](https://www.serverless.com/framework/docs/getting-started)
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
+```bash
+make check
 ```
+
+## Installation
+
+```bash
 make install
 ```
 
-## Starting LocalStack
+## Start LocalStack
 
-Make sure that LocalStack is started:
-```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
+```bash
+make start
 ```
 
-## Running
+## Run the application
 
-Deploy the app locally and send a test message to the created Websockets API.
-```
+```bash
 make run
 ```
 
-This should trigger a Lambda invocation which simply writes the invocation payload back to the websocket. You should see a successful output in the terminal:
-```
-...
-Serverless: Stack create finished...
-...
-Starting client that connects to Websocket API
-Sending message to websocket
-Received message from websocket: {"action":"test-action"}
-```
+The script deploys the WebSocket API via Serverless, connects a WebSocket client, sends a test message, and verifies it is echoed back by the Lambda handler.
 
 ## License
 

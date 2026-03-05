@@ -1,47 +1,48 @@
-# LocalStack Demo: Lambda Layers
+# Serverless Lambda Layers
 
-Simple demo application illustrating Lambda layers using LocalStack, deployed via the Serverless framework.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | Lambda                              |
+| Integrations | Serverless Framework                |
+| Categories   | Serverless                          |
+
+## Introduction
+
+A demo application illustrating Lambda layers using LocalStack, deployed via the Serverless framework. Lambda layers allow you to package shared code and dependencies separately from your function code, enabling reuse across multiple functions.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* Node.js / `npm`
-* `make`
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [Node.js](https://nodejs.org/en/download/) with `npm`
+- [Serverless Framework](https://www.serverless.com/framework/docs/getting-started)
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
+```bash
+make check
 ```
+
+## Installation
+
+```bash
 make install
 ```
 
-## Running
+## Start LocalStack
 
-Make sure that LocalStack is started:
-```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
+```bash
+make start
 ```
 
-Deploy the app locally and run a Lambda test invocation:
-```
+## Run the application
+
+```bash
 make run
 ```
 
-You should see a success output in the terminal:
-```
-{
-    "StatusCode": 200
-}
-```
-
-... and your LocalStack container should contain output similar to this:
-```
->START RequestId: ba4efc87-7bf9-1705-9f45-8e84ba8eb071 Version: $LATEST
-> 2019-10-23T14:25:12.709Z	ba4efc87-7bf9-1705-9f45-8e84ba8eb071	INFO	This text should be printed in the Lambda
-> END RequestId: ba4efc87-7bf9-1705-9f45-8e84ba8eb071
-> REPORT RequestId: ba4efc87-7bf9-1705-9f45-8e84ba8eb071	Duration: 22.65 ms	Billed Duration: 100 ms	Memory Size: 1536 MB	Max Memory Used: 42 MB
-```
+The script deploys the Lambda function with its layer via the Serverless framework and invokes it to verify the layer is loaded correctly.
 
 ## License
 

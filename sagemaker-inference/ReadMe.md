@@ -1,67 +1,53 @@
 # SageMaker Model Inference
 
-This is a small example about how you can use LocalStack to host your PyTorch ML models. It does the following:
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | SageMaker, S3                       |
+| Integrations | AWS SDK (boto3)                     |
+| Categories   | ML; Inference                       |
 
-* Create MNIST model in SageMaker
-* Create a SageMaker Endpoint for accessing the model
-* Invoke the endpoint
-  * directly on the container
-  * via boto
+## Introduction
 
-## Requirements
+A demo application illustrating how to host PyTorch ML models with SageMaker using LocalStack. The sample creates a SageMaker endpoint for an MNIST digit recognition model and demonstrates invocations both directly on the container and via the boto3 SDK.
 
-* Python 3.8+
-  * boto3
-  * numpy
-  * mypy
-* LocalStack
-* Docker
+> Note: This demo pulls AWS Deep Learning container images (~several GB). Pull the required image beforehand:
+> ```bash
+> docker pull 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.5.0-cpu-py3
+> ```
 
-## How To
+## Prerequisites
 
-### Obtain Deep Learning image
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [Python 3.8+](https://www.python.org/downloads/)
 
-Before using this example you should set up your Docker Client to pull the AWS Deep Learning images ([more info here](https://github.com/aws/deep-learning-containers/blob/master/available_images.md)):
-
-```bash
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 763104351884.dkr.ecr.us-east-1.amazonaws.com
-```
-
-Because the images tend to be heavy (multiple GB), you might want to `docker pull` them beforehand:
+## Check prerequisites
 
 ```bash
-docker pull 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.5.0-cpu-py3
+make check
 ```
 
-### Test the application
-
-Afterwards you can start localstack:
+## Installation
 
 ```bash
-localstack start    
+make install
 ```
 
-And execute the example with:
+## Start LocalStack
 
 ```bash
-python main.py
+make start
 ```
 
-You should see an output like this for each of the runs:
-```
-Creating bucket...
-Uploading model data to bucket...
-Creating model in SageMaker...
-Adding endpoint configuration...
-Creating endpoint...
-Checking endpoint status...
-Endpoint not ready - waiting...
-Checking endpoint status...
-Endpoint ready!
-Invoking via boto...
-Predicted digits: [7, 3]
-Invoking endpoint directly...
-Predicted digits: [2, 6]
+## Run the application
+
+```bash
+make run
 ```
 
-To try out the serverless run you can remove the comment in the `main.py` file and run the example again.
+The script creates an S3 bucket, uploads model data, creates a SageMaker endpoint, and invokes it to predict digit classes.
+
+## License
+
+This code is available under the Apache 2.0 license.

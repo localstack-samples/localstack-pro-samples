@@ -1,48 +1,49 @@
-# LocalStack Demo: Neptune Graph Database
+# Neptune Graph Database
 
-Simple demo application illustrating the use of Neptune Graph DB queries locally, using LocalStack.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | Neptune                             |
+| Integrations | AWS CLI                             |
+| Categories   | Graph Database                      |
+
+## Introduction
+
+A demo application illustrating Neptune Graph DB queries running locally using LocalStack. The sample creates a Neptune cluster, connects to it via Gremlin, and performs graph operations — adding vertices and querying the graph — all without connecting to AWS.
 
 ## Prerequisites
 
-* LocalStack (Pro version)
-* Docker
-* Python
-* `make`
-* [`awslocal`](https://github.com/localstack/awscli-local)
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [Python 3](https://www.python.org/downloads/)
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
+```bash
+make check
 ```
+
+## Installation
+
+```bash
 make install
 ```
 
-## Starting LocalStack
+## Start LocalStack
 
-Make sure that LocalStack is started:
-```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
+```bash
+make start
 ```
 
-## Running
+## Run the application
 
-Run the scenario Python script `query.py` as follows:
-```
+```bash
 make run
 ```
 
-You should see some logs from the script, similar to the output below:
-```
-Creating Neptune Graph DB cluster "cluster123" - this may take a few moments ...
-Connecting to Neptune Graph DB cluster URL: ws://localhost:4510/gremlin
-Submitting values: [1,2,3,4]
-Received values from cluster: [1, 2, 3, 4]
-Existing vertices in the graph: []
-Adding new vertices "v1" and "v2" to the graph
-New list of vertices in the graph: [v[0], v[3]]
-Deleting Neptune Graph DB cluster "cluster123"
-```
-_Note: when running the scenario consecutively, it may takes some time to free the port used by Neptune._
+The script creates a Neptune cluster, connects via Gremlin WebSocket, submits values, adds vertices to the graph, and queries the results.
+
 ## License
 
-The code in this sample repo is available under the Apache 2.0 license.
+This code is available under the Apache 2.0 license.

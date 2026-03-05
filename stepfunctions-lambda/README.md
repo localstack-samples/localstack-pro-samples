@@ -1,43 +1,54 @@
-# Creating a Lambda function with a function URL
+# Step Functions with Lambda
 
-In this example, we will demonstrate how to create an AWS Step Function with Lambda functions in LocalStack.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | Step Functions, Lambda              |
+| Integrations | AWS CLI                             |
+| Categories   | Serverless; Orchestration           |
+
+## Introduction
+
+A demo application illustrating how to orchestrate Lambda functions using AWS Step Functions with LocalStack. The sample creates multiple Lambda functions and a Step Functions state machine that coordinates their execution.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* `awslocal` CLI
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
 
-## Starting up
+## Check prerequisites
 
-Start LocalStack via: 
-
-```sh
-localstack start -d
+```bash
+make check
 ```
 
-Run the following command to create the Lambda functions:
+## Installation
 
-```sh
-make create-lambdas
+```bash
+make install
 ```
 
-## Setting up and running Step Function
+## Start LocalStack
 
-Create the Step Function:
-
-```sh
-awslocal stepfunctions create-state-machine --name step-demo \
-  --definition "$(cat step-definition.json)" \
-  --role-arn arn:aws:iam::000000000000:role/step-function-lambda
+```bash
+make start
 ```
 
-Start the execution:
+## Deploy the Application
 
-```sh
-awslocal stepfunctions start-execution \
-  --state-machine-arn arn:aws:states:us-east-1:000000000000:stateMachine:step-demo \
-  --input '{"adam": "LocalStack", "cole": "Stack"}'
+```bash
+make deploy
 ```
 
-This creates and invokes the flow between the three Lambda functions we created using LocalStack earlier.
+## Run the application
+
+```bash
+make run
+```
+
+The script creates Lambda functions and a Step Functions state machine, then starts an execution that flows through the Lambda orchestration.
+
+## License
+
+This code is available under the Apache 2.0 license.

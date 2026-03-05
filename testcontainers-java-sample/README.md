@@ -1,14 +1,41 @@
-# Example using RDS with Localstack Testcontainers
+# RDS with LocalStack Testcontainers
 
-Testcontainers need a special setup to use services like RDS, which may use any port to expose the database.
-The sample explains how the mapping works, and how you need to configure Testcontainers in order to connect to the RDS instance from your test.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | RDS                                 |
+| Integrations | Testcontainers, Java                |
+| Categories   | Database; Testing                   |
 
-## Run Example
-* Import the project (e.g. in IntelliJ), 
-* configure your LOCALSTACK_AUTH_TOKEN as environment variable, 
-* and then run  the test `TestRDS`.
+## Introduction
 
-It will create a LocalStack Testcontainer and a postgres database instance using RDSClient.
-The database will then be filled with some data, and queried afterwards. 
+A demo application illustrating how to use LocalStack Testcontainers with RDS in Java. Testcontainers requires a special setup for RDS because the service may expose the database on any port. The sample demonstrates the port mapping configuration needed to connect to an RDS PostgreSQL instance from your test code.
 
+## Prerequisites
 
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [Java](https://openjdk.org/) and [Maven](https://maven.apache.org/)
+
+## Check prerequisites
+
+```bash
+make check
+```
+
+## Installation
+
+```bash
+make install
+```
+
+## Run the application
+
+```bash
+make run
+```
+
+The Testcontainers library manages the LocalStack container lifecycle automatically. The test creates a LocalStack container, provisions an RDS PostgreSQL instance, inserts data, and queries it.
+
+## License
+
+This code is available under the Apache 2.0 license.

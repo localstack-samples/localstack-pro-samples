@@ -1,74 +1,53 @@
-# LocalStack Demo: AppSync GraphQL APIs for DynamoDB and RDS Aurora Postgres
+# AppSync GraphQL API
 
-Simple demo application illustrating how to proxy data from different resources (DynamoDB tables, RDS databases) via AppSync GraphQL using LocalStack.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | AppSync, DynamoDB, RDS              |
+| Integrations | AWS SDK, AWS CLI                    |
+| Categories   | GraphQL; Serverless                 |
+
+## Introduction
+
+A demo application illustrating how to proxy data from different resources (DynamoDB tables, RDS Aurora Postgres databases) via AppSync GraphQL using LocalStack. The sample runs mutation and query operations for two data sources and demonstrates real-time notifications via WebSocket subscriptions.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* Python 3.6+
-* `make`
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [Python 3](https://www.python.org/downloads/)
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
+```bash
+make check
 ```
+
+## Installation
+
+```bash
 make install
 ```
 
-## Starting LocalStack
+## Start LocalStack
 
-Make sure that LocalStack is started:
-```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
+```bash
+make start
 ```
 
-## Running
+## Run the application
 
-Deploy the app locally and run the GraphQL test invocations:
-```
+```bash
 make run
 ```
 
-The demo will run different GraphQL queries, for two different datasources (DynamoDB / RDS Aurora):
+The script:
 
-1. a mutation query which inserts a new item into DynamoDB / RDS Aurora
-2. a query which scans and returns the items from DynamoDB / RDS Aurora
-
-You should see a success output in the terminal:
-```
-{"data":{"addPostDDB":{"id":{"S":"id123"}}}}
-{"data":{"getPostsDDB":[{"id":{"S":"id123"}}]}}
-...
-{"data":{"addPostRDS":{"id":{"S":"id123"}}}}
-{"data":{"getPostsRDS":[{"id":{"S":"id123"}}]}}
-```
-
-... and the item should have been added to your local DynamoDB table (as well as your RDS database):
-```
-$ awslocal dynamodb scan --table-name table1
-{
-    "Items": [
-        {
-            "id": {
-                "S": "id123"
-            }
-        }
-    ],
-    "Count": 1,
-    "ScannedCount": 1,
-    "ConsumedCapacity": null
-}
-```
-
-Finally, you should also see a message printed from the WebSocket client subscribed to notifications from the API:
-```
-...
-Starting a WebSocket client to subscribe to GraphQL mutation operations.
-Connecting to WebSocket URL ws://localhost:4510/graphql/...
-...
-Received notification message from WebSocket: {"addedPost": {"id": "id123"}}
-```
+- Deploys AppSync GraphQL API with DynamoDB and RDS Aurora Postgres resolvers.
+- Runs mutation queries to insert items into both data sources.
+- Runs query operations to scan and return items from DynamoDB and RDS Aurora.
+- Connects a WebSocket client to verify real-time subscription notifications.
 
 ## License
 

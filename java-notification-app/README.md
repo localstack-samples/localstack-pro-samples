@@ -1,70 +1,58 @@
-AWS Messaging: Spring Boot on LocalStack 
-========================================
+# Java Notification App
 
-This sample Spring Boot application project demonstrates how to: 
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | CloudFormation, SNS, SQS, SES       |
+| Integrations | AWS SDK, Docker Compose             |
+| Categories   | Messaging; Notifications            |
 
-* Provision CloudFormation infrastructure on LocalStack
-* Configure SNS SQS subscriptions with CloudFormation
-* Receive SQS messages with the AWS Java SDK
-* Send SES message with the AWS Java SDK
+## Introduction
 
-## Requirements
+A Spring Boot application demonstrating AWS messaging services with LocalStack. The sample provisions CloudFormation infrastructure for SNS/SQS subscriptions, processes messages from SQS using the AWS Java SDK, and sends email notifications via SES. A MailHog SMTP server runs alongside LocalStack for local email testing.
 
-* Java 11+
-* Maven 3+
-* [LocalStack](https://github.com/localstack/localstack)
-* [awslocal](https://github.com/localstack/awscli-local)
+## Prerequisites
 
-## How To
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/) and Docker Compose
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [Java 11+](https://openjdk.org/) and [Maven 3+](https://maven.apache.org/)
 
-### Build the application
+## Check prerequisites
 
-The application is a simple Spring Boot application that you can build by running
+```bash
+make check
+```
 
-    mvn clean install
+## Installation
 
-### Spin up the infrastructure on localstack
+```bash
+make install
+```
 
-Resources are deployed via a CloudFormation template in `src/main/resources/email-infra.yml`.
+## Start LocalStack
 
-First, start LocalStack and the SMTP server with:
+```bash
+make start
+```
 
-    LOCALSTACK_AUTH_TOKEN=<your-api-key> docker-compose up -d
+This starts LocalStack and a MailHog SMTP server via Docker Compose. Access the MailHog UI at `http://localhost:8025/`.
 
-Then deploy the cloudformation stack (can take a few seconds)
+## Deploy the Application
 
-    awslocal cloudformation deploy \
-        --template-file src/main/resources/email-infra.yml \
-        --stack-name email-infra
+```bash
+make deploy
+```
 
-### Start the Spring Boot application
+Deploys the CloudFormation stack with SNS, SQS, and SES infrastructure.
 
-You can use `mvn spring-boot:run` to start the application, but you will need to set dummy AWS access credentials as environment variables:
+## Run the application
 
-    AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test mvn spring-boot:run
+```bash
+make run
+```
 
-### Test the application
+The script verifies the SES email identity, publishes an SNS message, processes the queued notification, and sends an email via SES.
 
-Verify the sender email address configured in the app
+## License
 
-    awslocal ses verify-email-identity --email-address no-reply@localstack.cloud
-
-Send a message to the topic
-
-    awslocal sns publish \
-        --topic arn:aws:sns:us-east-1:000000000000:email-notifications \
-        --message '{"subject":"hello", "address": "alice@example.com", "body": "hello world"}'
-
-Check the `/list` endpoint for queued messages.
-
-    curl -s localhost:8080/list | jq .
-
-
-Run the `/process` endpoint to send the queued notifications as emails
-
-    curl -s localhost:8080/process
-
-Verify that the email has been sent:
-
-* either check MailHog via the UI http://localhost:8025/
-* or query the LocalStack internal SES endpoint: `curl -s localhost:4566/_localstack/ses | jq .`
+This code is available under the Apache 2.0 license.

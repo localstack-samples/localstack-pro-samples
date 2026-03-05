@@ -1,44 +1,48 @@
-# LocalStack Demo: ELB Application Load Balancers
+# ELB Application Load Balancers
 
-Simple demo application illustrating ELBv2 Application Load Balancers using LocalStack, deployed via the Serverless framework.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | ELB, Lambda                         |
+| Integrations | Serverless Framework                |
+| Categories   | Networking; Serverless              |
+
+## Introduction
+
+A demo application illustrating ELBv2 Application Load Balancers using LocalStack, deployed via the Serverless framework. The sample deploys Lambda functions behind an Application Load Balancer and demonstrates HTTP invocations through the ELB endpoints.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* Node.js / `npm`
-* `make`
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [Node.js](https://nodejs.org/en/download/) with `npm`
+- [Serverless Framework](https://www.serverless.com/framework/docs/getting-started)
 
-## Installing
+## Check prerequisites
 
-To install the dependencies:
+```bash
+make check
 ```
+
+## Installation
+
+```bash
 make install
 ```
 
-## Running
+## Start LocalStack
 
-Make sure that LocalStack is started:
-```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 localstack start
+```bash
+make start
 ```
 
-Deploy the app locally and run an ELB Lambda test invocation:
-```
+## Run the application
+
+```bash
 make run
 ```
 
-You should see some output with the deployment logs of the Serverless application, and finally two successful invocations of the ELB endpoints `/hello1` and `/hello2`:
-```
-> sls deploy --stage local
-...
-Serverless app successfully deployed. Now trying to invoke the Lambda functions via ELB endpoint.
-...
-Invoking endpoint 1: http://lb-test-1.elb.localhost.localstack.cloud:4566/hello1
-"Hello 1"
-Invoking endpoint 2: http://lb-test-1.elb.localhost.localstack.cloud:4566/hello2
-"Hello 2"
-```
+The script deploys the Serverless application and invokes the Lambda functions via ELB endpoints `/hello1` and `/hello2`.
 
 ## License
 

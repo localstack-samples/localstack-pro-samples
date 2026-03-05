@@ -1,68 +1,49 @@
-# Creating a Lambda function with a function URL
+# Lambda Function URLs with JavaScript
 
-In this example, we will demonstrate how to create a Lambda function with a function URL. With the Function URL property, there is now a new way to call a Lambda Function via HTTP API call.
+| Key          | Value                               |
+| ------------ | ----------------------------------- |
+| Services     | Lambda                              |
+| Integrations | AWS CLI, Terraform                  |
+| Categories   | Serverless; REST API                |
+
+## Introduction
+
+A demo application illustrating how to create a JavaScript Lambda function with a function URL using LocalStack. Lambda function URLs provide a dedicated HTTP(S) endpoint for invoking a Lambda function directly. The sample also demonstrates deploying the same setup using Terraform.
 
 ## Prerequisites
 
-* LocalStack
-* Docker
-* `awslocal` CLI
-* Terraform
+- A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
+- [Docker](https://docs.docker.com/get-docker/)
+- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [Terraform](https://developer.hashicorp.com/terraform/downloads) (optional, for Terraform-based deployment)
 
-## Starting up
+## Check prerequisites
 
-Start LocalStack via: 
-
-```sh
-localstack start -d
+```bash
+make check
 ```
 
-Push the following command to deploy the Lambda function:
+## Installation
 
-```sh
-awslocal lambda create-function \
-    --function-name localstack-lamba-url-example \
-    --runtime nodejs14.x \
-    --zip-file fileb://function.zip \
-    --handler index.handler \
-    --role arn:aws:iam::000000000000:role/cool-stacklifter
+```bash
+make install
 ```
 
-## Creating a Lambda function URL
+## Start LocalStack
 
-With the Function URL property, there is now a new way to call a Lambda Function via HTTP API call using the `create-function-url-config` command.
-
-```sh 
-awslocal lambda create-function-url-config \
-    --function-name localstack-lamba-url-example \
-    --auth-type NONE
+```bash
+make start
 ```
 
-You will retrieve a HTTP URL that you can use to invoke the Lambda function, in the form of `http://abcdefgh.lambda-url.us-east-1.localhost.localstack.cloud:4566`.
+## Run the application
 
-You can now trigger the Lambda function by sending a HTTP POST request to the URL using `curl`:
-
-```sh
-curl -X POST \
-    'http://abcdefgh.lambda-url.us-east-1.localhost.localstack.cloud:4566/' \
-    -H 'Content-Type: application/json' \
-    -d '{"num1": "10", "num2": "10"}'
+```bash
+make run
 ```
 
-The following output would be retrieved:
+The script creates a Lambda function with a function URL and demonstrates invocation via HTTP POST.
 
-```sh 
-The product of 10 and 10 is 100% 
-```
+## License
 
-## Using Terraform
-
-You can use Terraform to automate the creation of Lambda function and to create a function URL. Run the following commands on your terminal to create the Lambda function and the function URL:
-
-```sh
-terraform init 
-terraform plan
-terraform apply --auto-approve
-```
-
-Since we are using LocalStack, no actual AWS resources will be created. Instead, LocalStack will create ephemeral development resources, which will automatically be cleaned once you stop LocalStack (using `localstack stop`).
+This code is available under the Apache 2.0 license.
