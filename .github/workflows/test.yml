@@ -36,16 +36,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
+
       - name: Install LocalStack
         run: pip install localstack awscli-local[ver1] virtualenv
+
       - name: Setup config
         run: |
           echo "Configuring git for codecommit sample"
           git config --global user.email "localstack.sample@localstack.cloud"
           git config --global user.name "Localstack Pro-Samples"
+
       - name: Pull the latest docker image
         run: docker pull localstack/localstack-pro
+
       - name: Execute a simple test
         timeout-minutes: 10
         run: |
