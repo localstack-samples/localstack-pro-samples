@@ -1,41 +1,44 @@
-name: "Run Tests for all samples"
+name: Run tests for all samples
 
 on:
-   push:
-    branches: [ "master" ]
-   pull_request:
-    branches: [ "master" ]
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  prepare_list:
+  prepare-list:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - id: set-matrix
         run: |
-          echo "matrix=[$(find . -mindepth 2 -type f -name 'Makefile' ! -path './sample-archive/*' | sed 's|/Makefile||' | awk '{printf "\"%s\",", $1}' | sed 's/,$//')]" >> $GITHUB_OUTPUT
-      - run: echo "matrix=[$(find . -mindepth 2 -type f -name 'Makefile' ! -path './sample-archive/*' | sed 's|/Makefile||' | awk '{printf "\"%s\",", $1}' | sed 's/,$//')]"
+          mapfile -t dirs < <(find . -mindepth 2 -type f -name "Makefile" ! -path "./sample-archive/*" | sed "s|/Makefile||" | sort)
+          echo "matrix=$(printf '%s\n' "${dirs[@]}" | jq -R . | jq -cs .)" >> "$GITHUB_OUTPUT"
 
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
-  runtest:
-    name: Run Dependency Test
+  run-tests:
+    name: Run dependency test (${{ matrix.directory }})
     runs-on: ubuntu-latest
-    needs: prepare_list
+    needs: prepare-list
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix:
-        directory: ${{ fromJson(needs.prepare_list.outputs.matrix) }}
-    
+        directory: ${{ fromJSON(needs.prepare-list.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Nodejs
-        uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Install LocalStack
-        run:  pip install localstack awscli-local[ver1] virtualenv
+        run: pip install localstack awscli-local[ver1] virtualenv
       - name: Setup config
         run: |
           echo "Configuring git for codecommit sample"
@@ -49,6 +52,6 @@ jobs:
           cd ${{ matrix.directory }}
           make test-ci
         env:
-          LOCALSTACK_API_KEY: ${{ secrets.TEST_LOCALSTACK_API_KEY }}
+          LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           DEBUG: 1
           DNS_ADDRESS: 127.0.0.1
