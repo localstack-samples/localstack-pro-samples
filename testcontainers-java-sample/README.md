@@ -16,25 +16,14 @@ A demo application illustrating how to use LocalStack Testcontainers with RDS in
 - [Docker](https://docs.docker.com/get-docker/)
 - [Java](https://openjdk.org/) and [Maven](https://maven.apache.org/)
 
-## Check prerequisites
+## Run Example
 
-```bash
-make check
-```
+- Import the project (e.g. in IntelliJ), 
+- Configure your LOCALSTACK_AUTH_TOKEN as environment variable, 
+- Run the test `TestRDS` in your IDE.
 
-## Installation
-
-```bash
-make install
-```
-
-## Run the application
-
-```bash
-make run
-```
-
-The Testcontainers library manages the LocalStack container lifecycle automatically. The test creates a LocalStack container, provisions an RDS PostgreSQL instance, inserts data, and queries it.
+It will create a LocalStack Testcontainer and a PostgreSQL database instance using `RDSClient`.
+The database will then be filled with some data, and queried afterwards.
 
 ## License
 

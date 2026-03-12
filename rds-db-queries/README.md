@@ -45,6 +45,15 @@ make run
 
 The script creates an RDS DB instance, runs queries to insert and retrieve records, and deletes the instance.
 
+You should see output similar to:
+
+```
+Creating RDS DB instance
+Run DB queries against RDS instance i1
+[(1, 'Jane'), (2, 'Alex'), (3, 'Maria')]
+Deleting RDS DB instance i1
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.

@@ -6,7 +6,7 @@ resource "aws_lambda_function" "example_lambda" {
   role             = "cool-stacklifter"
   handler          = "index.handler"
   source_code_hash = filebase64sha256("function.zip")
-  runtime          = "nodejs14.x"
+  runtime          = "nodejs20.x"
 }
 
 resource "aws_lambda_function_url" "lambda_function_url" {

@@ -45,6 +45,23 @@ make run
 
 The script deploys the Lambda function with its layer via the Serverless framework and invokes it to verify the layer is loaded correctly.
 
+You should see a success output:
+
+```
+{
+    "StatusCode": 200
+}
+```
+
+Check the LocalStack container logs for the Lambda output:
+
+```
+>START RequestId: ba4efc87-7bf9-1705-9f45-8e84ba8eb071 Version: $LATEST
+> 2019-10-23T14:25:12.709Z	ba4efc87-7bf9-1705-9f45-8e84ba8eb071	INFO	This text should be printed in the Lambda
+> END RequestId: ba4efc87-7bf9-1705-9f45-8e84ba8eb071
+> REPORT RequestId: ba4efc87-7bf9-1705-9f45-8e84ba8eb071	Duration: 22.65 ms	Billed Duration: 100 ms	Memory Size: 1536 MB	Max Memory Used: 42 MB
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.

@@ -45,6 +45,22 @@ make run
 
 The script creates a QLDB ledger, inserts test data, runs SELECT queries, and demonstrates join operations across tables.
 
+You should see output similar to:
+
+```
+Scenario 1: create and list tables in ledger
+-----------
+Creating new test ledger in QLDB API: ledger-test-1
+Creating two test tables in ledger
+Retrieves list of tables in ledger ledger-test-1: ['foobar1', 'foobar2']
+-----------
+Scenario 2: create ledger tables and run join query
+-----------
+Creating two test tables in ledger - "Vehicle" and "VehicleRegistration"
+Running a query that joins data from the two tables
+Query result: [{'Vehicle': {'id': 'v1'}}, {'Vehicle': {'id': 'v2'}}, {'Vehicle': {'id': 'v3'}}]
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.

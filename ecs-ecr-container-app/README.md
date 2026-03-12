@@ -50,6 +50,15 @@ The script:
 - Creates an ECS cluster and supporting infrastructure via CloudFormation.
 - Deploys and starts the ECS application container in your local Docker environment.
 
+Please refer to the `templates/` folder for details about the CloudFormation templates for the ECS service.
+
+You should see a success output in the terminal:
+
+```bash
+...
+Sample app (nginx) successfully deployed.
+```
+
 The nginx test app is accessible at `http://localhost:45139/` after deployment.
 
 ## License

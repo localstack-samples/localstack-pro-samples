@@ -33,6 +33,8 @@ make install
 
 ## Start LocalStack
 
+The Makefile exports `ENFORCE_IAM=1` automatically. Start LocalStack with:
+
 ```bash
 export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
 make start
@@ -49,6 +51,26 @@ The script demonstrates:
 - Denied Kinesis and S3 operations for users without the required IAM policies.
 - Creating an IAM user with a policy that allows Kinesis access.
 - Allowed Kinesis and S3 operations using the IAM credentials with the correct policy.
+
+You should see output similar to:
+
+```
+Running IAM enforcement tests in local environment
+Step 1: Trying to create Kinesis stream - should get DENIED ...
+An error occurred (AccessDeniedException) when calling the CreateStream operation: Access to the specified resource is denied
+Step 2: Trying to create S3 bucket - should get DENIED ...
+make_bucket failed: s3://test-iam-bucket An error occurred (AccessDeniedException) when calling the CreateBucket operation: Access to the specified resource is denied
+Step 3: Creating user with IAM policy to allow Kinesis access ...
+        "UserName": "user1",
+
+Done creating IAM users - now trying to create the same resources as above using the generated IAM credentials (AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY) and associated policy
+
+Step 4: Trying to create Kinesis stream using IAM credentials - should get ALLOWED ...
+        "StreamStatus": "ACTIVE",
+Step 5: Trying to create S3 bucket using IAM credentials - should get ALLOWED ...
+make_bucket: test-iam-bucket
+...
+```
 
 ## License
 

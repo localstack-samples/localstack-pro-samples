@@ -32,7 +32,7 @@ run:         ## Deploy and run the app locally
 
 start:
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
-	localstack start -d
+	DEBUG=1 LOCALSTACK_AUTH_TOKEN=$(LOCALSTACK_AUTH_TOKEN) localstack start -d
 
 stop:
 	@echo

@@ -8,7 +8,12 @@
 
 ## Introduction
 
-A demo application illustrating how to access S3 resources across different AWS accounts using bucket policies and IAM users with LocalStack. The sample uses two simulated accounts — Account A creates an S3 bucket and sets policies, while Account B accesses and copies resources from Account A's bucket into its own.
+A demo application illustrating how to access S3 resources across different AWS accounts using bucket policies and IAM users with LocalStack. The script uses the following AWS profiles to simulate a cross-account scenario:
+
+- **Admin user of account A** with account ID `000000000001`
+- **Admin user of account B** with account ID `000000000002`
+- **Account A user** — creates the S3 bucket and grants cross-account access via bucket policies
+- **Account B user** — copies resources from Account A's `source` bucket into its own `target` bucket
 
 ## Prerequisites
 

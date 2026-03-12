@@ -44,6 +44,19 @@ make run
 
 The script creates an MQ broker, retrieves the broker endpoint, sends a message to the queue, and deletes the broker.
 
+You should see output similar to:
+
+```
+$ make run
+Creating MQ broker in LocalStack ...
+Created MQ broker with id: b-7dc2ba4a-53a0-41ef-a2ad-92eac3ad879d
+Describe broker to get the endpoint
+Broker endpoint on http://localhost:4510
+Sending message to broker
+Message sentCleaning up - deleting broker
+Deleted Broker b-7dc2ba4a-53a0-41ef-a2ad-92eac3ad879d
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.

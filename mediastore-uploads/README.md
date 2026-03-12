@@ -44,6 +44,30 @@ make run
 
 The script creates a MediaStore container, uploads a test file, downloads it and verifies the content, then deletes the container.
 
+You should see output similar to:
+
+```bash
+$ make run
+Creating MediaStore container in LocalStack ...
+MediaStore container endpoint: http://localhost:4510/my-container1
+Uploading file to MediaStore container ...
+{
+    "ContentSHA256": "",
+    "ETag": "\"bf10a48192efd84f35b9a79fb3a18b70\"",
+    "StorageClass": ""
+}
+Downloading file from MediaStore container ...
+{
+    "ContentLength": "22",
+    "ContentType": "",
+    "ETag": "\"bf10a48192efd84f35b9a79fb3a18b70\"",
+    "StatusCode": 200
+}
+Checking file content of downloaded file ...
+test file content 123
+Cleaning up - deleting MediaStore container
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.

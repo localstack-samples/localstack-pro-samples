@@ -44,6 +44,18 @@ make run
 
 The script creates an FTP server via the AWS Transfer API, uploads two files (to root and a sub-directory), then downloads and verifies them from the target S3 bucket.
 
+You should then see log messages similar to:
+
+```
+Running Test: Creating FTP server and uploading files to S3 via Transfer API
+Creating FTP server in AWS Transfer API
+Connecting to AWS Transfer FTP server on local port 4510
+Uploading file to FTP root directory
+Uploading file to FTP sub-directory
+Downloading files from S3 root and sub-directory
+Test done.
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.

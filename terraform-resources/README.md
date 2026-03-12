@@ -39,10 +39,25 @@ make start
 ## Deploy the Application
 
 ```bash
-make deploy
+make run
 ```
 
-The script initializes Terraform and applies the configuration to create all resources in LocalStack.
+This initializes Terraform (if not already done) and runs `terraform apply --auto-approve`. You may need to confirm the creation by entering `yes`. You should see output similar to:
+
+```
+Plan: 10 to add, 0 to change, 0 to destroy.
+aws_iam_role.invocation_role: Creating...
+aws_api_gateway_rest_api.demo: Creating...
+aws_iam_role.lambda: Creating...
+aws_db_parameter_group.default: Creating...
+aws_elasticache_cluster.my-redis: Creating...
+aws_s3_bucket.test-bucket: Creating...
+aws_api_gateway_rest_api.demo: Creation complete after 1s [id=iq0njx2s0a]
+...
+aws_elasticache_cluster.my-redis: Creation complete after 32s [id=my-redis-cluster]
+
+Apply complete! Resources: 10 added, 0 changed, 0 destroyed.
+```
 
 ## License
 

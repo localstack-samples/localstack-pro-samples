@@ -49,7 +49,21 @@ make start
 make run
 ```
 
-The script runs an interactive Cognito authentication scenario. At certain points it prompts you to enter confirmation codes sent to your email address (codes are also printed in the LocalStack logs).
+The script runs an interactive Cognito authentication scenario. Make sure to configure the environment variable `$USER_EMAIL` with an email address before running.
+
+At certain points, the script will prompt you to enter a confirmation code that has been sent to your email address (the code is also printed in the LocalStack logs):
+
+```
+Please check email inbox for ..., and enter the confirmation code below:
+```
+
+The script will then also ask you to specify a password reset code that is sent to your email:
+
+```
+Please check email inbox for ..., and enter the password reset code here:
+```
+
+> Credits: Kudos to `@Jaystified`, [Kurusugawa Computer Inc.](https://kurusugawa.jp) who kindly provided the initial version of the testing script in `test.sh`.
 
 ## License
 

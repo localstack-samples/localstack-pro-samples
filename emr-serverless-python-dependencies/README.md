@@ -26,9 +26,20 @@ make check
 
 ## Installation
 
+This initializes your Terraform workspaces:
+
 ```bash
 make init
+```
+
+Build the Python dependencies for the Spark job. For LocalStack, we create a `/pyspark_env` folder that is mounted into the LocalStack container (rather than packaging it as a tarball like in AWS):
+
+```bash
+# For LocalStack: creates /pyspark_env folder
 make build
+
+# For AWS: creates pyspark_deps.tar.gz
+make build-aws
 ```
 
 ## Start LocalStack
@@ -40,16 +51,36 @@ make start
 
 ## Deploy the Application
 
-```bash
-make deploy
-```
+Creates the following resources via Terraform: IAM role, IAM policy, S3 bucket, and an EMR Serverless application.
 
-The script creates IAM roles, an S3 bucket, and an EMR Serverless application via Terraform.
+```bash
+# Deploy to LocalStack (starts LocalStack via docker-compose and applies Terraform)
+LOCALSTACK_AUTH_TOKEN=$LOCALSTACK_AUTH_TOKEN make deploy
+
+# Deploy to AWS
+make deploy-aws
+```
 
 ## Run the application
 
+We can finally run our Spark job. Notice the difference in `start_job.sh` between LocalStack and AWS: for AWS, `spark.archives` references `environment/bin/python`; for LocalStack, we rely on the volume-mounted container and use the absolute path `/tmp/environment/bin/python`.
+
 ```bash
+# LocalStack
 make run
+
+# AWS
+make run-aws
+```
+
+## Destroy the application
+
+```bash
+# LocalStack
+make destroy
+
+# AWS
+make destroy-aws
 ```
 
 ## License

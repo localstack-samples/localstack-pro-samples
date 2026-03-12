@@ -32,39 +32,73 @@ make install
 
 ## Start LocalStack
 
-```bash
-export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
-make start
-```
+1. Execute the VS Code command "LocalStack: Run Setup Wizard" using the LocalStack Toolkit
+2. Start LocalStack by clicking on the LocalStack Toolkit status bar
 
-This starts LocalStack with Lambda Debug Mode enabled, using the `localstack/localstack-pro` image with `LOCALSTACK_LAMBDA_DEBUG_MODE=1`.
+## Deploy the Lambda function
 
-## Deploy the Application
+1. Run `make build`
+2. Run `make deploy`
 
-```bash
-make build
-make deploy
-```
+## Debug the Lambda function
 
-## Debug the Lambda Function
+1. Open the **Remote invoke configuration** in the AWS Toolkit
+    1. Open the AWS Toolkit extension
+    2. Expand the AWS Explorer and Lambda node
+    3. Navigate to the function you want to debug, then choose the Invoke remotely icon ▶️ from the context menu
+2. Select the **Remote debugging** check box to display the remote debugging properties
+3. Specify the Local Root Path to your local handler file.
+4. Expand the `Remote debug additional configuration`, and set `Out files` to `.aws-sam/build/HelloWorldFunction`
+5. Set a breakpoint in your handler file by clicking in the gutter-margin
+6. Click the **Remote invoke** button to invoke the Lambda function
 
-### Via AWS Toolkit for VS Code (recommended)
+> [!NOTE]
+> **Debugging TypeScript with source maps**
+> Expand the `Remote debug additional configuration`, and set `Out files` to the directory containing the files `<filename>.js` and `<filename>.js.map`.
+> Double-check your path if you get the error "outFiles not valid or no js and map file found in outFiles, debug will continue without sourceMap support".
+> Notice the path is *relative to the VSCode workspace root*.
+> In this example:
+> * `.aws-sam/build/HelloWorldFunction` using workspace `code localstack-pro-samples/lambda-debugging-sam-typescript`
+> * `lambda-debugging-sam-typescript/.aws-sam/build/HelloWorldFunction` using workspace `code localstack-pro-samples`
 
-1. Run the VS Code command **"LocalStack: Run Setup Wizard"** using the LocalStack Toolkit.
-2. Start LocalStack from the LocalStack Toolkit status bar.
-3. Open the **Remote invoke configuration** in the AWS Toolkit.
-4. Select the **Remote debugging** checkbox.
-5. Expand the **Remote debug additional configuration** and set **Out files** to `.aws-sam/build/HelloWorldFunction`.
-6. Set a breakpoint in `hello-world/app.ts`.
-7. Click **Remote invoke** to start a debugging session.
+## Lambda Debug Mode
 
-### Via Lambda Debug Mode
+### Starting Up
 
-1. Open the sample folder in VS Code to auto-detect `.vscode/launch.json`.
-2. Set a breakpoint in `hello-world/app.ts`.
-3. Open the **Run and Debug** view and run the **Node: Remote Attach** task.
-4. Run `make invoke` to invoke the Lambda function.
+1. Start LocalStack with the following configuration:
+
+    ```sh
+    LOCALSTACK_AUTH_TOKEN=<your-auth-token> \
+    LOCALSTACK_LAMBDA_DEBUG_MODE=1 \
+    LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml \
+    localstack start --volume $PWD/lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml
+    ```
+
+    * `LOCALSTACK_AUTH_TOKEN=<your-auth-token>` is the authentication token for LocalStack
+    * `LOCALSTACK_LAMBDA_DEBUG_MODE=1` adjusts timeouts
+    * `LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml` points to the config file for Lambda debug mode allowing for advanced configuration. It maps the Lambda function `arn:aws:lambda:us-east-1:000000000000:function:HelloWorldFunctionTypeScript` to port `7050`.
+    * `--volume $PWD/lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml` maps the Lambda debug configuration from the host into the LocalStack Docker container for hot-reloading configuration updates.
+
+### Deploy the Lambda function
+
+1. Run `make build` to build the Lambda ZIP package
+2. Run `make deploy` to deploy the Lambda function
+
+### Debug the Lambda function
+
+1. Open the sample folder in VS Code to auto-detect `.vscode/launch.json`
+    a. If using SAM, ensure `localRoot` is set to `${workspaceFolder}/hello-world`
+    b. If using a local build, ensure `localRoot` is set to `${workspaceFolder}/hello-world/dist`
+2. Set a breakpoint in the handler file `hello-world/app.ts` by clicking in the gutter-margin
+3. Open the **Run and Debug** view in VS Code
+4. Run the **Node: Remote Attach** task
+5. Run `make invoke` to invoke the Lambda function
+
+## Troubleshooting
+
+* Concurrent invokes are currently rejected with a `ResourceConflictException`.
+Upvote [this GitHub issue](https://github.com/localstack/localstack/issues/8522) if this affects you.
 
 ## License
 
-This code is available under the Apache 2.0 license.
+The code in this sample is available under the Apache 2.0 license.

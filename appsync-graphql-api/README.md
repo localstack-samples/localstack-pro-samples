@@ -50,6 +50,43 @@ The script:
 - Runs query operations to scan and return items from DynamoDB and RDS Aurora.
 - Connects a WebSocket client to verify real-time subscription notifications.
 
+You should see a success output in the terminal:
+
+```bash
+{"data":{"addPostDDB":{"id":{"S":"id123"}}}}
+{"data":{"getPostsDDB":[{"id":{"S":"id123"}}]}}
+...
+{"data":{"addPostRDS":{"id":{"S":"id123"}}}}
+{"data":{"getPostsRDS":[{"id":{"S":"id123"}}]}}
+```
+
+The item should also have been added to your local DynamoDB table:
+
+```bash
+$ awslocal dynamodb scan --table-name table1
+{
+    "Items": [
+        {
+            "id": {
+                "S": "id123"
+            }
+        }
+    ],
+    "Count": 1,
+    "ScannedCount": 1,
+    "ConsumedCapacity": null
+}
+```
+
+Finally, you should see a notification from the WebSocket client:
+
+```bash
+Starting a WebSocket client to subscribe to GraphQL mutation operations.
+Connecting to WebSocket URL ws://localhost:4510/graphql/...
+...
+Received notification message from WebSocket: {"addedPost": {"id": "id123"}}
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.

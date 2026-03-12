@@ -22,7 +22,7 @@ run:         ## Build, deploy, and invoke the Lambda function URL
 	zip function.zip index.js
 	awslocal lambda create-function \
 		--function-name localstack-lamba-url-example \
-		--runtime nodejs14.x \
+		--runtime nodejs20.x \
 		--zip-file fileb://function.zip \
 		--handler index.handler \
 		--role arn:aws:iam::000000000000:role/cool-stacklifter

@@ -39,11 +39,47 @@ make start
 
 ## Run the application
 
+Deploy the Lambda function and create a function URL:
+
 ```bash
-make run
+awslocal lambda create-function \
+    --function-name localstack-lamba-url-example \
+    --runtime nodejs20.x \
+    --zip-file fileb://function.zip \
+    --handler index.handler \
+    --role arn:aws:iam::000000000000:role/cool-stacklifter
+
+awslocal lambda create-function-url-config \
+    --function-name localstack-lamba-url-example \
+    --auth-type NONE
 ```
 
-The script creates a Lambda function with a function URL and demonstrates invocation via HTTP POST.
+You will receive an HTTP URL in the form `http://abcdefgh.lambda-url.us-east-1.localhost.localstack.cloud:4566`. Invoke the Lambda function via HTTP POST:
+
+```sh
+curl -X POST \
+    'http://abcdefgh.lambda-url.us-east-1.localhost.localstack.cloud:4566/' \
+    -H 'Content-Type: application/json' \
+    -d '{"num1": "10", "num2": "10"}'
+```
+
+Expected output:
+
+```
+The product of 10 and 10 is 100
+```
+
+## Using Terraform
+
+You can automate the Lambda function and function URL creation using Terraform:
+
+```sh
+terraform init
+terraform plan
+terraform apply --auto-approve
+```
+
+Since we are using LocalStack, no actual AWS resources will be created. LocalStack creates ephemeral development resources that are automatically cleaned up when you stop LocalStack (`localstack stop`).
 
 ## License
 

@@ -10,10 +10,19 @@
 
 A demo application illustrating how to host PyTorch ML models with SageMaker using LocalStack. The sample creates a SageMaker endpoint for an MNIST digit recognition model and demonstrates invocations both directly on the container and via the boto3 SDK.
 
-> Note: This demo pulls AWS Deep Learning container images (~several GB). Pull the required image beforehand:
-> ```bash
-> docker pull 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.5.0-cpu-py3
-> ```
+### Obtain the Deep Learning Image
+
+Before running this example, set up your Docker client to pull AWS Deep Learning images ([more info](https://github.com/aws/deep-learning-containers/blob/master/available_images.md)):
+
+```bash
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 763104351884.dkr.ecr.us-east-1.amazonaws.com
+```
+
+Because the images tend to be heavy (multiple GB), pull them beforehand:
+
+```bash
+docker pull 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.5.0-cpu-py3
+```
 
 ## Prerequisites
 
@@ -47,7 +56,25 @@ make start
 make run
 ```
 
-The script creates an S3 bucket, uploads model data, creates a SageMaker endpoint, and invokes it to predict digit classes.
+The script creates an S3 bucket, uploads model data, creates a SageMaker endpoint, and invokes it to predict digit classes. You should see output similar to:
+
+```
+Creating bucket...
+Uploading model data to bucket...
+Creating model in SageMaker...
+Adding endpoint configuration...
+Creating endpoint...
+Checking endpoint status...
+Endpoint not ready - waiting...
+Checking endpoint status...
+Endpoint ready!
+Invoking via boto...
+Predicted digits: [7, 3]
+Invoking endpoint directly...
+Predicted digits: [2, 6]
+```
+
+To try out the serverless run, remove the comment in `main.py` and run the example again.
 
 ## License
 

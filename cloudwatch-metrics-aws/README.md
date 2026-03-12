@@ -38,10 +38,26 @@ make install
 
 ## Start LocalStack
 
+To receive email notifications locally, start a mock SMTP server such as [smtp4dev](https://github.com/rnwood/smtp4dev) first:
+
+```bash
+docker run --rm -it -p 3000:80 -p 2525:25 rnwood/smtp4dev
+```
+
+Navigating to `http://localhost:3000` will open a UI to view email notifications.
+
+Then set `SMTP_HOST` to the SMTP server address and start LocalStack:
+
 ```bash
 export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
+export SMTP_HOST=host.docker.internal:2525
 make start
 ```
+
+> [!NOTE]
+> If you start LocalStack in Docker mode, it should be possible to use `host.docker.internal`. For most operating systems this should resolve the address correctly, e.g.: `SMTP_HOST=host.docker.internal:2525`.
+
+Alternatively, you can use your real SMTP server by setting `SMTP_HOST`, `SMTP_USER`, and `SMTP_PASS`.
 
 ## Run the application
 

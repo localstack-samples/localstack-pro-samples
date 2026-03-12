@@ -44,6 +44,26 @@ make run
 
 The script uploads the PySpark job to S3, creates Glue databases and tables, starts the Glue job, and waits for it to complete.
 
+Please refer to the `job.py` PySpark job file and the `run.sh` script for implementation details.
+
+You should see output similar to:
+
+```
+$ make run
+Putting PySpark script to test S3 bucket ...
+make_bucket: glue-pyspark-test
+upload: ./job.py to s3://glue-pyspark-test/job.py
+Using local RDS database on port 4511 ...
+Creating Glue databases and tables ...
+Starting Glue job from PySpark script ...
+{
+    "Name": "test-job1"
+}
+Waiting for Glue job ID 'e4567287' to finish (current status: RUNNING) ...
+Waiting for Glue job ID 'e4567287' to finish (current status: RUNNING) ...
+Done - Glue job execution finished. Please check the LocalStack container logs for more details.
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.

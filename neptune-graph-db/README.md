@@ -45,6 +45,21 @@ make run
 
 The script creates a Neptune cluster, connects via Gremlin WebSocket, submits values, adds vertices to the graph, and queries the results.
 
+You should see output similar to:
+
+```
+Creating Neptune Graph DB cluster "cluster123" - this may take a few moments ...
+Connecting to Neptune Graph DB cluster URL: ws://localhost:4510/gremlin
+Submitting values: [1,2,3,4]
+Received values from cluster: [1, 2, 3, 4]
+Existing vertices in the graph: []
+Adding new vertices "v1" and "v2" to the graph
+New list of vertices in the graph: [v[0], v[3]]
+Deleting Neptune Graph DB cluster "cluster123"
+```
+
+> Note: When running the scenario consecutively, it may take some time to free the port used by Neptune.
+
 ## License
 
 This code is available under the Apache 2.0 license.

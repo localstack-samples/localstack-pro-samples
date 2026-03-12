@@ -45,6 +45,17 @@ make run
 
 The script deploys the WebSocket API via Serverless, connects a WebSocket client, sends a test message, and verifies it is echoed back by the Lambda handler.
 
+You should see output similar to:
+
+```
+...
+Serverless: Stack create finished...
+...
+Starting client that connects to Websocket API
+Sending message to websocket
+Received message from websocket: {"action":"test-action"}
+```
+
 ## License
 
 This code is available under the Apache 2.0 license.
