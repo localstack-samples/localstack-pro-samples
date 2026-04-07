@@ -36,6 +36,7 @@ resources:
     HTTPListener:
       Type: AWS::ElasticLoadBalancingV2::Listener
       Properties:
+        Port: 80
         DefaultActions:
           - Type: redirect
             RedirectConfig:
