@@ -39,7 +39,7 @@ def delete_db(instance):
     inst_id = instance["DBInstanceIdentifier"]
     print("Deleting RDS DB instance %s" % inst_id)
     client = connect_rds()
-    client.delete_db_instance(DBInstanceIdentifier=inst_id)
+    client.delete_db_instance(DBInstanceIdentifier=inst_id, SkipFinalSnapshot=True)
 
 
 def connect_rds():
