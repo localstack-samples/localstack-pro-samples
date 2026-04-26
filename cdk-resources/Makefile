@@ -17,6 +17,9 @@ check:       ## Check if all required prerequisites are installed
 install:     ## Install dependencies
 	@npm install
 
+install-ci-dependencies: ## Install CI-only prerequisites
+	@npm install -g aws-cdk-local
+
 start:       ## Start LocalStack
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
 	DEBUG=1 LOCALSTACK_AUTH_TOKEN=$(LOCALSTACK_AUTH_TOKEN) localstack start -d
@@ -40,7 +43,7 @@ run:         ## Run the deployed resources (alias for deploy)
 	make deploy
 
 test-ci:     ## Run CI tests
-	make check start install ready deploy; return_code=`echo $$?`;\
+	make install-ci-dependencies check start install ready deploy; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
 
-.PHONY: usage check install start stop ready logs deploy run test-ci
+.PHONY: usage check install install-ci-dependencies start stop ready logs deploy run test-ci
