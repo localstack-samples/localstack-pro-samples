@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
+cluster_arn=""
+schema_arn=""
 
 # Tear-down function to cleanup on exit
 function finish {
   echo ""
   # Delete the cluster (if available)
   echo "(Cleanup) Deleting Kafka cluster."
-  awslocal kafka delete-cluster --cluster-arn  $cluster_arn 2> /dev/null || true
+  if [ -n "$cluster_arn" ]; then
+    awslocal kafka delete-cluster --cluster-arn "$cluster_arn" 2> /dev/null || true
+  fi
   # Delete the schema registry
   echo "(Cleanup) Deleting registry."
   awslocal glue delete-registry --registry-id RegistryName=unicorn-ride-request-registry 2> /dev/null || true
@@ -37,7 +43,7 @@ cluster_arn=$(set -x;awslocal kafka create-cluster \
   --cluster-name "unicorn-ride-cluster" \
   --kafka-version "3.6.0" \
   --number-of-broker-nodes 1 \
-  --broker-node-group-info "{\"ClientSubnets\": [], \"InstanceType\":\"kafka.m5.xlarge\"}" | jq -r .ClusterArn)
+  --broker-node-group-info "{\"ClientSubnets\": [\"subnet-12345678\"], \"InstanceType\":\"kafka.m5.xlarge\"}" | jq -r .ClusterArn)
 
 state=$(set -x; awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
 
