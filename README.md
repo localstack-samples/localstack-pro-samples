@@ -62,7 +62,6 @@ You can find your Auth Token on the [LocalStack Web Application](https://app.loc
 | [MSK with Glue Schema Registry](glue-msk-schema-registry)      | Use of MSK, Glue Schema Registry, Glue ETL, and RDS                                                |
 | [AppSync GraphQL](appsync-graphql-api)                         | Deploying a GraphQL API using AppSync                                                              |
 | [Lambda XRay tracing](lambda-xray)                             | Using Lambda XRay tracing locally                                                                  |
-| [Mediastore Uploads](mediastore-uploads)                       | Using MediaStore API locally                                                                       |
 | [Serverless Lambda Layers](serverless-lambda-layers)           | Using Lambda layers locally deployed via the Serverless framework                                  |
 | [Java Notification App](java-notification-app)                 | Notification app using AWS Java SDK, SNS, SQS, SES, deployed via CloudFormation                    |
 | [Lambda Container images](lambda-container-image)              | Deploying Lambda functions as container images                                                     |
