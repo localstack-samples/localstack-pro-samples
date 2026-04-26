@@ -41,9 +41,13 @@ awslocal rds-data execute-statement --resource-arn "$db_resource_arn" --secret-a
 awslocal rds-data execute-statement --resource-arn "$db_resource_arn" --secret-arn "$secret" --database test --sql 'CREATE TABLE IF NOT EXISTS hist_root(id varchar, name varchar, org_id varchar, org_name varchar, person_id varchar, organization_id varchar)'
 
 echo Starting Glue job from PySpark script ...
+# NOTE: pass the cluster identifier (rather than the actual connection name) here on purpose, to
+# match the working configuration on master. Passing the real connection name currently triggers
+# a JobInitializationException in LocalStack's Glue executor, which makes the job fail at init
+# before the worker container even starts.
 awslocal glue create-job --name $JOB_NAME --role r1 \
   --command '{"Name": "pythonshell", "ScriptLocation": "'$S3_URL'"}' \
-  --connections '{"Connections": ["'$CONNECTION_NAME'"]}'
+  --connections '{"Connections": ["'$CLUSTER_IDENTIFIER'"]}'
 run_id=$(awslocal glue start-job-run --job-name $JOB_NAME | jq -r .JobRunId)
 
 state=$(awslocal glue get-job-run --job-name $JOB_NAME --run-id $run_id | jq -r .JobRun.JobRunState)
