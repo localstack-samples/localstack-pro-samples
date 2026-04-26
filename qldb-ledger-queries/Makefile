@@ -17,10 +17,10 @@ check:    ## Check if all required prerequisites are installed
 install:    ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
-	@pip install -r requirements.txt
+	@test -e .venv || ($(PYTHON_BIN) -m venv .venv; source .venv/bin/activate; pip install -r requirements.txt)
 
 run:        ## Run the sample queries against the local QLDB API
-	@$(PYTHON_BIN) query.py
+	@source .venv/bin/activate; python3 query.py
 
 start:
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
