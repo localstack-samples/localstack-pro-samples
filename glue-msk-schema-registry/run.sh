@@ -19,7 +19,7 @@ function finish {
 trap finish EXIT
 
 # Function to wait for a key input before continuing (only in interactive mode)
-if [ "$1" = "-it" ]; then
+if [ "${1:-}" = "-it" ]; then
   function step {
     if [ -n "$1" ]; then
       echo ""
