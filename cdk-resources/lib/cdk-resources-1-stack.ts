@@ -184,6 +184,7 @@ export class CdkResources1Stack extends cdk.Stack {
       responseMappingTemplate: `$util.toJson($ctx.result)`
     });
     getOneResolver.addDependsOn(apiSchema);
+    getOneResolver.addDependsOn(dataSource);
 
     const getAllResolver = new appsync.CfnResolver(this, 'GetAllQueryResolver', {
       apiId: itemsGraphQLApi.attrApiId,
@@ -199,6 +200,7 @@ export class CdkResources1Stack extends cdk.Stack {
       responseMappingTemplate: `$util.toJson($ctx.result)`
     });
     getAllResolver.addDependsOn(apiSchema);
+    getAllResolver.addDependsOn(dataSource);
 
     const saveResolver = new appsync.CfnResolver(this, 'SaveMutationResolver', {
       apiId: itemsGraphQLApi.attrApiId,
@@ -218,6 +220,7 @@ export class CdkResources1Stack extends cdk.Stack {
       responseMappingTemplate: `$util.toJson($ctx.result)`
     });
     saveResolver.addDependsOn(apiSchema);
+    saveResolver.addDependsOn(dataSource);
 
     const deleteResolver = new appsync.CfnResolver(this, 'DeleteMutationResolver', {
       apiId: itemsGraphQLApi.attrApiId,
@@ -235,5 +238,6 @@ export class CdkResources1Stack extends cdk.Stack {
     });
 
     deleteResolver.addDependsOn(apiSchema);
+    deleteResolver.addDependsOn(dataSource);
   }
 }
