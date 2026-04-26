@@ -1,5 +1,7 @@
 # LocalStack Pro Samples
 
+[![Run tests for all samples](https://github.com/localstack-samples/localstack-pro-samples/actions/workflows/test.yml/badge.svg)](https://github.com/localstack-samples/localstack-pro-samples/actions/workflows/test.yml)
+
 This repository contains sample projects that can be deployed on your local machine using [LocalStack](https://localstack.cloud/).
 
 Each example in the repository is prefixed with the name of the AWS service being used. For example, the `elb-load-balancing` directory contains examples that demonstrate how to use the Elastic Load Balancing service with LocalStack. Please refer to the sub directories for more details and instructions on how to start the samples.
@@ -40,7 +42,6 @@ You can find your Auth Token on the [LocalStack Web Application](https://app.loc
 | [Glacier & S3 select queries](glacier-s3-select)               | Using Glacier API and running S3 Select queries locally                                            |
 | [Cloudwatch Metrics alarm](cloudwatch-metrics-aws)             | Triggering a Cloudwatch metrics alarm based on a failing Lambda                                    |
 | [EC2 with Docker backend](ec2-docker-instances)                | Running EC2 instances with Docker backend                                                          |
-| [QLDB ledger queries](qldb-ledger-queries)                     | Running queries locally against a QLDB ledger                                                      |
 | [Cognito with JWT](cognito-jwt)                                | Running Cognito authentication and user pools locally                                              |
 | [Transfer API with S3](transfer-ftp-s3)                        | Using the Transfer API to upload files to S3                                                       |
 | [Codecommit with Git repository](codecommit-git-repo)          | Using the Codecommit API to create and push to a Git repository                                    |
@@ -55,10 +56,9 @@ You can find your Auth Token on the [LocalStack Web Application](https://app.loc
 | [ECS ECR Container application](ecs-ecr-container-app)         | Pushing Docker images to ECR and running them locally on ECS                                       |
 | [Athena queries over S3](athena-s3-queries)                    | Running Athena queries over S3 files locally                                                       |
 | [Terraform resources](terraform-resources)                     | Deploying various AWS resources via Terraform                                                      |
-| [CDK for Terraform resources](cdk-for-terraform)               | Deploying AWS resources via CDK for Terraform                                                      |
 | [Lambda Function URLs (JavaScript)](lambda-function-urls-javascript) | Invoking Lambda functions via HTTP(S) URLs using JavaScript                               |
 | [Lambda Function URLs (Python)](lambda-function-urls-python)   | Invoking Lambda functions via HTTP(S) URLs using Python                                            |
-| [Sagemaker inference](sagemaker-inference)                     | Creating & invoking a Sagemaker endpoint locally with MNIST dataset                                |
+| [Sagemaker inference](sagemaker-inference)                     | Creating & invoking a Sagemaker endpoint locally with MNIST dataset      |
 | [MSK with Glue Schema Registry](glue-msk-schema-registry)      | Use of MSK, Glue Schema Registry, Glue ETL, and RDS                                                |
 | [AppSync GraphQL](appsync-graphql-api)                         | Deploying a GraphQL API using AppSync                                                              |
 | [Lambda XRay tracing](lambda-xray)                             | Using Lambda XRay tracing locally                                                                  |
