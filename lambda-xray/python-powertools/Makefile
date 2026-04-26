@@ -8,6 +8,7 @@ usage:                  ## Show this help
 install:                ## Install dependencies
 	@which awslocal || pip install awscli-local
 	@which samlocal || pip install aws-sam-cli-local
+	@pip install 'click>=8.2'
 
 run: deploy invoke get-trace-summaries get-traces
 
