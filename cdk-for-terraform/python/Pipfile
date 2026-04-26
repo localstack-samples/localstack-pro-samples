@@ -8,4 +8,4 @@ python_version = "3"
 
 [packages]
 constructs = "*"
-cdktf = "*"
+cdktf = "==0.20.12"
