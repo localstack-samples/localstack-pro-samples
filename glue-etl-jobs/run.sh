@@ -43,7 +43,7 @@ awslocal rds-data execute-statement --resource-arn "$db_resource_arn" --secret-a
 
 echo Starting Glue job from PySpark script ...
 awslocal glue create-job --name $JOB_NAME --role r1 \
-  --command '{"Name": "glueetl", "ScriptLocation": "'$S3_URL'"}' \
+  --command '{"Name": "pythonshell", "ScriptLocation": "'$S3_URL'"}' \
   --connections '{"Connections": ["'$CONNECTION_NAME'"]}'
 run_id=$(awslocal glue start-job-run --job-name $JOB_NAME | jq -r .JobRunId)
 
@@ -57,6 +57,7 @@ for i in {1..35}; do
     echo "Done - Glue job execution finished. Please check the LocalStack container logs for more details."
     exit 0
 elif [ "$state" == FAILED ]; then
+    awslocal glue get-job-run --job-name $JOB_NAME --run-id $run_id
     echo "Job execution failed, exiting. Please check the LocalStack logs for details."
     exit 1
 fi
