@@ -15,6 +15,7 @@ check:       ## Check if all required prerequisites are installed
 	@echo "All required prerequisites are available."
 
 install:     ## Install dependencies
+	@pip install aws-sam-cli-local
 	@npm install
 
 start:       ## Start LocalStack
@@ -43,7 +44,7 @@ run:         ## Send a test SQS message to trigger the Lambda function
 		--delay-seconds 10
 
 test-ci:     ## Run CI tests
-	make check start install ready deploy run; return_code=`echo $$?`;\
+	make install check start ready deploy run; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
 
 .PHONY: usage check install start stop ready logs deploy run test-ci
