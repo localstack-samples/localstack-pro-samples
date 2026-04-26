@@ -32,7 +32,6 @@ secret=$(awslocal secretsmanager create-secret --name pass --secret-string "test
 db_resource_arn="arn:aws:rds:us-east-1:000000000000:cluster:$CLUSTER_IDENTIFIER"
 
 echo Creating Postgres database tables with data ...
-awslocal rds-data execute-statement --resource-arn "$db_resource_arn" --secret-arn "$secret" --database postgres --sql 'CREATE DATABASE test' || true
 awslocal rds-data execute-statement --resource-arn "$db_resource_arn" --secret-arn "$secret" --database test --sql 'CREATE TABLE IF NOT EXISTS persons(id varchar, name varchar)'
 awslocal rds-data execute-statement --resource-arn "$db_resource_arn" --secret-arn "$secret" --database test --sql 'CREATE TABLE IF NOT EXISTS organizations(org_id varchar, org_name varchar)'
 awslocal rds-data execute-statement --resource-arn "$db_resource_arn" --secret-arn "$secret" --database test --sql 'CREATE TABLE IF NOT EXISTS memberships(person_id varchar, organization_id varchar)'
@@ -43,8 +42,7 @@ awslocal rds-data execute-statement --resource-arn "$db_resource_arn" --secret-a
 
 echo Starting Glue job from PySpark script ...
 awslocal glue create-job --name $JOB_NAME --role r1 \
-  --command '{"Name": "pythonshell", "ScriptLocation": "'$S3_URL'"}' \
-  --connections '{"Connections": ["'$CONNECTION_NAME'"]}'
+  --command '{"Name": "pythonshell", "ScriptLocation": "'$S3_URL'"}'
 run_id=$(awslocal glue start-job-run --job-name $JOB_NAME | jq -r .JobRunId)
 
 state=$(awslocal glue get-job-run --job-name $JOB_NAME --run-id $run_id | jq -r .JobRun.JobRunState)
