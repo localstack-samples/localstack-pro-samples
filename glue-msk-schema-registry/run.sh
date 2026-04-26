@@ -42,7 +42,7 @@ step "Start with creating a Kafka cluster..."
 cluster_arn=$(set -x;awslocal kafka create-cluster \
   --cluster-name "unicorn-ride-cluster" \
   --kafka-version "3.6.0" \
-  --number-of-broker-nodes 1 \
+  --number-of-broker-nodes 2 \
   --broker-node-group-info "{\"ClientSubnets\": [\"subnet-12345678\", \"subnet-23456789\"], \"InstanceType\":\"kafka.m5.xlarge\"}" | jq -r .ClusterArn)
 
 state=$(set -x; awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
