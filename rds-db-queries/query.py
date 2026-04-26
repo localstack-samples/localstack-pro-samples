@@ -10,9 +10,19 @@ RDS_ENDPOINT = os.environ.get("RDS_ENDPOINT") or "http://localhost:4566"
 def run_queries(instance):
     print("Run DB queries against RDS instance %s" % instance["DBInstanceIdentifier"])
     port = instance["Endpoint"]["Port"]
-    conn = psycopg2.connect(
-        "dbname=test user=test password='test' host=localhost port=%s" % port
-    )
+    host = instance["Endpoint"].get("Address") or "localhost.localstack.cloud"
+    conn = None
+    for _ in range(30):
+        try:
+            conn = psycopg2.connect(
+                "dbname=test user=test password='test' host=%s port=%s" % (host, port)
+            )
+            break
+        except psycopg2.OperationalError:
+            time.sleep(2)
+    if conn is None:
+        raise RuntimeError("RDS Postgres endpoint did not become ready")
+
     with conn.cursor() as cur:
         cur.execute(
             'CREATE TABLE person ("id" INTEGER, "name" VARCHAR not null, PRIMARY KEY ("id"))'
@@ -30,7 +40,12 @@ def create_db():
     print("Creating RDS DB instance")
     client = connect_rds()
     instance = client.create_db_instance(
-        Engine="postgres", DBInstanceClass="c1", DBInstanceIdentifier="i1"
+        Engine="postgres",
+        DBInstanceClass="c1",
+        DBInstanceIdentifier="i1",
+        DBName="test",
+        MasterUsername="test",
+        MasterUserPassword="test",
     )
     return instance["DBInstance"]
 
@@ -48,7 +63,6 @@ def connect_rds():
 
 def main():
     instance = create_db()
-    time.sleep(7) # wait for the instance to be ready
     run_queries(instance)
     delete_db(instance)
 
