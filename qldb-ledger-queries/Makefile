@@ -2,6 +2,7 @@ export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export AWS_DEFAULT_REGION = us-east-1
 PYTHON_BIN ?= $(shell which python3 || which python)
+SHELL := /bin/bash
 
 usage:      ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -17,10 +18,11 @@ check:    ## Check if all required prerequisites are installed
 install:    ## Install dependencies
 	@which localstack || pip install localstack
 	@which awslocal || pip install awscli-local
-	@test -e .venv || ($(PYTHON_BIN) -m venv .venv; source .venv/bin/activate; pip install -r requirements.txt)
+	@test -e .venv || $(PYTHON_BIN) -m venv .venv
+	@.venv/bin/python -m pip install -r requirements.txt
 
 run:        ## Run the sample queries against the local QLDB API
-	@source .venv/bin/activate; python3 query.py
+	@.venv/bin/python query.py
 
 start:
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
