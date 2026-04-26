@@ -26,7 +26,7 @@ awslocal glue create-table --database legislators \
 awslocal glue create-table --database legislators \
   --table-input '{"Name": "organizations_json", "Parameters": {"connectionName": "'$CONNECTION_NAME'"}, "StorageDescriptor": {"Location": "test.organizations"}}'
 awslocal glue create-connection \
-  --connection-input '{"Name": "'$CONNECTION_NAME'", "ConnectionType": "JDBC", "ConnectionProperties": {"USERNAME": "test", "PASSWORD": "test", "JDBC_CONNECTION_URL": "jdbc:postgresql://localhost.localstack.cloud:'$db_port'"}}'
+  --connection-input '{"Name": "'$CONNECTION_NAME'", "ConnectionType": "JDBC", "ConnectionProperties": {"USERNAME": "test", "PASSWORD": "test", "JDBC_CONNECTION_URL": "jdbc:postgresql://localhost.localstack.cloud:'$db_port'/test"}}'
 
 secret=$(awslocal secretsmanager create-secret --name pass --secret-string "test" | jq -r ".ARN")
 db_resource_arn="arn:aws:rds:us-east-1:000000000000:cluster:$CLUSTER_IDENTIFIER"
@@ -43,8 +43,8 @@ awslocal rds-data execute-statement --resource-arn "$db_resource_arn" --secret-a
 
 echo Starting Glue job from PySpark script ...
 awslocal glue create-job --name $JOB_NAME --role r1 \
-  --command '{"Name": "pythonshell", "ScriptLocation": "'$S3_URL'"}' \
-  --connections '{"Connections": ["'$CLUSTER_IDENTIFIER'"]}'
+  --command '{"Name": "glueetl", "ScriptLocation": "'$S3_URL'"}' \
+  --connections '{"Connections": ["'$CONNECTION_NAME'"]}'
 run_id=$(awslocal glue start-job-run --job-name $JOB_NAME | jq -r .JobRunId)
 
 state=$(awslocal glue get-job-run --job-name $JOB_NAME --run-id $run_id | jq -r .JobRun.JobRunState)
