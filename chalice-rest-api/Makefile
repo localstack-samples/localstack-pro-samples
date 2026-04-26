@@ -38,7 +38,7 @@ run:         ## Start the Chalice local development server
 	@chalice-local local
 
 test-ci:     ## Run CI tests
-	make check start install ready deploy; return_code=`echo $$?`;\
+	make install check start ready deploy; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
 
 .PHONY: usage check install start stop ready logs deploy run test-ci
