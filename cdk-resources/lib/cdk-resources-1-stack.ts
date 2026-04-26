@@ -59,13 +59,15 @@ export class CdkResources1Stack extends cdk.Stack {
     //   code=lambda.Code.fromAsset(path.join(__dirname, "lambda-handler"))
     // );
 
+    const nodeRuntime = new lambda.Runtime('nodejs18.x', lambda.RuntimeFamily.NODEJS);
+
     const layer = new lambda.LayerVersion(this, 'Layer1', {
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/layer1')),
-      compatibleRuntimes: [lambda.Runtime.NODEJS_10_X, lambda.Runtime.NODEJS_12_X]
+      compatibleRuntimes: [nodeRuntime]
     });
 
     const myLambda = new lambda.Function(this, 'Func1', {
-      runtime: lambda.Runtime.NODEJS_12_X,
+      runtime: nodeRuntime,
       handler: 'main.handler',
       code: lambda.Code.fromAsset('lambda/func1'),
       memorySize: 1024,
