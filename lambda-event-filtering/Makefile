@@ -16,6 +16,7 @@ check:       ## Check if all required prerequisites are installed
 
 install:     ## Install dependencies
 	@pip install aws-sam-cli-local
+	@pip install 'click>=8.2'
 	@npm install
 
 start:       ## Start LocalStack
