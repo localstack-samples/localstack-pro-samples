@@ -58,6 +58,8 @@ for i in {1..35}; do
     exit 0
 elif [ "$state" == FAILED ]; then
     awslocal glue get-job-run --job-name $JOB_NAME --run-id $run_id
+    awslocal logs filter-log-events --log-group-name /aws-glue/jobs || true
+    localstack logs || true
     echo "Job execution failed, exiting. Please check the LocalStack logs for details."
     exit 1
 fi
