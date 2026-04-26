@@ -1,6 +1,7 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export AWS_DEFAULT_REGION = us-east-1
+TERRAFORM_VERSION ?= 1.11.4
 
 
 check:    ## Check if all required prerequisites are installed
@@ -9,6 +10,15 @@ check:    ## Check if all required prerequisites are installed
 	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack CLI is not installed. Please install it and try again."; exit 1; }
 	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
 	@echo "All required prerequisites are available."
+
+install-ci-dependencies:
+	@if ! command -v terraform > /dev/null 2>&1; then \
+		tmp_dir=$$(mktemp -d); \
+		curl -fsSL "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o "$$tmp_dir/terraform.zip"; \
+		unzip -q "$$tmp_dir/terraform.zip" -d "$$tmp_dir"; \
+		sudo install -m 0755 "$$tmp_dir/terraform" /usr/local/bin/terraform; \
+		rm -rf "$$tmp_dir"; \
+	fi
 
 
 
@@ -63,5 +73,5 @@ destroy-aws:
 	terraform destroy --auto-approve
 
 test-ci:
-	make init build deploy logs run; return_code=`echo $$?`;\
+	make install-ci-dependencies check init build deploy logs run; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
