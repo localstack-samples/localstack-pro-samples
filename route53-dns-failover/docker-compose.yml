@@ -3,13 +3,13 @@ version: "3.8"
 services:
   localstack:
     container_name: "${LOCALSTACK_DOCKER_NAME-localstack-main}"
-    image: localstack/localstack-pro:2.1.0
+    image: localstack/localstack-pro
     networks:
       sweet_mahavira:
     ports:
       - "127.0.0.1:53:53"
       - "127.0.0.1:53:53/udp"
-      - "127.0.0.1:4566:443"
+      - "127.0.0.1:4566:4566"
       - "127.0.0.1:4510:4510"
     environment:
       - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN}
