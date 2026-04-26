@@ -110,7 +110,7 @@ step "Get a diff between the initial version and the version registered by the n
   --second-schema-version-number LatestVersion=True | jq -r)
 
 step "Expected failure: Execute a producer which tries to register an incompatible schema..."
-(set -x; mvn -pl producer-3 exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker")
+(set -x; mvn -pl producer-3 exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker") || true
 
 step "Check that the newly registered schema is in state 'FAILED'..."
 awslocal glue get-schema-version \
@@ -118,7 +118,7 @@ awslocal glue get-schema-version \
   --schema-version-number VersionNumber=3
 
 step "Expected failure: Execute an incompatible (outdated) consumer..."
-(set -x; mvn -pl consumer exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker")
+(set -x; mvn -pl consumer exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker") || true
 
 step "Execute a compatible (updated) consumer..."
 (set -x; mvn -pl consumer-2 exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker")
