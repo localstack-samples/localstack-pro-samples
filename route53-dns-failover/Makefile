@@ -29,7 +29,7 @@ stop:
 
 ready:
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@localstack wait -t 120 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 logs:
 	@localstack logs > logs.txt
