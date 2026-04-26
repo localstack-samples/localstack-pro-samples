@@ -46,7 +46,8 @@ cluster_arn=$(set -x;awslocal kafka create-cluster \
   --cluster-name "unicorn-ride-cluster" \
   --kafka-version "3.6.0" \
   --number-of-broker-nodes 2 \
-  --broker-node-group-info "{\"ClientSubnets\": [\"$subnet_1\", \"$subnet_2\"], \"InstanceType\":\"kafka.m5.xlarge\"}" | jq -r .ClusterArn)
+  --broker-node-group-info "{\"ClientSubnets\": [\"$subnet_1\", \"$subnet_2\"], \"InstanceType\":\"kafka.m5.xlarge\"}" \
+  --encryption-info "{\"EncryptionInTransit\": {\"ClientBroker\": \"PLAINTEXT\"}}" | jq -r .ClusterArn)
 
 state=$(set -x; awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
 
