@@ -59,3 +59,33 @@ jobs:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           DEBUG: 1
           DNS_ADDRESS: 127.0.0.1
+
+      - name: Compute sample name
+        if: always()
+        id: sample-name
+        run: |
+          name="${{ matrix.directory }}"
+          name="${name#./}"
+          name="${name//\//-}"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Send a Slack notification
+        if: failure() || github.event_name != 'pull_request'
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ job.status }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          notification_title: "Sample `${{ steps.sample-name.outputs.name }}` ({workflow}) has {status_message}"
+          message_format: "{emoji} *${{ steps.sample-name.outputs.name }}* {status_message} in <{repo_url}|{repo}>"
+          footer: "Linked Repo <{repo_url}|{repo}> | <{run_url}|View Workflow run>"
+          notify_when: "failure"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Upload LocalStack logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ steps.sample-name.outputs.name }}
+          path: ${{ matrix.directory }}/logs.txt
+          if-no-files-found: ignore
