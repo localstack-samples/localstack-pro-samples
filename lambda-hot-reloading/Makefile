@@ -42,6 +42,9 @@ deploy:      ## Deploy the JavaScript Lambda with hot reloading enabled
 			--code S3Bucket=hot-reload,S3Key=$$(pwd) \
 			--handler index.handler
 
+wait:        ## Wait until the Lambda function can be invoked
+	@awslocal lambda wait function-active-v2 --function-name hot-reload-js
+
 run:         ## Invoke the hot-reload Lambda function
 	@awslocal lambda invoke \
 		--function-name hot-reload-js \
@@ -49,7 +52,7 @@ run:         ## Invoke the hot-reload Lambda function
 		output.json && cat output.json
 
 test-ci:     ## Run CI tests
-	make check start install ready deploy run; return_code=`echo $$?`;\
+	make check start install ready deploy wait run; return_code=`echo $$?`;\
 	make logs; make stop; exit $$return_code;
 
-.PHONY: usage check install start stop ready logs deploy run test-ci
+.PHONY: usage check install start stop ready logs deploy wait run test-ci
