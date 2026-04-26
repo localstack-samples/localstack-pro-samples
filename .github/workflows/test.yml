@@ -15,8 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: set-matrix
         run: |
-          # mapfile -t dirs < <(find . -mindepth 2 -type f -name "Makefile" ! -path "./sample-archive/*" ! -path "./sagemaker-inference/*" | sed "s|/Makefile||" | sort)
-          dirs=("./glue-etl-jobs" "./glue-msk-schema-registry")
+          mapfile -t dirs < <(find . -mindepth 2 -type f -name "Makefile" ! -path "./sample-archive/*" ! -path "./sagemaker-inference/*" | sed "s|/Makefile||" | sort)
           echo "matrix=$(printf '%s\n' "${dirs[@]}" | jq -R . | jq -cs .)" >> "$GITHUB_OUTPUT"
 
     outputs:
