@@ -39,11 +39,14 @@ else
 fi
 
 step "Start with creating a Kafka cluster..."
+vpc_id=$(set -x; awslocal ec2 create-vpc --cidr-block 10.0.0.0/16 | jq -r .Vpc.VpcId)
+subnet_1=$(set -x; awslocal ec2 create-subnet --vpc-id "$vpc_id" --cidr-block 10.0.1.0/24 --availability-zone us-east-1a | jq -r .Subnet.SubnetId)
+subnet_2=$(set -x; awslocal ec2 create-subnet --vpc-id "$vpc_id" --cidr-block 10.0.2.0/24 --availability-zone us-east-1b | jq -r .Subnet.SubnetId)
 cluster_arn=$(set -x;awslocal kafka create-cluster \
   --cluster-name "unicorn-ride-cluster" \
   --kafka-version "3.6.0" \
   --number-of-broker-nodes 2 \
-  --broker-node-group-info "{\"ClientSubnets\": [\"subnet-12345678\", \"subnet-23456789\"], \"InstanceType\":\"kafka.m5.xlarge\"}" | jq -r .ClusterArn)
+  --broker-node-group-info "{\"ClientSubnets\": [\"$subnet_1\", \"$subnet_2\"], \"InstanceType\":\"kafka.m5.xlarge\"}" | jq -r .ClusterArn)
 
 state=$(set -x; awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
 
