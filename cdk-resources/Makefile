@@ -18,7 +18,7 @@ install:     ## Install dependencies
 	@npm install
 
 install-ci-dependencies: ## Install CI-only prerequisites
-	@npm install -g aws-cdk-local
+	@npm install -g aws-cdk-local aws-cdk@2.29.1
 
 start:       ## Start LocalStack
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
