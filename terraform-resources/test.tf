@@ -63,8 +63,10 @@ resource "aws_iam_role" "invocation_role" {
   "Version": "2012-10-17",
   "Statement": {
     "Effect": "Allow",
-    "Action": "s3:ListBucket",
-    "Resource": "arn:aws:s3:::test-bucket"
+    "Principal": {
+      "Service": "apigateway.amazonaws.com"
+    },
+    "Action": "sts:AssumeRole"
   }
 }
 EOF
@@ -94,8 +96,10 @@ resource "aws_iam_role" "lambda" {
   "Version": "2012-10-17",
   "Statement": {
     "Effect": "Allow",
-    "Action": "s3:ListBucket",
-    "Resource": "arn:aws:s3:::example_bucket"
+    "Principal": {
+      "Service": "lambda.amazonaws.com"
+    },
+    "Action": "sts:AssumeRole"
   }
 }
 EOF
@@ -139,7 +143,7 @@ resource "aws_elasticache_cluster" "my-redis" {
 
 resource "aws_db_parameter_group" "default" {
   name   = "rds-pg"
-  family = "mysql5.6"
+  family = "mysql8.0"
 
   parameter {
     name  = "character_set_server"
