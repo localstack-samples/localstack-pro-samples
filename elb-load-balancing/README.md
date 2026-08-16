@@ -14,7 +14,8 @@ A demo application illustrating ELBv2 Application Load Balancers using LocalStac
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
-- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) (required by `lstk aws`)
 - [Node.js](https://nodejs.org/en/download/) with `npm`
 - [Serverless Framework](https://www.serverless.com/framework/docs/getting-started)
 
