@@ -1,3 +1,17 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      # Pinned below 6.57.0: that release added a state waiter to
+      # aws_api_gateway_rest_api which polls for a field LocalStack does not
+      # return, so creation fails with "unexpected state '', wanted target
+      # 'AVAILABLE'". Without a constraint here, terraform init picks up the
+      # latest provider and the sample breaks.
+      version = "~> 6.56.0"
+    }
+  }
+}
+
 provider "aws" {
   access_key                  = "mock_access_key"
   secret_key                  = "mock_secret_key"
