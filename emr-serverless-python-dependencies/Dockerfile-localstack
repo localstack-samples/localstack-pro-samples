@@ -3,6 +3,16 @@
 ## ----------------------------------------------------------------------------
 FROM --platform=linux/amd64 localstack/localstack:latest AS base
 
+# The LocalStack image is Debian-based, and Debian splits ensurepip out of the
+# stdlib into a separate pythonX.Y-venv package. Without it `python3 -m venv`
+# fails, both for the venv below and for the one poetry-plugin-bundle creates.
+# The version is derived from the image's interpreter rather than hardcoded so
+# this keeps working as the base image's Python moves on.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        "python$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')-venv" \
+    && rm -rf /var/lib/apt/lists/*
+
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
