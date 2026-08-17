@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3 Buckets for EKart Store'
+
+Parameters:
+  Environment:
+    Type: String
+
+Resources:
+  ProductImagesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'ekart-product-images-${Environment}'
+      AccessControl: Private
+      VersioningConfiguration:
+        Status: Enabled
+
+Outputs:
+  ProductImagesBucketName:
+    Value: !Ref ProductImagesBucket
