@@ -30,3 +30,4 @@ glacier-s3-select/*result.csv
 azure-functions/.python_packages/
 
 */logs.txt
+mwaa-ml-classifier-deployment/.pkgs
