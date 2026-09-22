@@ -4,7 +4,7 @@ import * as cdk from 'aws-cdk-lib';
 import { PhpBrefStack } from '../lib/php-bref-stack';
 
 const app = new cdk.App();
-new PhpBrefStack(app, 'CdkBrefStack', {
+const cdkBrefStack = new PhpBrefStack(app, 'CdkBrefStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
@@ -19,3 +19,4 @@ new PhpBrefStack(app, 'CdkBrefStack', {
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
+cdk.Tags.of(cdkBrefStack).add('aws-apn-id', 'pc:9yq38ki5jw5mas7jhjthpgveo');
