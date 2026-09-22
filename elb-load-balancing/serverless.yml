@@ -33,6 +33,7 @@ resources:
         Name: lb-test-1
         Subnets:
           - !Ref Subnet
+          - !Ref Subnet2
     HTTPListener:
       Type: AWS::ElasticLoadBalancingV2::Listener
       Properties:
@@ -53,12 +54,21 @@ resources:
         AvailabilityZone: !Select
           - 0
           - Fn::GetAZs: !Ref "AWS::Region"
+    # An ALB requires at least two subnets in two different Availability Zones.
+    Subnet2:
+      Type: AWS::EC2::Subnet
+      Properties:
+        VpcId: !Ref VPC
+        CidrBlock: 12.2.2.0/24
+        AvailabilityZone: !Select
+          - 1
+          - Fn::GetAZs: !Ref "AWS::Region"
     VPC:
       Type: AWS::EC2::VPC
       Properties:
         EnableDnsSupport: "true"
         EnableDnsHostnames: "true"
-        CidrBlock: 12.2.1.0/24
+        CidrBlock: 12.2.0.0/16
 
 plugins:
   - serverless-deployment-bucket
