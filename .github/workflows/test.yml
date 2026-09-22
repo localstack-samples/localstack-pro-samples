@@ -39,7 +39,14 @@ jobs:
           node-version: 20
 
       - name: Install LocalStack
-        run: pip install localstack awscli-local[ver1] virtualenv
+        run: |
+          pip install localstack awscli-local[ver1] virtualenv
+          # The runner's system python3-botocore is Debian de-vendored (no
+          # botocore.vendored), which breaks awslocal's awscli s3transfer import
+          # with "ModuleNotFoundError: No module named 'botocore.vendored'".
+          # Force the PyPI boto3/botocore into the user site so it shadows the
+          # system package and restores botocore.vendored.
+          pip install --upgrade boto3 botocore
 
       - name: Setup config
         run: |
