@@ -4,6 +4,8 @@ provider:
   name: aws
   deploymentBucket:
     name: localstack-websockets-serverless
+  stackTags:
+    aws-apn-id: pc:9yq38ki5jw5mas7jhjthpgveo
 
 package:
   patterns:
