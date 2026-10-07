@@ -1,0 +1,51 @@
+# Node
+node_modules/
+.next/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv
+
+# LocalStack
+/tmp/localstack
+logs/
+backup/
+
+# Docker
+*.log
+*.pid
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Ignore installed Python package dirs in each lambda-functions subfolder
+lambda-functions/*/bin/
+lambda-functions/*/boto3/
+lambda-functions/*/boto3-*.dist-info/
+lambda-functions/*/botocore/
+lambda-functions/*/botocore-*.dist-info/
+lambda-functions/*/dateutil/
+lambda-functions/*/jmespath/
+lambda-functions/*/jmespath-*.dist-info/
+lambda-functions/*/jwt/
+lambda-functions/*/PyJWT-*.dist-info/
+lambda-functions/*/python_dateutil-*.dist-info/
+lambda-functions/*/s3transfer/
+lambda-functions/*/s3transfer-*.dist-info/
+lambda-functions/*/six-*.dist-info/
+lambda-functions/*/urllib3/
+lambda-functions/*/urllib3-*.dist-info/
+lambda-functions/*/__pycache__/
+lambda-functions/*/function.zip
+# Do NOT ignore handler.py, requirements.txt, six.py in any lambda-functions subfolder
+!lambda-functions/*/handler.py
+!lambda-functions/*/requirements.txt
+!lambda-functions/*/six.py

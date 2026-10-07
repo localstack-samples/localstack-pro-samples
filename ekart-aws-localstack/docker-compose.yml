@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  localstack:
+    container_name: ekart-localstack
+    image: localstack/localstack:3.0
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - SERVICES=s3,dynamodb,lambda,apigateway,cognito-idp,ses,sqs,events,iam,cloudformation,ssm,logs
+      - DEBUG=1
+      - LAMBDA_EXECUTOR=docker
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - LOCALSTACK_HOST=localhost
+      - EDGE_PORT=4566
+      - DATA_DIR=/tmp/localstack/data
+      - PERSISTENCE=1
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./tmp/localstack}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - ekart-network
+
+  backend:
+    build: ./backend
+    container_name: ekart-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=development
+      - LOCALSTACK_ENDPOINT=http://localstack:4566
+      - DATABASE_URL=dynamodb://localstack:4566
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    depends_on:
+      - localstack
+    volumes:
+      - ./backend:/app
+    networks:
+      - ekart-network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build: ./frontend
+    container_name: ekart-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+      - NEXT_PUBLIC_AWS_REGION=us-east-1
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - ekart-network
+    command: npm run dev
+
+  redis:
+    image: redis:7-alpine
+    container_name: ekart-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ekart-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: ekart-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - ekart-network
+
+networks:
+  ekart-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  localstack_data:

@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Lambda Functions for EKart Store'
+
+Parameters:
+  Environment:
+    Type: String
+  UserPoolId:
+    Type: String
+
+Resources:
+  OrderProcessorLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub 'ekart-order-processor-${Environment}'
+      Handler: handler.lambda_handler
+      Role: arn:aws:iam::000000000000:role/lambda-role
+      Runtime: python3.10
+      Code:
+        S3Bucket: ekart-lambda-code
+        S3Key: order-processor.zip
+      Environment:
+        Variables:
+          ENV: !Ref Environment
+          USER_POOL_ID: !Ref UserPoolId
+      Timeout: 30
+      MemorySize: 256
+
+Outputs:
+  OrderProcessorLambdaArn:
+    Value: !GetAtt OrderProcessorLambda.Arn
