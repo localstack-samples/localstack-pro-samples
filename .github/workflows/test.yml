@@ -41,6 +41,9 @@ jobs:
       - name: Install lstk and the AWS CLI wrapper
         run: |
           npm install -g @localstack/lstk
+          # Write the localstack AWS profile. Without it, lstk aws prints a setup note on stdout,
+          # which breaks scripts that pipe its output into jq.
+          lstk setup aws --force --non-interactive
           pip install awscli virtualenv
           pip install --upgrade boto3 botocore
 

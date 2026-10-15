@@ -31,6 +31,8 @@ lstk login
 
 You can find your Auth Token on the [LocalStack Web Application](https://app.localstack.cloud/workspace/auth-token).
 
+The samples call the AWS CLI through `lstk aws`. Run `lstk setup aws` once to create the `localstack` AWS profile it uses.
+
 ## Outline
 
 | Sample Name                                                    | Description                                                                                        |
