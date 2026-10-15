@@ -21,10 +21,6 @@ Parameters:
     Type: Number
     Default: 80
     Description: What port number the application inside the docker container is binding to
-  HostPort:
-    Type: Number
-    Default: 45139
-    Description: What port number the application on the host is binding to
   ContainerCpu:
     Type: Number
     Default: 256
@@ -85,8 +81,8 @@ Resources:
           Memory: !Ref ContainerMemory
           Image: !Ref ImageUrl
           PortMappings:
+            # With awsvpc networking (required by Fargate) the host port must equal the container port
             - ContainerPort: !Ref ContainerPort
-              HostPort: !Ref HostPort
 
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well

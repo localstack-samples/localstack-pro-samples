@@ -59,7 +59,7 @@ You should see a success output in the terminal:
 Sample app (nginx) successfully deployed.
 ```
 
-The nginx test app is accessible at `http://localhost:45139/` after deployment.
+After deployment, `make run` prints the host port LocalStack bound for the nginx task (from the task's network bindings) and requests `http://localhost:<port>/`.
 
 ## License
 
