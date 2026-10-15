@@ -1,6 +1,6 @@
 # Enforce IAM to test cross-account cross-region access
 export LOCALSTACK_ENFORCE_IAM=1
-export DEBUG=1
+export LOCALSTACK_DEBUG=1
 
 SHELL := /bin/bash
 

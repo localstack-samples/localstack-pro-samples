@@ -1,6 +1,10 @@
 #!/bin/bash
 set -euxo pipefail
 export AWS_SECRET_ACCESS_KEY=test
+export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+# lstk aws reads AWS_ACCESS_KEY_ID only as a 12-digit account id and drops any other value,
+# so the calls signed as an IAM user (access key LKIA...) use the AWS CLI with the LocalStack endpoint
+LS_ENDPOINT=${AWS_ENDPOINT_URL:-http://localhost.localstack.cloud:4566}
 
 # Create `ls-a` and `ls-b` IAM users using the root accounts of each user
 AWS_ACCESS_KEY_ID=000000000001 lstk aws iam create-user --user-name ls-a
@@ -25,23 +29,23 @@ USER_ACCESS_KEY_ID_A=`jq -r .AccessKey.AccessKeyId <<< $CREDENTIALS_A`
 USER_ACCESS_KEY_ID_B=`jq -r .AccessKey.AccessKeyId <<< $CREDENTIALS_B`
 
 # Create `source` bucket in `ls-a` user's account
-AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_A lstk aws s3 mb s3://source
-AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_A lstk aws s3 sync ./bucket s3://source
+AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_A aws --endpoint-url "$LS_ENDPOINT" s3 mb s3://source
+AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_A aws --endpoint-url "$LS_ENDPOINT" s3 sync ./bucket s3://source
 
 # Attach a bucket policy so that user `ls-b` can access it
-AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_A lstk aws s3api put-bucket-policy --bucket source --policy file://source_bucket_policy.json
+AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_A aws --endpoint-url "$LS_ENDPOINT" s3api put-bucket-policy --bucket source --policy file://source_bucket_policy.json
 
 # Attempt to access bucket `source` using `ls-a` user
-AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_B lstk aws s3 ls s3://source
-AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_B lstk aws s3api list-object-versions --bucket source --prefix main.go
+AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_B aws --endpoint-url "$LS_ENDPOINT" s3 ls s3://source
+AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_B aws --endpoint-url "$LS_ENDPOINT" s3api list-object-versions --bucket source --prefix main.go
 
 # Sync buckets `source` and `target` using `ls-b` user
-AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_B lstk aws s3 mb s3://target
-AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_B lstk aws s3 sync s3://source s3://target
-AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_B lstk aws s3api list-object-versions --bucket target --prefix main.go
+AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_B aws --endpoint-url "$LS_ENDPOINT" s3 mb s3://target
+AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_B aws --endpoint-url "$LS_ENDPOINT" s3 sync s3://source s3://target
+AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_B aws --endpoint-url "$LS_ENDPOINT" s3api list-object-versions --bucket target --prefix main.go
 
 # Fail the script if somehow user A can access the resources of bucket `target`
 echo "Check if s3api list-object-versions commnands fails as expected"
-if AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_A lstk aws s3api list-object-versions --bucket target --prefix main.go; then
+if AWS_ACCESS_KEY_ID=$USER_ACCESS_KEY_ID_A aws --endpoint-url "$LS_ENDPOINT" s3api list-object-versions --bucket target --prefix main.go; then
     exit 1
 fi
