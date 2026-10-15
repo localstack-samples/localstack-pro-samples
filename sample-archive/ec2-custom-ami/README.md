@@ -33,7 +33,7 @@ Please refer to the `containers.json` and `packer.json` configuration files.
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 SERVICES=cloudformation,ec2 localstack start
+LOCALSTACK_AUTH_TOKEN=... LOCALSTACK_DEBUG=1 LOCALSTACK_SERVICES=cloudformation,ec2 lstk start
 ```
 
 Run the application and trigger the virtual machine build process:

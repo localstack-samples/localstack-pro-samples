@@ -22,10 +22,10 @@ First, we need to make sure we start LocalStack with the right configuration.
 To use our new lambda provider, all you need to do is set `PROVIDER_OVERRIDE_LAMBDA=v2`, if you use a LocalStack version < 2.0.
 
 
-If you want to use our old provider, please set `LAMBDA_REMOTE_DOCKER` to `0` (see the [Configuration Documentation](https://docs.localstack.cloud/localstack/configuration/#lambda) for more information):
+If you want to use our old provider, please set `LAMBDA_REMOTE_DOCKER` to `0`, passed with the `LOCALSTACK_` prefix so that `lstk` forwards it to the container (see the [Configuration Documentation](https://docs.localstack.cloud/localstack/configuration/#lambda) for more information):
 
 ```bash
-LAMBDA_REMOTE_DOCKER=0 localstack start
+LOCALSTACK_LAMBDA_REMOTE_DOCKER=0 lstk start
 ```
 
 Accordingly, if you are launching LocalStack via Docker or Docker Compose:

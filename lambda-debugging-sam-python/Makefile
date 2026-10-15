@@ -26,7 +26,7 @@ usage:                ## Show this help
 check:    ## Check if all required prerequisites are installed
 	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
 	@command -v python3 > /dev/null 2>&1 || { echo "Python 3 is not installed. Please install Python 3 and try again."; exit 1; }
-	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack CLI is not installed. Please install it and try again."; exit 1; }
+	@command -v lstk > /dev/null 2>&1 || { echo "lstk CLI is not installed. Please run: npm install -g @localstack/lstk"; exit 1; }
 	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
 	@echo "All required prerequisites are available."
 
@@ -97,18 +97,17 @@ clean:                ## Clean the build directory
 
 start:                ## Start LocalStack
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
-	IMAGE_NAME=localstack/localstack-pro \
 	LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN} \
 	LOCALSTACK_LAMBDA_DEBUG_MODE=1 \
 	LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml \
-	localstack start --detached --volume ${PWD}/lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml
+	lstk start --non-interactive
 
 stop:                 ## Stop LocalStack
-	localstack stop
+	lstk stop
 
 ready:                ## Wait until LocalStack is running
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@lstk status > /dev/null && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 test-ci:
 	make start install build ready deploy wait invoke; return_code=`echo $$?`;\

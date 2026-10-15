@@ -11,7 +11,7 @@ check:    ## Check if all required prerequisites are installed
 	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed. Please install AWS CLI and try again."; exit 1; }
 	@command -v python > /dev/null 2>&1 || { echo "Python is not installed. Please install Python and try again."; exit 1; }
 	@command -v openssl > /dev/null 2>&1 || { echo "OpenSSL is not installed. Please install OpenSSL and try again."; exit 1; }
-	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack is not installed. Please install LocalStack and try again."; exit 1; }
+	@command -v lstk > /dev/null 2>&1 || { echo "lstk CLI is not installed. Please run: npm install -g @localstack/lstk"; exit 1; }
 	@echo "All required prerequisites are available."
 
 install:     ## Install dependencies
@@ -56,18 +56,17 @@ test:        ## Run tests
 
 start:       ## Start LocalStack
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
-	localstack start -d
-
+	lstk start --non-interactive --type aws
 stop:        ## Stop LocalStack
 	@echo
-	localstack stop
+	lstk stop
 
 ready:       ## Wait until LocalStack is ready
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@lstk status > /dev/null && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 logs:        ## Retrieve LocalStack logs
-	@localstack logs > logs.txt
+	@lstk logs > logs.txt
 
 test-ci:     ## Run CI tests
 	make check start install ready test; return_code=`echo $$?`;\

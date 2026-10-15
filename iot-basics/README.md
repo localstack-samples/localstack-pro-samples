@@ -14,7 +14,7 @@ A demo application illustrating basic IoT API usage with LocalStack. The sample 
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
-- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
 - [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
 
 ## Check prerequisites

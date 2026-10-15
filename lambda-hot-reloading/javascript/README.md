@@ -8,10 +8,10 @@
 
 ## Starting up
 
-First, we need to make sure we start LocalStack with the right configuration. This is as simple as setting `LAMBDA_REMOTE_DOCKER`(see the [Configuration Documentation](https://docs.localstack.cloud/localstack/configuration/#lambda) for more information):
+First, we need to make sure we start LocalStack with the right configuration. This is as simple as setting `LAMBDA_REMOTE_DOCKER`, passed with the `LOCALSTACK_` prefix so that `lstk` forwards it to the container (see the [Configuration Documentation](https://docs.localstack.cloud/localstack/configuration/#lambda) for more information):
 
 ```bash
-LAMBDA_REMOTE_DOCKER=0 localstack start
+LOCALSTACK_LAMBDA_REMOTE_DOCKER=0 lstk start
 ```
 
 Accordingly, if you are launching LocalStack via Docker or Docker Compose:

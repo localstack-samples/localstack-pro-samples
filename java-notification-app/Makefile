@@ -25,10 +25,11 @@ stop:        ## Stop all services
 
 ready:       ## Wait until LocalStack is ready
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@for i in $$(seq 1 30); do curl -sf http://localhost:4566/_localstack/health > /dev/null && break; sleep 1; done; \
+		curl -sf http://localhost:4566/_localstack/health > /dev/null && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 logs:        ## Retrieve LocalStack logs
-	@localstack logs > logs.txt
+	@docker compose logs localstack > logs.txt
 
 deploy:      ## Deploy CloudFormation stack for notification infrastructure
 	@awslocal cloudformation deploy \

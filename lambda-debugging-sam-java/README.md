@@ -61,13 +61,13 @@ make install
     LOCALSTACK_AUTH_TOKEN=<your-auth-token> \
     LOCALSTACK_LAMBDA_DEBUG_MODE=1 \
     LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml \
-    localstack start --volume $PWD/lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml
+    lstk start
     ```
 
     * `LOCALSTACK_AUTH_TOKEN=<your-auth-token>` is the authentication token for LocalStack
     * `LOCALSTACK_LAMBDA_DEBUG_MODE=1` adjusts timeouts
     * `LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml` points to the config file for Lambda debug mode allowing for advanced configuration. It maps the Lambda function `arn:aws:lambda:us-east-1:000000000000:function:HelloWorldFunctionJava` to port `5050`.
-    * `--volume $PWD/lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml` maps the Lambda debug configuration from the host into the LocalStack Docker container for hot-reloading configuration updates.
+    * [`.lstk/config.toml`](.lstk/config.toml) mounts `lambda_debug_mode_config.yaml` from the host into the LocalStack Docker container for hot-reloading configuration updates. `lstk` reads it when you run it from this directory.
 
 ### Deploy the Lambda function
 

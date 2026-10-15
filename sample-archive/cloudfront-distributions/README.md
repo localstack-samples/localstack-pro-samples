@@ -24,7 +24,7 @@ Please refer to the `distconfig.json` file for details about the CloudFront dist
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 SERVICES=edge,serverless,ssm,cloudfront localstack start
+LOCALSTACK_AUTH_TOKEN=... LOCALSTACK_DEBUG=1 LOCALSTACK_SERVICES=edge,serverless,ssm,cloudfront lstk start
 ```
 
 Please also ensure that your local IP address is registered as a DNS nameserver in your environment (e.g., by configuring `/etc/resolv.conf`).

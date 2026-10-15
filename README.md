@@ -9,6 +9,7 @@ Each example in the repository is prefixed with the name of the AWS service bein
 ## Prerequisites
 
 * [Docker](https://docs.docker.com/get-docker/)
+* [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/), which starts LocalStack: `npm install -g @localstack/lstk` or `brew install localstack/tap/lstk`
 * [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
 * [Serverless](https://www.serverless.com/framework/docs/getting-started)
 * [Terraform](https://developer.hashicorp.com/terraform/downloads)
@@ -22,10 +23,10 @@ All samples require a valid [LocalStack for AWS license](https://localstack.clou
 export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
 ```
 
-Alternatively, use the LocalStack CLI to persist the token:
+Alternatively, log in with `lstk`, which stores your credentials:
 
 ```bash
-localstack auth set-token <your-auth-token>
+lstk login
 ```
 
 You can find your Auth Token on the [LocalStack Web Application](https://app.localstack.cloud/workspace/auth-token).
@@ -115,7 +116,7 @@ usage:       ## Show this help
         @fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 install:     ## Install dependencies
-        @which localstack || pip install localstack
+        @which lstk > /dev/null || npm install -g @localstack/lstk
         @which awslocal || pip install awscli-local
         ## install whatever else you need, like node modules, python packages, etc.
         @test -e node_modules || npm install
@@ -126,18 +127,18 @@ run:         ## Run the actual sample steps/commands. This assumes LocalStack is
 
 start:       ## Start LocalStack in detached mode
         @test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Get your auth token at https://localstack.cloud/pricing."; exit 1)
-        localstack start -d
+        lstk start --non-interactive --type aws
 
 stop:        ## Stop the Running LocalStack container
         @echo
-        localstack stop
+        lstk stop
 
 ready:       ## Make sure the LocalStack container is up
         @echo Waiting on the LocalStack container...
-        @localstack wait -t 30 && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+        @lstk status > /dev/null && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 logs:        ## Save the logs in a separate file, since the LS container will only contain the logs of the last sample run.
-        @localstack logs > logs.txt
+        @lstk logs > logs.txt
 
 test-ci:     ## Execute the necessary targets in the correct order for an automatic execution.
         make start install ready run; return_code=`echo $$?`;\

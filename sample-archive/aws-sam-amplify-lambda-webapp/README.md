@@ -20,7 +20,7 @@ pip install aws-sam-cli-local
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 SERVICES=serverless,cognito,amplify localstack start
+LOCALSTACK_AUTH_TOKEN=... LOCALSTACK_DEBUG=1 LOCALSTACK_SERVICES=serverless,cognito,amplify lstk start
 ```
 
 ## Running

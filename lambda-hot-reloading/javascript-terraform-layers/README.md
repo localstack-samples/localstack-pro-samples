@@ -22,10 +22,10 @@ The source code of the created lambda function `hotreloadlambda` is located in t
 ## Starting up
 
 First, we need to make sure we start LocalStack with the right configuration. 
-Hot reloading of layers is only supported in our new lambda provider, all you need to do is set `PROVIDER_OVERRIDE_LAMBDA=v2`, if you use a LocalStack version < 2.0.
+Hot reloading of layers is only supported in our new lambda provider, all you need to do is set `PROVIDER_OVERRIDE_LAMBDA=v2` (with the `LOCALSTACK_` prefix, so that `lstk` forwards it to the container), if you use a LocalStack version < 2.0.
 
 ```bash
-PROVIDER_OVERRIDE_LAMBDA=v2 localstack start
+LOCALSTACK_PROVIDER_OVERRIDE_LAMBDA=v2 lstk start
 ```
 
 Accordingly, if you are launching LocalStack via Docker or Docker Compose:

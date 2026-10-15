@@ -70,7 +70,7 @@ elif [ "$state" == FAILED ]; then
     # sample CI keeps passing until LocalStack exposes RDS to spawned containers.
     awslocal glue get-job-run --job-name $JOB_NAME --run-id $run_id
     awslocal logs filter-log-events --log-group-name /aws-glue/jobs || true
-    localstack logs || true
+    lstk logs || true
     echo "Glue job reached FAILED state (likely due to JDBC connectivity from the spawned Spark container) - see logs above for details."
     exit 0
 fi

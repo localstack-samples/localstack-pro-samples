@@ -1,6 +1,6 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
-export SERVICES = serverless,kinesisanalytics
+export LOCALSTACK_SERVICES = serverless,kinesisanalytics
 export AWS_DEFAULT_REGION=us-east-1
 
 usage:       ## Show this help
@@ -8,7 +8,7 @@ usage:       ## Show this help
 
 install:     ## Install dependencies
 	#@npm install
-	@which localstack || pip install localstack
+	@which lstk > /dev/null || npm install -g @localstack/lstk
 	@which awslocal || pip install awscli-local
 
 deploy:

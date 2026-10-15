@@ -30,18 +30,17 @@ get-traces:             ## Get the latest X-Ray traces (default 10min)
 	awslocal xray batch-get-traces --trace-ids $$ID
 
 start:
-	localstack start -d
-
+	lstk start --non-interactive --type aws
 stop:
 	@echo
-	localstack stop
+	lstk stop
 
 ready:
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@lstk status > /dev/null && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 logs:
-	@localstack logs > logs.txt
+	@lstk logs > logs.txt
 
 test-ci:
 	make start install ready run; return_code=`echo $$?`;\

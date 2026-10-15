@@ -22,7 +22,7 @@ make install
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 SERVICES=sagemaker,s3,logs,sts,iam localstack start
+LOCALSTACK_AUTH_TOKEN=... LOCALSTACK_DEBUG=1 LOCALSTACK_SERVICES=sagemaker,s3,logs,sts,iam lstk start
 ```
 
 ## Running

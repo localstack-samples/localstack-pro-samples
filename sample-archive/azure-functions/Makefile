@@ -1,5 +1,5 @@
 export AZURE = 1
-export SERVICES = azure
+export LOCALSTACK_SERVICES = azure
 
 usage:      ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'

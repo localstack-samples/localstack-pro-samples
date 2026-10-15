@@ -14,7 +14,7 @@ A demo application illustrating how to create a JavaScript Lambda function with 
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
-- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
 - [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) (optional, for Terraform-based deployment)
 
@@ -79,7 +79,7 @@ terraform plan
 terraform apply --auto-approve
 ```
 
-Since we are using LocalStack, no actual AWS resources will be created. LocalStack creates ephemeral development resources that are automatically cleaned up when you stop LocalStack (`localstack stop`).
+Since we are using LocalStack, no actual AWS resources will be created. LocalStack creates ephemeral development resources that are automatically cleaned up when you stop LocalStack (`lstk stop`).
 
 ## License
 

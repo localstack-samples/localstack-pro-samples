@@ -18,7 +18,7 @@ Start your LocalStack Docker container with the following command:
 
 ```bash
 export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
-localstack start
+lstk start
 ```
 
 ## Install dependencies

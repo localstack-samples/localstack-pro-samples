@@ -8,13 +8,12 @@ lint:          ## Run code linter for all projects
 	MAKE_TARGET='lint' make for-each-dir
 
 start:         ## Start LocalStack infrastructure
-	localstack start -d
-
+	lstk start --non-interactive --type aws
 ready:         ## Check if the LocalStack container is up and running.
-	localstack wait -t 20 && echo "LocalStack is ready to use!"
+	lstk status > /dev/null && echo "LocalStack is ready to use!"
 
 stop:          ## Stop LocalStack infrastructure
-	localstack stop
+	lstk stop
 
 for-each-dir:
 	./make-for-each.sh $$MAKE_TARGET $$CMD
