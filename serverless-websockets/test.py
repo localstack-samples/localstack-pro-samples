@@ -22,7 +22,9 @@ def test_websocket_api():
     apis = client.get_apis()['Items']
     api = [a for a in apis if 'localstack-websockets' in a['Name']][0]
 
-    url = api['ApiEndpoint']
+    # Connect to the deployed stage: an endpoint without a stage path is rejected
+    stage = client.get_stages(ApiId=api['ApiId'])['Items'][0]['StageName']
+    url = '%s/%s' % (api['ApiEndpoint'], stage)
     print('Connecting to websocket URL %s' % url)
     asyncio.get_event_loop().run_until_complete(start_client(url))
     result = queue.get(timeout=3)

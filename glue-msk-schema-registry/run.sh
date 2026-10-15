@@ -51,7 +51,7 @@ cluster_arn=$(set -x;lstk aws kafka create-cluster \
 
 state=$(set -x; lstk aws kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
 
-for i in {1..35}; do
+for i in {1..75}; do
   echo "Waiting for Kafka cluster to become ACTIVE (current status: $state)..."
   sleep 4
   if [ "$state" == ACTIVE ]; then
