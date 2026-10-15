@@ -9,6 +9,7 @@ usage:       ## Show this help
 check:       ## Check if all required prerequisites are installed
 	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
 	@command -v mvn > /dev/null 2>&1 || { echo "Maven is not installed. Please install Maven and try again."; exit 1; }
+	@command -v lstk > /dev/null 2>&1 || { echo "lstk CLI is not installed (required by 'lstk aws'). Please run: npm install -g @localstack/lstk"; exit 1; }
 	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed (required by 'lstk aws'). Please install it and try again."; exit 1; }
 	@echo "All required prerequisites are available."
 
