@@ -14,7 +14,7 @@ A [PHP/Bref](https://bref.sh/) serverless application using a shared Lambda laye
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
-- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
 - [`cdklocal`](https://github.com/localstack/aws-cdk-local) — install with `npm install -g aws-cdk-local`
 - [Node.js](https://nodejs.org/en/download/) with `npm`
 - [`curl`](https://curl.se/) and [`jq`](https://stedolan.github.io/jq/)

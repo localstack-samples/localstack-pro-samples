@@ -8,7 +8,7 @@ This is a simple example of how to hot reload your Typescript Lambda with Webpac
 * [Docker](https://docs.docker.com/get-docker/)
 * [Node.js](https://nodejs.org/en/download/)
 * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
-* [`awslocal`](https://github.com/localstack/awscli-local)
+
 * [yarn](https://classic.yarnpkg.com/en/docs/install)
 * `jq`
 
@@ -18,7 +18,7 @@ Start your LocalStack Docker container with the following command:
 
 ```bash
 export LOCALSTACK_AUTH_TOKEN=<your-auth-token>
-localstack start
+lstk start
 ```
 
 ## Install dependencies
@@ -70,7 +70,7 @@ webpack 5.75.0 compiled successfully in 455 ms
 Deploy the Lambda with the following command:
 
 ```bash
-awslocal lambda create-function \
+lstk aws lambda create-function \
     --function-name localstack-example \
     --runtime nodejs18.x \
     --role arn:aws:iam::000000000000:role/lambda-ex \
@@ -81,7 +81,7 @@ awslocal lambda create-function \
 Additionally, you can create a Lambda Function URL with the following command:
 
 ```bash
-function_url=$(awslocal lambda create-function-url-config --function-name localstack-example --auth-type NONE | jq -r '.FunctionUrl')
+function_url=$(lstk aws lambda create-function-url-config --function-name localstack-example --auth-type NONE | jq -r '.FunctionUrl')
 ```
 
 ## Test the Lambda
@@ -140,7 +140,7 @@ You can perform further changes to the `api.ts` file and test the Lambda in real
 The Lambda Hot Reloading feature in LocalStack allows you to hot reload your Lambda code in real-time. In this sample, this is achieved using the following:
 
 - The `build` script in the `package.json` file uses Nodemon to watch for changes in the `src` directory and rebuild the Lambda. This is enabled using the [`nodemon-webpack-plugin`](https://www.npmjs.com/package/nodemon-webpack-plugin) plugin, which has been pre-configured in the `webpack.config.js` file.
-- The `S3Bucket` and `S3Key` parameters in the `awslocal lambda create-function` command are used to deploy the Lambda code from the `dist` directory. This is done by specifying the `dist` directory as the `S3Key` parameter. Everytime the Lambda is updated, Nodemon triggers another build and the `dist` directory is updated with the latest code changes. LocalStack then automatically updates the Lambda code with the latest changes from the `dist` directory.
+- The `S3Bucket` and `S3Key` parameters in the `lstk aws lambda create-function` command are used to deploy the Lambda code from the `dist` directory. This is done by specifying the `dist` directory as the `S3Key` parameter. Everytime the Lambda is updated, Nodemon triggers another build and the `dist` directory is updated with the latest code changes. LocalStack then automatically updates the Lambda code with the latest changes from the `dist` directory.
 
 ## Notes
 

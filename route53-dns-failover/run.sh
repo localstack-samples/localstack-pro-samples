@@ -8,10 +8,10 @@ set -eux
 HOSTED_ZONE_NAME=hello-localstack.com
 
 # Create a hosted zone
-HOSTED_ZONE_ID=$(awslocal route53 create-hosted-zone --name $HOSTED_ZONE_NAME --caller-reference foo | jq -r .HostedZone.Id)
+HOSTED_ZONE_ID=$(lstk aws route53 create-hosted-zone --name $HOSTED_ZONE_NAME --caller-reference foo | jq -r .HostedZone.Id)
 
 # Create a health check that runs against the `http_echo` container
-HEALTH_CHECK_ID=$(awslocal route53 create-health-check --caller-reference foobar --health-check-config '{
+HEALTH_CHECK_ID=$(lstk aws route53 create-health-check --caller-reference foobar --health-check-config '{
     "FullyQualifiedDomainName": "http_echo",
     "Port": 80,
     "ResourcePath": "/",
@@ -20,7 +20,7 @@ HEALTH_CHECK_ID=$(awslocal route53 create-health-check --caller-reference foobar
 }' | jq -r .HealthCheck.Id)
 
 # Create RRSets
-awslocal route53 change-resource-record-sets --hosted-zone ${HOSTED_ZONE_ID#/hostedzone/} --change-batch '{
+lstk aws route53 change-resource-record-sets --hosted-zone ${HOSTED_ZONE_ID#/hostedzone/} --change-batch '{
 "Changes": [
     {
         "Action": "CREATE",
@@ -41,7 +41,7 @@ awslocal route53 change-resource-record-sets --hosted-zone ${HOSTED_ZONE_ID#/hos
         }
     }
 ]}'
-awslocal route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID#/hostedzone/} --change-batch '{
+lstk aws route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID#/hostedzone/} --change-batch '{
 "Changes": [
     {
         "Action": "CREATE",
@@ -83,7 +83,7 @@ LOCALSTACK_DNS_SERVER=localhost
 dig @$LOCALSTACK_DNS_SERVER +noall +answer test.hello-localstack.com CNAME
 
 # Make the healthcheck fail by pointing it to a nonexistent host
-awslocal route53 update-health-check --health-check-id ${HEALTH_CHECK_ID} --fully-qualified-domain-name bad-host-p45e8eG94rK.com
+lstk aws route53 update-health-check --health-check-id ${HEALTH_CHECK_ID} --fully-qualified-domain-name bad-host-p45e8eG94rK.com
 
 # Wait for the healthcheck to refresh
 sleep 12

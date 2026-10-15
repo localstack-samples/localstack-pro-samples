@@ -26,8 +26,8 @@ usage:                ## Show this help
 check:    ## Check if all required prerequisites are installed
 	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
 	@command -v node > /dev/null 2>&1 || { echo "Node.js is not installed. Please install Node.js and try again."; exit 1; }
-	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack CLI is not installed. Please install it and try again."; exit 1; }
-	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
+	@command -v lstk > /dev/null 2>&1 || { echo "lstk CLI is not installed. Please run: npm install -g @localstack/lstk"; exit 1; }
+	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed (required by 'lstk aws'). Please install it and try again."; exit 1; }
 	@echo "All required prerequisites are available."
 
 
@@ -100,14 +100,14 @@ start:                ## Start LocalStack
 	LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN} \
 	LOCALSTACK_LAMBDA_DEBUG_MODE=1 \
 	LOCALSTACK_LAMBDA_DEBUG_MODE_CONFIG_PATH=/tmp/lambda_debug_mode_config.yaml \
-	localstack start --detached --volume ${PWD}/lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml
+	lstk start --non-interactive
 
 stop:                 ## Stop LocalStack
-	localstack stop
+	lstk stop
 
 ready:                ## Wait until LocalStack is running
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@lstk status > /dev/null && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 test-ci:
 	make start install build ready deploy wait invoke; return_code=`echo $$?`;\

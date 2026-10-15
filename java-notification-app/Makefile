@@ -9,7 +9,8 @@ usage:       ## Show this help
 check:       ## Check if all required prerequisites are installed
 	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
 	@command -v mvn > /dev/null 2>&1 || { echo "Maven is not installed. Please install Maven and try again."; exit 1; }
-	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
+	@command -v lstk > /dev/null 2>&1 || { echo "lstk CLI is not installed (required by 'lstk aws'). Please run: npm install -g @localstack/lstk"; exit 1; }
+	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed (required by 'lstk aws'). Please install it and try again."; exit 1; }
 	@echo "All required prerequisites are available."
 
 install:     ## Build the Java application
@@ -25,21 +26,22 @@ stop:        ## Stop all services
 
 ready:       ## Wait until LocalStack is ready
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@for i in $$(seq 1 30); do curl -sf http://localhost:4566/_localstack/health > /dev/null && break; sleep 1; done; \
+		curl -sf http://localhost:4566/_localstack/health > /dev/null && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 logs:        ## Retrieve LocalStack logs
-	@localstack logs > logs.txt
+	@docker compose logs localstack > logs.txt
 
 deploy:      ## Deploy CloudFormation stack for notification infrastructure
-	@awslocal cloudformation deploy \
+	@lstk aws cloudformation deploy \
 		--template-file src/main/resources/email-infra.yml \
 		--stack-name email-infra
 
 run:         ## Start the Spring Boot application and run a test notification
-	@awslocal ses verify-email-identity --email-address no-reply@localstack.cloud
+	@lstk aws ses verify-email-identity --email-address no-reply@localstack.cloud
 	AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test mvn spring-boot:run &
 	@sleep 5
-	@awslocal sns publish \
+	@lstk aws sns publish \
 		--topic arn:aws:sns:us-east-1:000000000000:email-notifications \
 		--message '{"subject":"hello", "address": "alice@example.com", "body": "hello world"}'
 	@curl -s localhost:8080/process

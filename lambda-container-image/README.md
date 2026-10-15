@@ -14,8 +14,8 @@ A demo application illustrating Lambda container images with LocalStack. The Lam
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
-- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
-- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 
 ## Check prerequisites
 
@@ -89,10 +89,10 @@ Hello from LocalStack Lambda container image!
 An error occurred (UnsupportedMediaTypeException) when calling the Invoke operation (reached max retries: 0): The payload is not JSON: b'\xb5\xeb-\xb5\xeb-'
 ```
 
-**Solution**: Downgrade your `awslocal` CLI to version 1, or update the Lambda invocation to use `--cli-binary-format raw-in-base64-out`:
+**Solution**: Downgrade your `lstk aws` CLI to version 1, or update the Lambda invocation to use `--cli-binary-format raw-in-base64-out`:
 
 ```bash
-awslocal lambda invoke --cli-binary-format raw-in-base64-out \
+lstk aws lambda invoke --cli-binary-format raw-in-base64-out \
     --function-name ls-lambda-image \
     --payload '{"test": "test"}' /tmp/lambda.out \
     --log-type Tail --query 'LogResult' --output text | base64 -d

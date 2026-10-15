@@ -6,7 +6,6 @@ usage:                  ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 install:                ## Install dependencies
-	@which awslocal || pip install awscli-local
 	@which samlocal || pip install aws-sam-cli-local
 	@pip install 'click>=8.2'
 
@@ -26,22 +25,21 @@ watch-trace-summaries:  ## Get the latest X-Ray trace summaries (default 10min) 
 
 get-traces:             ## Get the latest X-Ray traces (default 10min)
 	TIME=$$(date +%s); \
-	ID=$$(awslocal xray get-trace-summaries --start-time $$(($$TIME-600)) --end-time $$TIME | jq -r '.TraceSummaries[0].Id'); \
-	awslocal xray batch-get-traces --trace-ids $$ID
+	ID=$$(lstk aws xray get-trace-summaries --start-time $$(($$TIME-600)) --end-time $$TIME | jq -r '.TraceSummaries[0].Id'); \
+	lstk aws xray batch-get-traces --trace-ids $$ID
 
 start:
-	localstack start -d
-
+	lstk start --non-interactive --type aws
 stop:
 	@echo
-	localstack stop
+	lstk stop
 
 ready:
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@lstk status > /dev/null && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 logs:
-	@localstack logs > logs.txt
+	@lstk logs > logs.txt
 
 test-ci:
 	make start install ready run; return_code=`echo $$?`;\

@@ -1,7 +1,7 @@
 export AWS_ACCESS_KEY_ID ?= test
 export AWS_SECRET_ACCESS_KEY ?= test
 export DOCKER_BRIDGE ?= $(shell (uname -a | grep Linux > /dev/null) && echo 172.17.0.1 || echo docker.for.mac.localhost)
-export SERVICES = edge,serverless,cloudformation,sts,stepfunctions,sqs
+export LOCALSTACK_SERVICES = edge,serverless,cloudformation,sts,stepfunctions,sqs
 export START_WEB ?= 1
 
 usage:           ## Show this help
@@ -10,7 +10,7 @@ usage:           ## Show this help
 install:         ## Install dependencies
 	@npm install
 	@which serverless || npm install -g serverless
-	@which localstack || pip install localstack
+	@which lstk > /dev/null || npm install -g @localstack/lstk
 
 run:           ## Deploy and start the app locally
 	@make install; \

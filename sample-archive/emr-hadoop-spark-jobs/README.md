@@ -26,7 +26,7 @@ This sample project creates a local EMR cluster and runs two simple jobs upon in
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 SERVICES=cloudformation,emr localstack start
+LOCALSTACK_AUTH_TOKEN=... LOCALSTACK_DEBUG=1 LOCALSTACK_SERVICES=cloudformation,emr lstk start
 ```
 
 Run the startup script:
@@ -52,10 +52,10 @@ sleep 5
 Finally, you should see some log lines indicating that the 2 jobs have run successfully:
 ```
 The job should have copied file job1.xml to bucket bucket2:
-awslocal s3 ls s3://bucket2/
+lstk aws s3 ls s3://bucket2/
 2019-12-16 20:45:59          9 job1.xml
 The Spark job should have copied file job2.xml to bucket bucket3:
-awslocal s3 ls s3://bucket3/
+lstk aws s3 ls s3://bucket3/
 2019-12-16 20:46:12          9 job2.xml
 ```
 

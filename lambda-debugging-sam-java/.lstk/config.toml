@@ -1,0 +1,8 @@
+# lstk configuration for this sample, picked up when lstk runs in this directory.
+# It mounts the Lambda debug mode config into the emulator, so LocalStack picks up
+# changes to lambda_debug_mode_config.yaml without a restart.
+[[containers]]
+type = "aws"
+tag  = "latest"
+port = "4566"
+volumes = ["../lambda_debug_mode_config.yaml:/tmp/lambda_debug_mode_config.yaml"]

@@ -14,8 +14,8 @@ A demo application illustrating schema evolution with AWS Glue Schema Registry a
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
-- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
-- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 - [Java 11](https://openjdk.org/) and [Maven 3](https://maven.apache.org/)
 
 ## Check prerequisites
@@ -30,7 +30,7 @@ make check
 make install
 ```
 
-The install target installs LocalStack and `awslocal`. Please also manually install Maven 3 and Java 11. Verify your versions:
+The install target installs LocalStack and `lstk aws`. Please also manually install Maven 3 and Java 11. Verify your versions:
 
 ```sh
 $ mvn --version

@@ -14,8 +14,8 @@ A demo application illustrating AWS Lambda event source filtering with DynamoDB 
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
-- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
-- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 - [`samlocal`](https://github.com/localstack/aws-sam-cli-local) — install with `pip install aws-sam-cli-local`
 - [Node.js](https://nodejs.org/en/download/) with `npm` and [`ulid`](https://www.npmjs.com/package/ulid) (`npm install --save ulid`)
 
@@ -57,7 +57,7 @@ samlocal deploy
 After deploying, send an SQS message to trigger the Lambda via the filter criteria:
 
 ```bash
-awslocal sqs send-message \
+lstk aws sqs send-message \
     --queue-url http://localhost:4566/000000000000/MyQueue \
     --message-body '{"data": "A"}' \
     --delay-seconds 10

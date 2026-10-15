@@ -38,9 +38,13 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install LocalStack
+      - name: Install lstk and the AWS CLI wrapper
         run: |
-          pip install localstack awscli-local[ver1] virtualenv
+          npm install -g @localstack/lstk
+          # Write the localstack AWS profile. Without it, lstk aws prints a setup note on stdout,
+          # which breaks scripts that pipe its output into jq.
+          lstk setup aws --force --non-interactive
+          pip install awscli virtualenv
           pip install --upgrade boto3 botocore
 
       - name: Setup config
@@ -59,8 +63,9 @@ jobs:
           make test-ci
         env:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
-          DEBUG: 1
-          DNS_ADDRESS: 127.0.0.1
+          # lstk forwards LOCALSTACK_-prefixed variables to the emulator container
+          LOCALSTACK_DEBUG: 1
+          LOCALSTACK_DNS_ADDRESS: 127.0.0.1
 
       - name: Compute sample name
         if: always()

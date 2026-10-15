@@ -6,7 +6,7 @@ Simple demo application illustrating how to deploy and run the [AWS Serverless A
 
 * LocalStack
 * Docker
-* [`awslocal`](https://github.com/localstack/awscli-local)
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 * [`samlocal`](https://github.com/localstack/aws-sam-cli-local)
 
 ## Installing
@@ -20,7 +20,7 @@ pip install aws-sam-cli-local
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 SERVICES=serverless,cognito,amplify localstack start
+LOCALSTACK_AUTH_TOKEN=... LOCALSTACK_DEBUG=1 LOCALSTACK_SERVICES=serverless,cognito,amplify lstk start
 ```
 
 ## Running
@@ -33,7 +33,7 @@ cd lambda-refarch-webapp
 
 Package and deploy the application against LocalStack, using the `samlocal` command line:
 ```
-awslocal s3 mb s3://test
+lstk aws s3 mb s3://test
 samlocal build
 samlocal package --s3-bucket test --output-template-file packaged.yml
 samlocal deploy --stack-name s3 --s3-bucket test --template-file packaged.yml --capabilities CAPABILITY_IAM --parameter-overrides 'Repository=test OauthToken=test'

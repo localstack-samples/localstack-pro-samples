@@ -16,8 +16,8 @@ start=$(($EPOCH-600))
 end=$(($EPOCH))
 
 # Retrieve trace summaries
-awslocal xray get-trace-summaries --start-time=$start --end-time=$end
+lstk aws xray get-trace-summaries --start-time=$start --end-time=$end
 
 # Retrive full traces
-TRACEIDS=$(awslocal xray get-trace-summaries --start-time=$start --end-time=$end --query 'TraceSummaries[*].Id' --output text)
-awslocal xray batch-get-traces --trace-ids $TRACEIDS --query 'Traces[*]'
+TRACEIDS=$(lstk aws xray get-trace-summaries --start-time=$start --end-time=$end --query 'TraceSummaries[*].Id' --output text)
+lstk aws xray batch-get-traces --trace-ids $TRACEIDS --query 'Traces[*]'

@@ -6,11 +6,11 @@ IMAGE_FILE=amzn2.vdi
 
 test -e $IMAGE_FILE || wget -O $IMAGE_FILE $IMAGE_URL
 
-VPC_ID=$(awslocal ec2 create-vpc --cidr-block 0.0.0.0/24 | jq -r '.Vpc.VpcId')
-SUB_ID=$(awslocal ec2 create-subnet --cidr-block 0.0.0.0/26 --vpc-id $VPC_ID | jq -r '.Subnet.SubnetId')
+VPC_ID=$(lstk aws ec2 create-vpc --cidr-block 0.0.0.0/24 | jq -r '.Vpc.VpcId')
+SUB_ID=$(lstk aws ec2 create-subnet --cidr-block 0.0.0.0/26 --vpc-id $VPC_ID | jq -r '.Subnet.SubnetId')
 
 perl -i -pe 's|"S3Key": .*|"S3Key": "'$PWD'/amzn2.vdi"|' containers.json
-IMAGE_ID=$(awslocal ec2 import-image --description "Test VM image" --license-type BYOL --disk-containers file://containers.json | jq -r '.ImageId')
+IMAGE_ID=$(lstk aws ec2 import-image --description "Test VM image" --license-type BYOL --disk-containers file://containers.json | jq -r '.ImageId')
 
 perl -i -pe 's/"source_ami": .*/"source_ami": "'$IMAGE_ID'",/' packer.json
 perl -i -pe 's/"subnet_id": .*/"subnet_id": "'$SUB_ID'",/' packer.json

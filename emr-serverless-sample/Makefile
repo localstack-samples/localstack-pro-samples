@@ -11,8 +11,8 @@ usage:       ## Show this help
 
 check:       ## Check if all required prerequisites are installed
 	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
-	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack CLI is not installed. Please install it and try again."; exit 1; }
-	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
+	@command -v lstk > /dev/null 2>&1 || { echo "lstk CLI is not installed. Please run: npm install -g @localstack/lstk"; exit 1; }
+	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed (required by 'lstk aws'). Please install it and try again."; exit 1; }
 	@command -v mvn > /dev/null 2>&1 || { echo "Maven is not installed. Please install Maven and try again."; exit 1; }
 	@echo "All required prerequisites are available."
 
@@ -21,32 +21,31 @@ install:     ## Build the Java application
 
 start:       ## Start LocalStack
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
-	localstack start -d
-
+	lstk start --non-interactive --type aws
 stop:        ## Stop LocalStack
 	@echo
-	localstack stop
+	lstk stop
 
 ready:       ## Wait until LocalStack is ready
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@lstk status > /dev/null && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 logs:        ## Retrieve LocalStack logs
-	@localstack logs > logs.txt
+	@lstk logs > logs.txt
 
 deploy:      ## Create S3 bucket and upload the JAR file
-	@awslocal s3 mb s3://$(S3_BUCKET) || true
-	@awslocal s3 cp hello-world/target/hello-world-1.0.jar s3://$(S3_BUCKET)/code/hello-world-1.0.jar
+	@lstk aws s3 mb s3://$(S3_BUCKET) || true
+	@lstk aws s3 cp hello-world/target/hello-world-1.0.jar s3://$(S3_BUCKET)/code/hello-world-1.0.jar
 
 run:         ## Create and run an EMR Serverless job
-	$(eval APP_ID := $(shell awslocal emr-serverless create-application \
+	$(eval APP_ID := $(shell lstk aws emr-serverless create-application \
 		--type SPARK \
 		--name hello-world-demo \
 		--release-label emr-6.9.0 \
 		--query applicationId --output text))
 	@echo "Application ID: $(APP_ID)"
-	@awslocal emr-serverless start-application --application-id $(APP_ID)
-	@awslocal emr-serverless start-job-run \
+	@lstk aws emr-serverless start-application --application-id $(APP_ID)
+	@lstk aws emr-serverless start-job-run \
 		--application-id $(APP_ID) \
 		--execution-role-arn $(JOB_ROLE_ARN) \
 		--job-driver '{"sparkSubmit": {"entryPoint": "s3://$(S3_BUCKET)/code/hello-world-1.0.jar"}}'

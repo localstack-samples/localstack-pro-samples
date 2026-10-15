@@ -14,8 +14,8 @@ A demo application illustrating how to proxy data from different resources (Dyna
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
-- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
-- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 - [Python 3](https://www.python.org/downloads/)
 
 ## Check prerequisites
@@ -63,7 +63,7 @@ You should see a success output in the terminal:
 The item should also have been added to your local DynamoDB table:
 
 ```bash
-$ awslocal dynamodb scan --table-name table1
+$ lstk aws dynamodb scan --table-name table1
 {
     "Items": [
         {

@@ -14,8 +14,8 @@ A demo application illustrating how to run a Java Spark job on EMR Serverless us
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
-- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
-- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 - [Java](https://openjdk.org/) and [Maven](https://maven.apache.org/)
 
 ## Check prerequisites
@@ -26,7 +26,7 @@ make check
 
 ## Configure a Custom AWS Profile (optional)
 
-If not using `awslocal`, add the following profile to `~/.aws/config`:
+If not using `lstk aws`, add the following profile to `~/.aws/config`:
 
 ```shell
 [profile localstack]
@@ -92,7 +92,7 @@ The Spark job submits with:
 To stop the EMR Serverless application after the job completes:
 
 ```bash
-awslocal emr-serverless stop-application --application-id $APPLICATION_ID
+lstk aws emr-serverless stop-application --application-id $APPLICATION_ID
 ```
 
 ## License

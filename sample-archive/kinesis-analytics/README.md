@@ -19,7 +19,7 @@ make install
 
 Make sure that LocalStack is started with the following `SERVICES` configuration:
 ```
-LOCALSTACK_AUTH_TOKEN=... DEBUG=1 SERVICES=cloudformation,kinesisanalytics,kinesis localstack start
+LOCALSTACK_AUTH_TOKEN=... LOCALSTACK_DEBUG=1 LOCALSTACK_SERVICES=cloudformation,kinesisanalytics,kinesis lstk start
 ```
 
 Deploy the app locally and run a Lambda test invocation:

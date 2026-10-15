@@ -44,4 +44,4 @@ cdktf deploy
 
 ## Configuration
 
-LocalStack currently does not provide a wrapper (similar to `cdklocal` or `tflocal`) to run CDK for Terraform. Therefore, you need to configure the AWS `provider` to redirect requests to the LocalStack API (`http://localhost:4566` by default), using [Terraform Override mechanism](https://developer.hashicorp.com/terraform/language/files/override). Check the [`localstack_config.py`](./localstack_config.py) file for an example.
+LocalStack currently does not provide a wrapper (similar to `cdklocal` or `lstk tf`) to run CDK for Terraform. Therefore, you need to configure the AWS `provider` to redirect requests to the LocalStack API (`http://localhost:4566` by default), using [Terraform Override mechanism](https://developer.hashicorp.com/terraform/language/files/override). Check the [`localstack_config.py`](./localstack_config.py) file for an example.

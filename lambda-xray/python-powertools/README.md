@@ -8,16 +8,16 @@ and shows how to use the X-Ray API to fetch distributed trace data.
 - LocalStack
 - Docker
 - `make`
-- [awslocal](https://github.com/localstack/awscli-local)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 - [samlocal](https://github.com/localstack/aws-sam-cli-local)
 - Python / `pip`
 
 ## Start LocalStack
 
-Start your LocalStack with your Auth Token configured along with the `DEBUG=1` configuration:
+Start LocalStack with your Auth Token configured and debug logging enabled. `lstk` forwards `LOCALSTACK_`-prefixed variables to the container, so `LOCALSTACK_DEBUG=1` sets `DEBUG=1`:
 
 ```bash
-LOCALSTACK_AUTH_TOKEN=$LOCALSTACK_AUTH_TOKEN DEBUG=1 localstack start
+LOCALSTACK_AUTH_TOKEN=$LOCALSTACK_AUTH_TOKEN LOCALSTACK_DEBUG=1 lstk start
 ```
 
 ## Deploy

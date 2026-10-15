@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eo pipefail
-FUNCTION=$(awslocal cloudformation describe-stack-resource --stack-name blank-python --logical-resource-id function --query 'StackResourceDetail.PhysicalResourceId' --output text)
+FUNCTION=$(lstk aws cloudformation describe-stack-resource --stack-name blank-python --logical-resource-id function --query 'StackResourceDetail.PhysicalResourceId' --output text)
 
 ### Usage: ./4-invoke.sh NUM (default: 1)
 
@@ -15,7 +15,7 @@ fi
 
 # Loop NUM times
 for ((i = 1; i <= num; i++)); do
-  awslocal lambda invoke --function-name $FUNCTION --payload file://event.json out.json
+  lstk aws lambda invoke --function-name $FUNCTION --payload file://event.json out.json
   cat out.json
   echo ""
   sleep 2

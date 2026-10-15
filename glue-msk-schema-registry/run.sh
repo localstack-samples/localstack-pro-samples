@@ -10,11 +10,11 @@ function finish {
   # Delete the cluster (if available)
   echo "(Cleanup) Deleting Kafka cluster."
   if [ -n "$cluster_arn" ]; then
-    awslocal kafka delete-cluster --cluster-arn "$cluster_arn" 2> /dev/null || true
+    lstk aws kafka delete-cluster --cluster-arn "$cluster_arn" 2> /dev/null || true
   fi
   # Delete the schema registry
   echo "(Cleanup) Deleting registry."
-  awslocal glue delete-registry --registry-id RegistryName=unicorn-ride-request-registry 2> /dev/null || true
+  lstk aws glue delete-registry --registry-id RegistryName=unicorn-ride-request-registry 2> /dev/null || true
 }
 trap finish EXIT
 
@@ -39,19 +39,19 @@ else
 fi
 
 step "Start with creating a Kafka cluster..."
-vpc_id=$(set -x; awslocal ec2 create-vpc --cidr-block 10.0.0.0/16 | jq -r .Vpc.VpcId)
-subnet_1=$(set -x; awslocal ec2 create-subnet --vpc-id "$vpc_id" --cidr-block 10.0.1.0/24 --availability-zone us-east-1a | jq -r .Subnet.SubnetId)
-subnet_2=$(set -x; awslocal ec2 create-subnet --vpc-id "$vpc_id" --cidr-block 10.0.2.0/24 --availability-zone us-east-1b | jq -r .Subnet.SubnetId)
-cluster_arn=$(set -x;awslocal kafka create-cluster \
+vpc_id=$(set -x; lstk aws ec2 create-vpc --cidr-block 10.0.0.0/16 | jq -r .Vpc.VpcId)
+subnet_1=$(set -x; lstk aws ec2 create-subnet --vpc-id "$vpc_id" --cidr-block 10.0.1.0/24 --availability-zone us-east-1a | jq -r .Subnet.SubnetId)
+subnet_2=$(set -x; lstk aws ec2 create-subnet --vpc-id "$vpc_id" --cidr-block 10.0.2.0/24 --availability-zone us-east-1b | jq -r .Subnet.SubnetId)
+cluster_arn=$(set -x;lstk aws kafka create-cluster \
   --cluster-name "unicorn-ride-cluster" \
   --kafka-version "3.6.0" \
   --number-of-broker-nodes 2 \
   --broker-node-group-info "{\"ClientSubnets\": [\"$subnet_1\", \"$subnet_2\"], \"InstanceType\":\"kafka.m5.xlarge\"}" \
   --encryption-info "{\"EncryptionInTransit\": {\"ClientBroker\": \"PLAINTEXT\"}}" | jq -r .ClusterArn)
 
-state=$(set -x; awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
+state=$(set -x; lstk aws kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
 
-for i in {1..35}; do
+for i in {1..75}; do
   echo "Waiting for Kafka cluster to become ACTIVE (current status: $state)..."
   sleep 4
   if [ "$state" == ACTIVE ]; then
@@ -60,21 +60,21 @@ for i in {1..35}; do
     echo "Cluster creation FAILED, exiting..."
     exit 1
   fi
-  state=$(awslocal kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
+  state=$(lstk aws kafka describe-cluster --cluster-arn $cluster_arn | jq -r .ClusterInfo.State)
 done
 
 if [ "$state" != ACTIVE  ]; then
   echo "Gave up waiting on Cluster, exiting..."
   exit 1
 fi
-bootstrap_broker=$(set -x; awslocal kafka get-bootstrap-brokers --cluster-arn  $cluster_arn | jq -r .BootstrapBrokerString)
+bootstrap_broker=$(set -x; lstk aws kafka get-bootstrap-brokers --cluster-arn  $cluster_arn | jq -r .BootstrapBrokerString)
 echo "Kafka Bootstrap Broker: $bootstrap_broker"
 
 step "The Kafka cluster is ready. Let's create a Glue Schema Registry..."
-(set -x; awslocal glue create-registry --registry-name unicorn-ride-request-registry)
+(set -x; lstk aws glue create-registry --registry-name unicorn-ride-request-registry)
 
 step "Create the AVRO schema in the new registry (with compatibility BACKWARD)..."
-schema_arn=$(set -x; awslocal glue create-schema \
+schema_arn=$(set -x; lstk aws glue create-schema \
   --registry-id RegistryName="unicorn-ride-request-registry" \
   --schema-name unicorn-ride-request-schema-avro \
   --compatibility BACKWARD \
@@ -82,11 +82,11 @@ schema_arn=$(set -x; awslocal glue create-schema \
   --schema-definition "file://producer/src/main/resources/avro/unicorn_ride_request_v1.avsc" | jq -r .SchemaArn)
 
 step "Check if the schema has been created successfully..."
-(set -x; awslocal glue get-schema \
+(set -x; lstk aws glue get-schema \
   --schema-id SchemaArn=$schema_arn)
 
 step "Check if the schema version has been created correctly..."
-(set -x; awslocal glue get-schema-version \
+(set -x; lstk aws glue get-schema-version \
   --schema-id SchemaArn=$schema_arn \
   --schema-version-number LatestVersion=True)
 
@@ -103,7 +103,7 @@ step "Run a new producer (automatically registers a new schema which removes a r
 (set -x; mvn -pl producer-2 exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker")
 
 step "Get a diff between the initial version and the version registered by the new producer..."
-(set -x; awslocal glue get-schema-versions-diff \
+(set -x; lstk aws glue get-schema-versions-diff \
   --schema-id SchemaArn=$schema_arn \
   --schema-diff-type SYNTAX_DIFF \
   --first-schema-version-number VersionNumber=1 \
@@ -113,7 +113,7 @@ step "Expected failure: Execute a producer which tries to register an incompatib
 (set -x; mvn -pl producer-3 exec:java -Dexec.args="--bootstrap-servers $bootstrap_broker") || true
 
 step "Check that the newly registered schema is in state 'FAILED'..."
-awslocal glue get-schema-version \
+lstk aws glue get-schema-version \
   --schema-id SchemaArn=$schema_arn \
   --schema-version-number VersionNumber=3
 

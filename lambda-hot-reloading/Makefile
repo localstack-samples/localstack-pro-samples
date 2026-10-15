@@ -8,8 +8,8 @@ usage:       ## Show this help
 
 check:       ## Check if all required prerequisites are installed
 	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
-	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack CLI is not installed. Please install it and try again."; exit 1; }
-	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
+	@command -v lstk > /dev/null 2>&1 || { echo "lstk CLI is not installed. Please run: npm install -g @localstack/lstk"; exit 1; }
+	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed (required by 'lstk aws'). Please install it and try again."; exit 1; }
 	@echo "All required prerequisites are available."
 
 install:     ## Install dependencies for the JavaScript sample
@@ -17,25 +17,24 @@ install:     ## Install dependencies for the JavaScript sample
 
 start:       ## Start LocalStack
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
-	localstack start -d
-
+	lstk start --non-interactive --type aws
 stop:        ## Stop LocalStack
 	@echo
-	localstack stop
+	lstk stop
 
 ready:       ## Wait until LocalStack is ready
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@lstk status > /dev/null && echo LocalStack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 logs:        ## Retrieve LocalStack logs
-	@localstack logs > logs.txt
+	@lstk logs > logs.txt
 
 deploy:      ## Deploy the JavaScript Lambda with hot reloading enabled
 	@cd javascript && \
-		awslocal iam create-role \
+		lstk aws iam create-role \
 			--role-name lambda-role \
 			--assume-role-policy-document file://trust-policy.json 2>/dev/null || true && \
-		awslocal lambda create-function \
+		lstk aws lambda create-function \
 			--function-name hot-reload-js \
 			--runtime nodejs18.x \
 			--role arn:aws:iam::000000000000:role/lambda-role \
@@ -43,10 +42,10 @@ deploy:      ## Deploy the JavaScript Lambda with hot reloading enabled
 			--handler index.handler
 
 wait:        ## Wait until the Lambda function can be invoked
-	@awslocal lambda wait function-active-v2 --function-name hot-reload-js
+	@lstk aws lambda wait function-active-v2 --function-name hot-reload-js
 
 run:         ## Invoke the hot-reload Lambda function
-	@awslocal lambda invoke \
+	@lstk aws lambda invoke \
 		--function-name hot-reload-js \
 		--payload '{}' \
 		output.json && cat output.json

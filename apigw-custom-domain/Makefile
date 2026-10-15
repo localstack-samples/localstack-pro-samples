@@ -11,12 +11,11 @@ check:    ## Check if all required prerequisites are installed
 	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed. Please install AWS CLI and try again."; exit 1; }
 	@command -v python > /dev/null 2>&1 || { echo "Python is not installed. Please install Python and try again."; exit 1; }
 	@command -v openssl > /dev/null 2>&1 || { echo "OpenSSL is not installed. Please install OpenSSL and try again."; exit 1; }
-	@command -v localstack > /dev/null 2>&1 || { echo "LocalStack is not installed. Please install LocalStack and try again."; exit 1; }
+	@command -v lstk > /dev/null 2>&1 || { echo "lstk CLI is not installed. Please run: npm install -g @localstack/lstk"; exit 1; }
 	@echo "All required prerequisites are available."
 
 install:     ## Install dependencies
 	@which serverless || npm install -g serverless
-	@which awslocal || pip install awscli-local
 	@if [ ! -d "node_modules" ]; then \
 		echo "node_modules not found. Running npm install..."; \
 		npm install; \
@@ -41,9 +40,9 @@ deploy:      ## Deploy Serverless app to local environment with SSL setup for Ro
 	@echo "Generating and importing test SSL certificate to ACM for Route53 domain test.example.com"
 	@make cert
 	@echo "Importing local test certificate into ACM API ..."
-	@awslocal acm import-certificate --certificate fileb://sslcert/server.crt --private-key fileb://sslcert/ssl.key
+	@lstk aws acm import-certificate --certificate fileb://sslcert/server.crt --private-key fileb://sslcert/ssl.key
 	@echo "Creating Route53 hosted zone for test domain 'test.example.com' ..."
-	@awslocal route53 create-hosted-zone --name test.example.com --caller-reference r1
+	@lstk aws route53 create-hosted-zone --name test.example.com --caller-reference r1
 	@echo "Deploying Serverless app to local environment"
 	@SLS_DEBUG=1 npm run deploy
 	@echo "Serverless app successfully deployed."
@@ -56,18 +55,17 @@ test:        ## Run tests
 
 start:       ## Start LocalStack
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)
-	localstack start -d
-
+	lstk start --non-interactive --type aws
 stop:        ## Stop LocalStack
 	@echo
-	localstack stop
+	lstk stop
 
 ready:       ## Wait until LocalStack is ready
 	@echo Waiting on the LocalStack container...
-	@localstack wait -t 30 && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
+	@lstk status > /dev/null && echo Localstack is ready to use! || (echo Gave up waiting on LocalStack, exiting. && exit 1)
 
 logs:        ## Retrieve LocalStack logs
-	@localstack logs > logs.txt
+	@lstk logs > logs.txt
 
 test-ci:     ## Run CI tests
 	make check start install ready test; return_code=`echo $$?`;\

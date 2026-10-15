@@ -8,13 +8,13 @@
 
 ## Introduction
 
-A demo application deploying various AWS resources to LocalStack via Terraform. The sample creates a range of AWS resources including S3 buckets, Lambda functions, API Gateway endpoints, RDS parameter groups, and ElastiCache clusters — all using `tflocal` to redirect Terraform to LocalStack.
+A demo application deploying various AWS resources to LocalStack via Terraform. The sample creates a range of AWS resources including S3 buckets, Lambda functions, API Gateway endpoints, RDS parameter groups, and ElastiCache clusters — all using `lstk tf` to redirect Terraform to LocalStack.
 
 ## Prerequisites
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
-- [`localstack` CLI](https://docs.localstack.cloud/getting-started/installation/#localstack-cli)
+- [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
 - [Terraform](https://developer.hashicorp.com/terraform/downloads)
 
 ## Check prerequisites

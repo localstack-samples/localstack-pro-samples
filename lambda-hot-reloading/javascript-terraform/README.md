@@ -4,9 +4,9 @@
 
 * LocalStack
 * Docker
-* [awslocal](https://github.com/localstack/awscli-local) CLI
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 * Terraform
-* [tflocal](https://github.com/localstack/terraform-local) CLI
+* [Terraform](https://developer.hashicorp.com/terraform/install), used through `lstk tf`
 
 ## Introduction to the sample
 Other than the deployment of the sample, it is practically identical to [our javascript hot reloading sample](../javascript/).
@@ -22,10 +22,10 @@ First, we need to make sure we start LocalStack with the right configuration.
 To use our new lambda provider, all you need to do is set `PROVIDER_OVERRIDE_LAMBDA=v2`, if you use a LocalStack version < 2.0.
 
 
-If you want to use our old provider, please set `LAMBDA_REMOTE_DOCKER` to `0` (see the [Configuration Documentation](https://docs.localstack.cloud/localstack/configuration/#lambda) for more information):
+If you want to use our old provider, please set `LAMBDA_REMOTE_DOCKER` to `0`, passed with the `LOCALSTACK_` prefix so that `lstk` forwards it to the container (see the [Configuration Documentation](https://docs.localstack.cloud/localstack/configuration/#lambda) for more information):
 
 ```bash
-LAMBDA_REMOTE_DOCKER=0 localstack start
+LOCALSTACK_LAMBDA_REMOTE_DOCKER=0 lstk start
 ```
 
 Accordingly, if you are launching LocalStack via Docker or Docker Compose:
@@ -43,23 +43,23 @@ services:
 
 ## Deploying
 
-Now we can deploy our terraform stack by using `tflocal`.
+Now we can deploy our terraform stack by using `lstk tf`.
 First, we initialize the terraform working directory using:
 
 ```bash
-tflocal init
+lstk tf init
 ```
 
 We can now check the plan of terraform for our deployment:
 
 ```bash
-tflocal plan
+lstk tf plan
 ```
 
 Afterwards, we can deploy our stack on LocalStack:
 
 ```bash
-tflocal apply
+lstk tf apply
 ```
 
 The terraform configuration will automatically deploy the lambda with hot reloading for the function code.
@@ -70,7 +70,7 @@ The function code will be the contents of the `lambda_src` subdirectory.
 We can quickly make sure that it works by invoking it with a simple payload:
 
 ```bash
-awslocal lambda invoke --function-name hotreloadlambda output.txt
+lstk aws lambda invoke --function-name hotreloadlambda output.txt
 ```
 
 The invocation itself returns:
