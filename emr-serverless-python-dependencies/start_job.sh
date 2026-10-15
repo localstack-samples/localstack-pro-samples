@@ -11,7 +11,7 @@ s3a_bucket="s3a://${bucket}"
 if [ $local = "local" ]; then
     # LocalStack doesn't yet support adding spark.archives, adding the environment from the volume added to localstack container
     env_path="/tmp/environment"
-    AWS=awslocal
+    AWS="lstk aws"
 fi
 if [ $local = "aws" ]; then
     env_path="environment"

@@ -14,7 +14,7 @@ A Spring Boot application demonstrating AWS messaging services with LocalStack. 
 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose
-- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 - [Java 11+](https://openjdk.org/) and [Maven 3+](https://maven.apache.org/)
 
 ## Check prerequisites
@@ -63,13 +63,13 @@ Run everything via `make run` or follow the steps below.
 Verify the sender email address configured in the app:
 
 ```bash
-awslocal ses verify-email-identity --email-address no-reply@localstack.cloud
+lstk aws ses verify-email-identity --email-address no-reply@localstack.cloud
 ```
 
 Send a message to the topic:
 
 ```bash
-awslocal sns publish --topic arn:aws:sns:us-east-1:000000000000:email-notifications --message '{"subject":"hello", "address": "alice@example.com", "body": "hello world"}'
+lstk aws sns publish --topic arn:aws:sns:us-east-1:000000000000:email-notifications --message '{"subject":"hello", "address": "alice@example.com", "body": "hello world"}'
 ```
 
 Run the `/process` endpoint to send the queued notifications as emails:

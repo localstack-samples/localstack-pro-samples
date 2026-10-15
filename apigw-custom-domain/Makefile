@@ -16,7 +16,6 @@ check:    ## Check if all required prerequisites are installed
 
 install:     ## Install dependencies
 	@which serverless || npm install -g serverless
-	@which awslocal || pip install awscli-local
 	@if [ ! -d "node_modules" ]; then \
 		echo "node_modules not found. Running npm install..."; \
 		npm install; \
@@ -41,9 +40,9 @@ deploy:      ## Deploy Serverless app to local environment with SSL setup for Ro
 	@echo "Generating and importing test SSL certificate to ACM for Route53 domain test.example.com"
 	@make cert
 	@echo "Importing local test certificate into ACM API ..."
-	@awslocal acm import-certificate --certificate fileb://sslcert/server.crt --private-key fileb://sslcert/ssl.key
+	@lstk aws acm import-certificate --certificate fileb://sslcert/server.crt --private-key fileb://sslcert/ssl.key
 	@echo "Creating Route53 hosted zone for test domain 'test.example.com' ..."
-	@awslocal route53 create-hosted-zone --name test.example.com --caller-reference r1
+	@lstk aws route53 create-hosted-zone --name test.example.com --caller-reference r1
 	@echo "Deploying Serverless app to local environment"
 	@SLS_DEBUG=1 npm run deploy
 	@echo "Serverless app successfully deployed."

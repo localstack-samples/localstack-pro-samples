@@ -9,7 +9,7 @@ check:    ## Check if all required prerequisites are installed
 	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
 	@command -v node > /dev/null 2>&1 || { echo "Node.js is not installed. Please install Node.js and try again."; exit 1; }
 	@command -v lstk > /dev/null 2>&1 || { echo "lstk CLI is not installed. Please run: npm install -g @localstack/lstk"; exit 1; }
-	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
+	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed (required by 'lstk aws'). Please install it and try again."; exit 1; }
 	@echo "All required prerequisites are available."
 
 
@@ -18,14 +18,13 @@ install:     ## Install dependencies
 	@which serverless || npm install -g serverless
 	@npm install --save-dev serverless-localstack
 	@which lstk > /dev/null || npm install -g @localstack/lstk
-	@which awslocal || pip install awscli-local
 
 run:         ## Deploy the app locally and run a Lambda test invocation
 	echo "Deploying Serverless app to local environment"; \
-	awslocal s3api create-bucket --bucket testbucket --region us-east-1; \
+	lstk aws s3api create-bucket --bucket testbucket --region us-east-1; \
 	SLS_DEBUG=1 npm run deploy && \
 	echo "Serverless app successfully deployed. Now trying to invoke the Lambda function with layer." && \
-	awslocal lambda invoke --function-name test-layers-local-hello /tmp/out.tmp
+	lstk aws lambda invoke --function-name test-layers-local-hello /tmp/out.tmp
 
 start:
 	@test -n "${LOCALSTACK_AUTH_TOKEN}" || (echo "LOCALSTACK_AUTH_TOKEN is not set. Find your token at https://app.localstack.cloud/workspace/auth-token"; exit 1)

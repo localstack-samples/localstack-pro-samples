@@ -9,13 +9,12 @@ check:    ## Check if all required prerequisites are installed
 	@command -v docker > /dev/null 2>&1 || { echo "Docker is not installed. Please install Docker and try again."; exit 1; }
 	@command -v python3 > /dev/null 2>&1 || { echo "Python 3 is not installed. Please install Python 3 and try again."; exit 1; }
 	@command -v lstk > /dev/null 2>&1 || { echo "lstk CLI is not installed. Please run: npm install -g @localstack/lstk"; exit 1; }
-	@command -v awslocal > /dev/null 2>&1 || { echo "awslocal is not installed. Please run: pip install awscli-local"; exit 1; }
+	@command -v aws > /dev/null 2>&1 || { echo "AWS CLI is not installed (required by 'lstk aws'). Please install it and try again."; exit 1; }
 	@echo "All required prerequisites are available."
 
 
 install:     ## Install dependencies
 	@which lstk > /dev/null || npm install -g @localstack/lstk
-	@which awslocal || pip install awscli-local
 	@test -e .venv || (virtualenv .venv; . .venv/bin/activate; pip install -r requirements.txt)
 
 test-mqtt:
@@ -24,13 +23,13 @@ test-mqtt:
 
 run:         ## Deploy the app locally
 	echo "Deploying app to local environment"; \
-	awslocal cloudformation create-stack --stack-name test-iot --template-body file://iot.cf.yml; \
+	lstk aws cloudformation create-stack --stack-name test-iot --template-body file://iot.cf.yml; \
 	echo "IoT stack successfully deployed. Now checking whether all resources have been created."; \
 	sleep 3; \
-	awslocal iot list-things; \
-	awslocal iot list-policies; \
-	awslocal iot create-job --job-id j1 --targets t1; \
-	awslocal iot list-jobs; \
+	lstk aws iot list-things; \
+	lstk aws iot list-policies; \
+	lstk aws iot create-job --job-id j1 --targets t1; \
+	lstk aws iot list-jobs; \
 	make test-mqtt
 
 start:

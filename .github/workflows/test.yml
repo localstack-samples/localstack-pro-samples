@@ -41,7 +41,7 @@ jobs:
       - name: Install lstk and the AWS CLI wrapper
         run: |
           npm install -g @localstack/lstk
-          pip install awscli-local[ver1] virtualenv
+          pip install awscli virtualenv
           pip install --upgrade boto3 botocore
 
       - name: Setup config

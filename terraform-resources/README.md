@@ -8,7 +8,7 @@
 
 ## Introduction
 
-A demo application deploying various AWS resources to LocalStack via Terraform. The sample creates a range of AWS resources including S3 buckets, Lambda functions, API Gateway endpoints, RDS parameter groups, and ElastiCache clusters — all using `tflocal` to redirect Terraform to LocalStack.
+A demo application deploying various AWS resources to LocalStack via Terraform. The sample creates a range of AWS resources including S3 buckets, Lambda functions, API Gateway endpoints, RDS parameter groups, and ElastiCache clusters — all using `lstk tf` to redirect Terraform to LocalStack.
 
 ## Prerequisites
 

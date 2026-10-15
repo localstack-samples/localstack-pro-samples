@@ -31,9 +31,9 @@ Open the following file in your browser: `demo/web/index.html`
 * Click the button "Create new request" to send a new request to the backend API
 * The new request will go through the phases `QUEUED->PROCESSING->FINISHED` as the request is being handled by the backend services (Lambda functions, Step Functions state machine)
 
-If you have the [`awslocal`](https://github.com/localstack/awscli-local) command line installed, you can browse the contents of the local S3 bucket via:
+With [`lstk`](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/) and the AWS CLI installed, you can browse the contents of the local S3 bucket via:
 ```
-awslocal s3 ls s3://archiveBucket/
+lstk aws s3 ls s3://archiveBucket/
 ```
 
 ## App Screenshot

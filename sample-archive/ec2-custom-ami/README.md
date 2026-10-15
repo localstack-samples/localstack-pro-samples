@@ -10,7 +10,7 @@ Simple demo application illustrating EC2 virtual machines (VMs) and building ima
 * LocalStack
 * Docker
 * `make`
-* [`awslocal`](https://github.com/localstack/awscli-local)
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 * [`packer`](https://www.packer.io)
 * `VirtualBox` on Mac OS
 

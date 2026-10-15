@@ -8,16 +8,15 @@ usage:      ## Show this help
 
 install:    ## Install dependencies
 	@which lstk > /dev/null || npm install -g @localstack/lstk
-	@which awslocal || pip install awscli-local
 	@test -e node_modules || npm install
 
 run:        ## Deploy the app locally and invoke the CloudFront distribution
 	@echo "Deploying the app locally"; \
 		sls deploy --stage local && \
-		api_id=$$(awslocal apigateway get-rest-apis | jq -r '.items[0].id') && \
-		awslocal s3 cp html/index.html s3://htmlpages/index.html && \
+		api_id=$$(lstk aws apigateway get-rest-apis | jq -r '.items[0].id') && \
+		lstk aws s3 cp html/index.html s3://htmlpages/index.html && \
 		perl -i -pe 's/"[0-9a-z]*\.execute\-api\./"'$$api_id'.execute-api./g' distconfig.json && \
-		cf_domain=$$(awslocal cloudfront create-distribution --distribution-config \
+		cf_domain=$$(lstk aws cloudfront create-distribution --distribution-config \
 			file://distconfig.json | jq -r '.Distribution.DomainName') && \
 		echo "Injecting CloudFront domain $$cf_domain into code and redeploying Lambda" && \
 		perl -i -pe "s|cloudFrontUrl = '.*|cloudFrontUrl = 'https://"$$cf_domain"';|g" handler.js && \

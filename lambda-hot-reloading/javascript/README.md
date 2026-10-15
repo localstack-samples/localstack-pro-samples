@@ -4,7 +4,7 @@
 
 * LocalStack
 * Docker
-* `awslocal` CLI
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 
 ## Starting up
 
@@ -30,7 +30,7 @@ services:
 Now we need to create an IAM role, which is a collection of policies that grant specific permissions to access AWS resources on our mocked infrastructure. Before we create the role, we must define a trust policy for it. The trust policy has been defined in `trust-policy.json`. To create an IAM role, open your terminal in the directory where you want to create the role and run the following command:
 
 ```bash
-awslocal iam create-role --role-name lambda-example --assume-role-policy-document ./trust-policy.json
+lstk aws iam create-role --role-name lambda-example --assume-role-policy-document ./trust-policy.json
 ```
 
 To create the Lambda function, you now need to take care of only two things:
@@ -41,7 +41,7 @@ To create the Lambda function, you now need to take care of only two things:
 Push the following command to create the Lambda function:
 
 ```bash
-awslocal lambda create-function --function-name myfirstlambda \
+lstk aws lambda create-function --function-name myfirstlambda \
     --code S3Bucket="hot-reload",S3Key="/path/to/local/lambda/code" \
     --handler index.handler \
     --runtime nodejs14.x  \
@@ -51,7 +51,7 @@ awslocal lambda create-function --function-name myfirstlambda \
 We can quickly make sure that it works by invoking it with a simple payload:
 
 ```bash
-awslocal lambda invoke --function-name myfirstlambda output.txt
+lstk aws lambda invoke --function-name myfirstlambda output.txt
 ```
 
 The invocation itself returns:

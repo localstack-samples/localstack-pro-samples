@@ -55,10 +55,10 @@ To create the Lambda function, you need to take care of two things:
 - Deploy via an S3 Bucket. You need to use the magic variable `hot-reload` as the bucket.
 - Set the S3 key to the path of the directory your lambda function resides in. The handler is then referenced by the filename of your lambda code and the function in that code that needs to be invoked.
 
-Create the Lambda Function using the `awslocal` CLI:
+Create the Lambda Function using the `lstk aws` CLI:
 
 ```sh
-awslocal lambda create-function \
+lstk aws lambda create-function \
     --function-name hello-world \
     --runtime "nodejs16.x" \
     --role arn:aws:iam::123456789012:role/lambda-ex \
@@ -69,7 +69,7 @@ awslocal lambda create-function \
 You can quickly make sure that it works by invoking it with a simple payload:
 
 ```
-$ awslocal lambda invoke \
+$ lstk aws lambda invoke \
     --function-name hello-world \
     --payload '{"action": "test"}' output.txt
 ```

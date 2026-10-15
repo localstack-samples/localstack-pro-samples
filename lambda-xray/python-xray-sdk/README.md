@@ -11,7 +11,7 @@ and shows how to use the X-Ray API to fetch distributed trace data.
 - Docker
 - Python / `pip`
 - `make`
-- [awslocal](https://github.com/localstack/awscli-local)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 
 ## Start LocalStack
 
@@ -129,4 +129,4 @@ The documentation is made available under the [Creative Commons Attribution-Shar
 
 The sample code is made available under a [modified MIT license](https://github.com/awsdocs/aws-lambda-developer-guide/blob/main/LICENSE-SAMPLECODE).
 
-- The code was adjusted by replacing `aws` with `awslocal` for use with LocalStack, adding a `Makefile` to automate all steps, updating the Python dependencies, parametrizing the invoke script, adding a get-traces script, demonstrating custom subsegement tracing, and removed the unused tests.
+- The code was adjusted by replacing `aws` with `lstk aws` for use with LocalStack, adding a `Makefile` to automate all steps, updating the Python dependencies, parametrizing the invoke script, adding a get-traces script, demonstrating custom subsegement tracing, and removed the unused tests.

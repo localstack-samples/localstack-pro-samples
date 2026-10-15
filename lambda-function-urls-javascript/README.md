@@ -15,7 +15,7 @@ A demo application illustrating how to create a JavaScript Lambda function with 
 - A valid [LocalStack for AWS license](https://localstack.cloud/pricing). Your license provides a [`LOCALSTACK_AUTH_TOKEN`](https://docs.localstack.cloud/getting-started/auth-token/) to activate LocalStack.
 - [Docker](https://docs.docker.com/get-docker/)
 - [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
-- [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) (optional, for Terraform-based deployment)
 
 ## Check prerequisites
@@ -42,14 +42,14 @@ make start
 Deploy the Lambda function and create a function URL:
 
 ```bash
-awslocal lambda create-function \
+lstk aws lambda create-function \
     --function-name localstack-lamba-url-example \
     --runtime nodejs20.x \
     --zip-file fileb://function.zip \
     --handler index.handler \
     --role arn:aws:iam::000000000000:role/cool-stacklifter
 
-awslocal lambda create-function-url-config \
+lstk aws lambda create-function-url-config \
     --function-name localstack-lamba-url-example \
     --auth-type NONE
 ```

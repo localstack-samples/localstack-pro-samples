@@ -10,7 +10,7 @@ Each example in the repository is prefixed with the name of the AWS service bein
 
 * [Docker](https://docs.docker.com/get-docker/)
 * [`lstk` CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/), which starts LocalStack: `npm install -g @localstack/lstk` or `brew install localstack/tap/lstk`
-* [`awslocal` CLI](https://docs.localstack.cloud/user-guide/integrations/aws-cli/)
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 * [Serverless](https://www.serverless.com/framework/docs/getting-started)
 * [Terraform](https://developer.hashicorp.com/terraform/downloads)
 * `make` & `jq`
@@ -117,7 +117,6 @@ usage:       ## Show this help
 
 install:     ## Install dependencies
         @which lstk > /dev/null || npm install -g @localstack/lstk
-        @which awslocal || pip install awscli-local
         ## install whatever else you need, like node modules, python packages, etc.
         @test -e node_modules || npm install
         @test -e .venv || (python3 -m venv .venv; source .venv/bin/activate; pip install -r requirements.txt)

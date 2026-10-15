@@ -3,7 +3,7 @@ tfoutput=$(terraform output -json)
 application_id=$(echo $tfoutput | jq .application_id.value | tr -d '"')
 
 if [ $local = "local" ]; then
-    AWS=awslocal
+    AWS="lstk aws"
 fi
 if [ $local = "aws" ]; then
     AWS=aws

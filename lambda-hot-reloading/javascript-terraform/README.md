@@ -4,9 +4,9 @@
 
 * LocalStack
 * Docker
-* [awslocal](https://github.com/localstack/awscli-local) CLI
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 * Terraform
-* [tflocal](https://github.com/localstack/terraform-local) CLI
+* [Terraform](https://developer.hashicorp.com/terraform/install), used through `lstk tf`
 
 ## Introduction to the sample
 Other than the deployment of the sample, it is practically identical to [our javascript hot reloading sample](../javascript/).
@@ -43,23 +43,23 @@ services:
 
 ## Deploying
 
-Now we can deploy our terraform stack by using `tflocal`.
+Now we can deploy our terraform stack by using `lstk tf`.
 First, we initialize the terraform working directory using:
 
 ```bash
-tflocal init
+lstk tf init
 ```
 
 We can now check the plan of terraform for our deployment:
 
 ```bash
-tflocal plan
+lstk tf plan
 ```
 
 Afterwards, we can deploy our stack on LocalStack:
 
 ```bash
-tflocal apply
+lstk tf apply
 ```
 
 The terraform configuration will automatically deploy the lambda with hot reloading for the function code.
@@ -70,7 +70,7 @@ The function code will be the contents of the `lambda_src` subdirectory.
 We can quickly make sure that it works by invoking it with a simple payload:
 
 ```bash
-awslocal lambda invoke --function-name hotreloadlambda output.txt
+lstk aws lambda invoke --function-name hotreloadlambda output.txt
 ```
 
 The invocation itself returns:

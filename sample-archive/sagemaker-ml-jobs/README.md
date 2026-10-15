@@ -9,7 +9,7 @@ Simple demo application illustrating running a machine learning job using the AW
 * Python
 * `virtualenv`
 * `make`
-* [`awslocal`](https://github.com/localstack/awscli-local)
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), used through `lstk aws`
 
 ## Installing
 
@@ -36,7 +36,7 @@ This command pulls a SageMaker TensorFlow Docker image, and spins up a Docker co
 
 When the job has finished running, you should see the results in the target S3 bucket:
 ```
-$ awslocal s3 ls s3://sagemaker-us-east-1-000000000000/
+$ lstk aws s3 ls s3://sagemaker-us-east-1-000000000000/
                            PRE data/
                            PRE eval/
                            PRE export/

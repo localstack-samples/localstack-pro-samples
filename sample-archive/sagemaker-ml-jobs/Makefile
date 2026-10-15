@@ -9,7 +9,6 @@ usage:      ## Show this help
 
 install:    ## Install dependencies
 	@which lstk > /dev/null || npm install -g @localstack/lstk
-	@which awslocal || pip install awscli-local
 	@test -e .venv || virtualenv --python $(PYTHON_BIN) .venv
 	@. .venv/bin/activate; pip install tensorflow==1.15.0 sagemaker localstack 'requests>=2.20.0'
 
